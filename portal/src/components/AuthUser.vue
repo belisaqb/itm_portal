@@ -2,7 +2,7 @@
   <!-- Form to Login -->
   <div>
     <template v-if="isLogin">
-      <h3>Login</h3>
+      <h3>Inicio de Sesión</h3>
       <form @submit.prevent="doLogin">
         <div class="mb-3">
           <label for="email" class="form-label">Correo</label>
@@ -16,9 +16,10 @@
           <input v-model="inputPassword" id="password" class="form-bg form-control" type="password" name="password"
             placeholder="Password">
         </div>
-        <input type="submit" class="btn btn-primary" value="Iniciar Sesión">
-        <!-- <button @click="$emit('doLogin')" type="submit" class="btn btn-primary">Iniciar Sesión</button> -->
         <a href="#" @click="isLogin = false">¿No tienes cuenta? Registrarse</a>
+        <input :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary mt-2" value="Iniciar Sesión">
+        <!-- <button @click="$emit('doLogin')" type="submit" class="btn btn-primary">Iniciar Sesión</button> -->
+        
       </form>
 
       <button @click="doLogOut" v-show="isLoggedIn" class="btn btn-primary">Cerrar Sesión</button>
@@ -27,7 +28,7 @@
 
     <!-- Form to register -->
     <template v-else>
-      <h3>Register</h3>
+      <h3>Registro de Usuario</h3>
       <form @submit.prevent="doRegister" class="add">
         <div class="mb-3">
           <label for="name" class="form-label">Nombre</label>
@@ -41,8 +42,8 @@
           <label for="password" class="form-label">Contraseña</label>
           <input v-model="inputPassword" type="password" name="password" class="form-control">
         </div>
-        <button type="submit" class="btn btn-primary">Registrarse</button>
         <a href="#" @click="isLogin = true">¿Ya tienes cuenta? Inicia Sesión</a>
+        <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary mt-2">Registrarse</button>        
       </form>
     </template>
 

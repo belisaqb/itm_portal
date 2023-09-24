@@ -1,5 +1,24 @@
 <template>
-  <AuthUser></AuthUser>
+  <NavBar></NavBar>
+
+
+  <div class="m-5">
+    <ProjectRegister class="col-6" :categories="categories"></ProjectRegister>
+  </div>
+
+  <div v-for="(project, index) in projects" :key="index" class="m-5">
+        <ProjectCard
+          :id="project.id"
+          :projectName="project.name"
+          :projectDescription="project.description"
+          :projectCategory="project.category"
+        ></ProjectCard>
+      </div>
+
+  <div class="m-5">
+    <AuthUser class="col-6"></AuthUser>
+  </div>
+
   <UploadImg></UploadImg>
   <!-- <div class="custom">
     <div class="mb-3">
@@ -29,80 +48,116 @@
   </div> -->
 </template>
 
+
+
 <script>
+
 import AuthUser from './components/AuthUser.vue'
 import UploadImg from './components/UploadImg.vue'
+import NavBar from './components/NavBar.vue';
+import ProjectRegister from './components/ProjectRegister.vue';
+import ProjectCard from './components/ProjectCard.vue';
 
 export default {
   name: 'App',
   data() {
-    return {      
+    return {
+      categories: [],
+      projects: []
     }
   },
   components: {
+    NavBar,
     AuthUser,
-    UploadImg
+    UploadImg,
+    ProjectRegister,
+    ProjectCard
   },
   methods: {
+    filterCategory(idToMatch) {
+      const filteredCategories = this.categories.filter(category => category.id === idToMatch);
+      return filteredCategories;
+    }
+  },
+  mounted: function () {
+
+    //----------------------Get Categories-----------------
+    const categoriesRef = collection(db, 'categories')
+    getDocs(categoriesRef)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.id, ' => ', doc.data());
+          this.categories.push({
+            id: doc.id,
+            category: doc.data().category
+          })
+        });
+      })
+      .catch((error) => {
+        console.error('Error al obtener documentos: ', error);
+      });
+
+
+   
+    //-----------------Get Projects------------------------
+    //  Obtener datos de Firebase y actualizar projects
+    const projectsRef = collection(db, 'projects');
+    getDocs(projectsRef)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          const filterCategories = this.filterCategory(doc.data().id_category);
+          // console.log(filterCategories[0].category)
+          this.projects.push({
+            id: doc.id,
+            name: doc.data().name,
+            description: doc.data().description,
+            category: filterCategories[0].category
+          });
+        });
+
+      })
+      .catch((error) => {
+        console.error('Error al obtener documentos: ', error);
+      });
+    //-----------------Get Projects------------------------
     
-  }  
+
+  },
+  beforeUnmount() {
+    
+  }
 }
 
 </script>
 
 <script setup>
-// imports de Firebase
-import { ref, onMounted } from 'vue'
-import { collection, onSnapshot } from 'firebase/firestore'
+//-------------------------- imports de Firebase ---------------------------------
+import { onMounted } from 'vue'
+import { collection, getDocs } from 'firebase/firestore'
+import { onAuthStateChanged } from "firebase/auth";
 import { db, auth } from '@/firebase'
 
-import { onAuthStateChanged } from "firebase/auth";
 
 
 
-//todos
-const projects = ref([
-  // {
-  //   id: 'id1',
-  //   name: 'Crystals Path',
-  //   description: 'This'
-  // },
-  // {
-  //   id: 'id2',
-  //   name: 'Damn this thing',
-  //   description: 'These'
-  // }
-])
+//------------------------ Carga del Bootstrap---------------------------------
+const loadBootstrap = () => {
+  const script = document.createElement('script');
+  script.src = 'https://cdn.jsdelivr.net/npm/bootstrap/dist/js/bootstrap.bundle.min.js';
+  script.async = false;  // Carga de forma síncrona
+  document.head.appendChild(script);
 
-//get Projects on Firebase
+  const link = document.createElement('link');
+  link.rel = 'stylesheet';
+  link.href = 'https://cdn.jsdelivr.net/npm/bootstrap/dist/css/bootstrap.min.css';
+  document.head.appendChild(link);
+};
+// Cargar Bootstrap al inicio
+loadBootstrap();
+//-------------------------------------------------------------------------------
+
+
 onMounted(() => {
-  // console.log('mounted')
-  // const querySnapshot = await getDocs(collection(db, 'projects'))
-  // let projectList = []
-
-  // querySnapshot.forEach((doc) => {
-  //   console.log(doc.id, " => ", doc.data());
-  //   const project = {
-  //     id: doc.id,
-  //     name: doc.data().name,
-  //     description: doc.data().description
-  //   }
-  //   projectList.push(project)
-  // })
-  // projects.value = projectList
-
-  onSnapshot(collection(db, 'projects'), (querySnapshot) => {
-    const projectList = [];
-    querySnapshot.forEach((doc) => {
-      const project = {
-        id: doc.id,
-        name: doc.data().name,
-        description: doc.data().description
-      }
-      projectList.push(project)
-    })
-    projects.value = projectList
-  })  
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
@@ -117,42 +172,15 @@ onMounted(() => {
     }
   });
 })
-
-
-
-//addProject
-
-// const newProjectName = ref('')
-// const newProjectDescription = ref('')
-
-// const addProject = () => {
-//   // console.log('addProject')
-//   const newProject = {
-//     id: Math.floor(Math.random() * 10),
-//     name: newProjectName.value,
-//     description: newProjectDescription.value
-//   }
-//   projects.value.unshift(newProject)
-//   console.log('newProject: ', newProject)
-//   newProjectName.value = ''
-//   newProjectDescription.value = ''
-// }
-
-// const deleteProject = id => {
-//   // console.log('deleteProject: ', id)
-//   projects.value = projects.value.filter(project => project.id !== id)
-// }
-
-
 </script>
 
-
 <style>
-@import 'https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css';
-
 .custom {
   max-width: 400px;
   padding: 20px;
   margin: 0 auto;
 }
 </style>
+
+
+
