@@ -85,12 +85,12 @@ export default {
       // console.log('Datos recibidos del componente hijo:', data)
       this.projectId = data
 
-      console.log('getting: ', this.fetchDataById(data.id))
+      // console.log('getting: ', this.fetchDataById(data.id))
       const getProject = await this.fetchDataById(data.id)
       this.singleProject = getProject
       this.showProjectDetails = true
 
-      console.log(this.singleProject)
+      // console.log(this.singleProject)
 
       this.changeView(2)
 
