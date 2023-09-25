@@ -17,7 +17,7 @@
             placeholder="Password">
         </div>
         <a href="#" @click="isLogin = false">¿No tienes cuenta? Registrarse</a>
-        <input :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary mt-2" value="Iniciar Sesión">
+        <input :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2" value="Iniciar Sesión">
         <!-- <button @click="$emit('doLogin')" type="submit" class="btn btn-primary">Iniciar Sesión</button> -->
         
       </form>
@@ -43,7 +43,7 @@
           <input v-model="inputPassword" type="password" name="password" class="form-control">
         </div>
         <a href="#" @click="isLogin = true">¿Ya tienes cuenta? Inicia Sesión</a>
-        <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary mt-2">Registrarse</button>        
+        <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2">Registrarse</button>        
       </form>
     </template>
 

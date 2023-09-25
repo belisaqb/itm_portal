@@ -1,51 +1,44 @@
 <template>
-  <NavBar></NavBar>
+  <NavBar
+    @go-home="viewHome"
+    @go-auth="viewAuth"
+    @go-project-register="viewProjectRegister">
 
+  </NavBar>
 
-  <div class="m-5">
-    <ProjectRegister class="col-6" :categories="categories"></ProjectRegister>
+  <div v-if="projectRegister" class="m-5">
+    <ProjectRegister class="col-6" 
+      :categories="categories">
+    </ProjectRegister>
   </div>
 
-  <div v-for="(project, index) in projects" :key="index" class="m-5">
-        <ProjectCard
-          :id="project.id"
-          :projectName="project.name"
-          :projectDescription="project.description"
-          :projectCategory="project.category"
-        ></ProjectCard>
-      </div>
+  <div v-if="home" class="row">
+    <div v-for="(project, index) in projects" :key="index" class="col my-2">
+      <ProjectCard 
+        @showProjectDetails="goProjectDetails" 
+        :id="project.id" 
+        :image="project.image"
+        :projectName="project.name" 
+        :projectDescription="project.description" 
+        :projectCategory="project.category">
+      </ProjectCard>
+    </div>
+  </div>
 
-  <div class="m-5">
+  <div v-if="projectDetails">
+      <ProjectDetails 
+        :image="singleProject.image" 
+        :projectName="singleProject.name"
+        :projectDescription="singleProject.description" 
+        :projectCategory="singleProject.category">
+      </ProjectDetails>
+  </div>
+  
+
+
+  <div v-if="authUser" class="m-5">
     <AuthUser class="col-6"></AuthUser>
   </div>
-
-  <UploadImg></UploadImg>
-  <!-- <div class="custom">
-    <div class="mb-3">
-      <h1>Registro de proyecto</h1>
-
-      <form @submit.prevent="addProject">
-        <label for="name" class="mt-4 form-label">Nombre del proyecto</label>
-        <input v-model="newProjectName" type="text" class="form-control" id="name" placeholder="Nombre del proyecto">
-        <label for="description" class="mt-4 form-label">Descripción</label>
-        <input v-model="newProjectDescription" type="text" class="form-control" id="description"
-          placeholder="Descripción del proyecto">
-        <button :disabled="!newProjectName || !newProjectDescription" class="mt-4 btn btn-primary mb-3">Guardar</button>
-      </form>
-
-
-      <div v-for="project in projects" :key="project.id">
-        <div class="card mt-2" style="width: 18rem;">
-          <div class="card-body">
-            <h5 class="card-title">{{ project.name }}</h5>
-            <p class="card-text">{{ project.description }}</p>
-            <button @click="deleteProject(project.id)" class="btn btn-danger">&cross;</button>
-          </div>
-        </div>
-      </div>
-
-    </div>
-  </div> -->
 </template>
 
 
@@ -53,31 +46,122 @@
 <script>
 
 import AuthUser from './components/AuthUser.vue'
-import UploadImg from './components/UploadImg.vue'
 import NavBar from './components/NavBar.vue';
 import ProjectRegister from './components/ProjectRegister.vue';
 import ProjectCard from './components/ProjectCard.vue';
+import ProjectDetails from './components/ProjectDetails.vue'
 
 export default {
   name: 'App',
   data() {
     return {
+      //------------------VIEWS----------------
+      home: true,
+      authUser: false,
+      projectRegister: false,
+      projectDetails: false,
+      
+
+      //-------------------Init---------------
       categories: [],
-      projects: []
+      projects: [],
+      projectId: '',
+      singleProject: {}
     }
   },
   components: {
     NavBar,
     AuthUser,
-    UploadImg,
     ProjectRegister,
-    ProjectCard
+    ProjectCard,
+    ProjectDetails
   },
   methods: {
     filterCategory(idToMatch) {
-      const filteredCategories = this.categories.filter(category => category.id === idToMatch);
-      return filteredCategories;
+      const filteredCategories = this.categories.filter(category => category.id === idToMatch)
+      return filteredCategories
+    },
+    async goProjectDetails(data) {
+      // console.log('Datos recibidos del componente hijo:', data)
+      this.projectId = data
+
+      console.log('getting: ', this.fetchDataById(data.id))
+      const getProject = await this.fetchDataById(data.id)
+      this.singleProject = getProject
+      this.showProjectDetails = true
+
+      console.log(this.singleProject)
+
+      this.changeView(2)
+
+
+    },
+    async getDocumentById(documentId) {
+      const docRef = doc(db, 'projects', documentId)
+      const docSnap = await getDoc(docRef)
+      if (docSnap.exists()) {
+        // console.log('Datos del documento:', docSnap.data())
+        return docSnap.data();
+      } else {
+        console.log('El documento no existe.')
+        return null;
+      }
+    },
+    async fetchDataById(documentId) {
+      const documentData = await this.getDocumentById(documentId);
+      if (documentData) {
+        // Maneja los datos del documento aquí
+        // console.log('Datos del documento:', documentData);
+        return documentData
+      } else {
+        console.log('Documento no encontrado.');
+      }
+    },
+
+    //------------------------------CHANGE VIEW------------------------------
+    changeView(view) {
+      switch (view) {
+        //Home
+        case 0:
+          this.home = true
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false
+          break
+
+        //Auth
+        case 1:
+          this.home = false
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = true
+          break
+        //ProjectDetails
+        case 2:
+          this.home = false
+          this.projectDetails = true,
+          this.projectRegister = false,
+          this.authUser = false
+          break
+        //ProjectDetails
+        case 3:
+          this.home = false
+          this.projectDetails = false,
+          this.projectRegister = true,
+          this.authUser = false
+          break
+      }
+    },
+    viewHome() {
+      this.changeView(0)
+    },
+    viewAuth() {
+      this.changeView(1)
+    },
+    viewProjectRegister() {
+      this.changeView(3)
     }
+
   },
   mounted: function () {
 
@@ -98,33 +182,34 @@ export default {
       });
 
 
-   
+
     //-----------------Get Projects------------------------
     //  Obtener datos de Firebase y actualizar projects
-    const projectsRef = collection(db, 'projects');
+    const projectsRef = collection(db, 'projects')
     getDocs(projectsRef)
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
           const filterCategories = this.filterCategory(doc.data().id_category);
-          // console.log(filterCategories[0].category)
+          // console.log(doc.data().image)
           this.projects.push({
             id: doc.id,
             name: doc.data().name,
             description: doc.data().description,
-            category: filterCategories[0].category
+            category: filterCategories[0].category,
+            image: doc.data().image
           });
         });
 
       })
       .catch((error) => {
-        console.error('Error al obtener documentos: ', error);
+        console.error('Error al obtener documentos: ', error)
       });
     //-----------------Get Projects------------------------
-    
+
 
   },
   beforeUnmount() {
-    
+
   }
 }
 
@@ -133,11 +218,9 @@ export default {
 <script setup>
 //-------------------------- imports de Firebase ---------------------------------
 import { onMounted } from 'vue'
-import { collection, getDocs } from 'firebase/firestore'
-import { onAuthStateChanged } from "firebase/auth";
+import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
+import { onAuthStateChanged } from "firebase/auth"
 import { db, auth } from '@/firebase'
-
-
 
 
 //------------------------ Carga del Bootstrap---------------------------------
@@ -163,7 +246,7 @@ onMounted(() => {
     if (user) {
       // User is signed in, see docs for a list of available properties
       // https://firebase.google.com/docs/reference/js/auth.user
-      const uid = user.uid;
+      const uid = user.uid
       console.log(uid)
       // ...
     } else {

@@ -32,7 +32,7 @@
 <script>
 //---------Import Firebase-------------------------
 // import { ref } from 'firebase/storage';
-import { ref as storageRef, uploadBytesResumable } from 'firebase/storage';
+import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { db, storage } from '@/firebase'
 
@@ -45,7 +45,7 @@ export default {
             inputProjectName: '',
             inputProjectDescription: '',
             selectedCategory: '',
-            file: ''
+            imageUrl: ''
         }
     },
     props: {
@@ -61,7 +61,7 @@ export default {
                 name: this.inputProjectName,
                 description: this.inputProjectDescription,
                 id_category: this.selectedCategory,
-                image: 'images/' + this.file.name,
+                image: this.imageUrl,
                 createdAt: serverTimestamp()
             })
                 .then(() => {
@@ -79,10 +79,10 @@ export default {
                 this.selectedCategory = ''
         },
         async onFileChange(event) {
-            this.file = event.target.files[0];
+            const file = event.target.files[0];
 
             // Subir la imagen a Firebase Storage
-            await this.uploadImage(this.file);
+            await this.uploadImage(file);
         },
         async uploadImage(file) {
             const storageReference = storageRef(storage, 'images/' + file.name);
@@ -101,6 +101,12 @@ export default {
                 () => {
                     // Carga completada con éxito
                     console.log('Imagen subida con éxito');
+                    // Obtener la URL de la imagen
+                    getDownloadURL(task.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        // Llamar a una función para mostrar la imagen en la interfaz de usuario
+                        this.imageUrl = downloadURL
+                    });
                 }
             );
         }
