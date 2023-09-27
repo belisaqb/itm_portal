@@ -1,6 +1,43 @@
 <template>
     <div>
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <nav style="padding: 0;" class="navbar navbar-expand-lg">
+            <div class="navbar-container container">
+                <a class="navbar-brand logo" href="#"><img class="img-logo" src="@/assets/svg/ITM.svg" alt="itm"></a>
+                <form class="d-flex search-bar">
+                    <input type="search" class="search-input" placeholder="Buscar">
+                    <button class="search-button" type="submit"><img src="@/assets/svg/search2.svg" alt="search"></button>
+                </form>
+                <button class="navbar-toggler btn-hamburguer" id="hamburguer" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span><img src="@/assets/svg/menuHamburguesa.svg" alt="menu"></span>
+                </button>
+                <div class="collapse navbar-collapse div-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a @click="goHome" class="link-nav semibold-ligth-green-med" href="#">PROYECTOS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="link-nav semibold-ligth-green-med" href="#">FOROS</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
+                        </li>
+                        <li class="nav-item">
+                            <a @click="goProjectRegister" class="link-nav semibold-ligth-green-med" href="#">REGISTRAR PROYECTO</a>
+                        </li>
+                    </ul>
+                    <div class="img-user">
+                        <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
+                    </div>
+                    <div class="notifications">
+                        <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="user"></button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
             <div class="container-fluid">
                 <a class="navbar-brand" href="#">Navbar</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -26,7 +63,7 @@
                     </form>
                 </div>
             </div>
-        </nav>
+        </nav> -->
     </div>
 </template>
 
@@ -45,4 +82,9 @@ export default {
         }
     }
 }
+
+
+
+
+
 </script>

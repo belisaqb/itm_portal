@@ -1,55 +1,217 @@
 <template>
-  <NavBar
-    @go-home="viewHome"
-    @go-auth="viewAuth"
-    @go-project-register="viewProjectRegister">
+  <header class="header">
+    <NavBar @go-home="viewHome"
+      @go-auth="viewAuth"
+      @go-project-register="viewProjectRegister"></NavBar>
+  </header>
 
-  </NavBar>
+  <main>
+    <SideBar></SideBar>
 
-  <div v-if="projectRegister" class="m-5">
-    <ProjectRegister class="col-6" 
-      :categories="categories">
-    </ProjectRegister>
-  </div>
+    <section class="content" id="content">
+      <div class="content-section">
+        <h1 class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
 
-  <div v-if="home" class="row">
-    <div v-for="(project, index) in projects" :key="index" class="col my-2">
-      <ProjectCard 
-        @showProjectDetails="goProjectDetails" 
-        :id="project.id" 
-        :image="project.image"
-        :projectName="project.name" 
-        :projectDescription="project.description" 
-        :projectCategory="project.category">
-      </ProjectCard>
+        <div class="d-flex justify-content-center mt-3 dropdown mx-2">
+          <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button" data-bs-toggle="dropdown"
+            aria-expanded="false">
+            ORDENAR POR
+          </button>
+          <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+            <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
+            <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
+          </ul>
+        </div>
+
+        <div class="container mt-4">
+
+          <div class="row mx-1">
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img1.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay ">
+                    <div class="d-flex mx-2  positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">FERIA VOCACIONAL DE ITM EN LICEO DE PUNTARENAS
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img1.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">FERIA VOCACIONAL DE ITM EN LICEO DE PUNTARENAS
+                  </h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
+                </div>
+              </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+              <div class="card-content card">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
+                  </h2>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="m-5 p-5">
+    <div v-if="projectRegister" class="m-5">
+      <ProjectRegister class="col-6" :categories="categories">
+      </ProjectRegister>
+    </div>
+
+    <div v-if="home" class="row">
+      <div v-for="(project, index) in projects" :key="index" class="col my-2">
+        <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+          :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
+        </ProjectCard>
+      </div>
+    </div>
+
+    <div v-if="projectDetails">
+      <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
+        :projectDescription="singleProject.description" :projectCategory="singleProject.category">
+      </ProjectDetails>
+    </div>
+
+    <div v-if="authUser" class="m-5">
+      <AuthUser class="col-6"></AuthUser>
     </div>
   </div>
 
-  <div v-if="projectDetails">
-      <ProjectDetails 
-        :image="singleProject.image" 
-        :projectName="singleProject.name"
-        :projectDescription="singleProject.description" 
-        :projectCategory="singleProject.category">
-      </ProjectDetails>
-  </div>
   
-
-
-  <div v-if="authUser" class="m-5">
-    <AuthUser class="col-6"></AuthUser>
-  </div>
 </template>
 
 
 
 <script>
+import './js/navbar'
+import './js/sidebar'
 
 import AuthUser from './components/AuthUser.vue'
 import NavBar from './components/NavBar.vue';
 import ProjectRegister from './components/ProjectRegister.vue';
 import ProjectCard from './components/ProjectCard.vue';
 import ProjectDetails from './components/ProjectDetails.vue'
+import SideBar from './components/SideBar.vue'
 
 export default {
   name: 'App',
@@ -60,7 +222,7 @@ export default {
       authUser: false,
       projectRegister: false,
       projectDetails: false,
-      
+
 
       //-------------------Init---------------
       categories: [],
@@ -74,7 +236,8 @@ export default {
     AuthUser,
     ProjectRegister,
     ProjectCard,
-    ProjectDetails
+    ProjectDetails,
+    SideBar
   },
   methods: {
     filterCategory(idToMatch) {
@@ -125,30 +288,30 @@ export default {
         case 0:
           this.home = true
           this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false
+            this.projectRegister = false,
+            this.authUser = false
           break
 
         //Auth
         case 1:
           this.home = false
           this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = true
+            this.projectRegister = false,
+            this.authUser = true
           break
         //ProjectDetails
         case 2:
           this.home = false
           this.projectDetails = true,
-          this.projectRegister = false,
-          this.authUser = false
+            this.projectRegister = false,
+            this.authUser = false
           break
         //ProjectDetails
         case 3:
           this.home = false
           this.projectDetails = false,
-          this.projectRegister = true,
-          this.authUser = false
+            this.projectRegister = true,
+            this.authUser = false
           break
       }
     },
@@ -258,11 +421,9 @@ onMounted(() => {
 </script>
 
 <style>
-.custom {
-  max-width: 400px;
-  padding: 20px;
-  margin: 0 auto;
-}
+/* @import url(css/main.css); */
+
+
 </style>
 
 

@@ -1,0 +1,22 @@
+//set fonts for titles and sections
+@mixin set-font($fweight, $fsize, $fcolor){
+    font-weight: $fweight;
+    font-size: $fsize ;   
+    color: $fcolor;
+    
+}
+
+//set background color
+@mixin set-background-color($clr){
+    background-color: $clr;
+}
+
+//set border solid
+@mixin set-border($width ,$clr){
+    border: $width solid $clr;
+}
+
+//set box-shadow
+@mixin set-box-shadow($h, $v, $blur, $spread, $clr){
+    box-shadow: $h $v $blur $spread, $clr ;
+}
