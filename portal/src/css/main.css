@@ -399,11 +399,11 @@ main {
 }
 
 .dropdown-menu {
-  background-color: rgb(0, 45, 92);
+  background-color: rgb(0, 45, 92) !important;
 }
 
 .dropdown-menu :hover {
-  background-color: rgb(0, 45, 92);
+  background-color: rgb(0, 45, 92) !important;
 }
 
 .card-container {
@@ -419,6 +419,12 @@ main {
   border-radius: 0;
 }
 
+.card-content {
+  background: none;
+  border-radius: 0;
+  border: none;
+}
+
 .overlay {
   position: absolute;
   top: 0;
@@ -429,22 +435,16 @@ main {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(0, 0, 0)); /* Ajusta la opacidad y el color del degradado según tus preferencias */
 }
 
-.card-content {
-  background: none;
-  border-radius: 0;
-  border: none;
-}
-
 .semibold-ligth-green-med {
   font-weight: 600;
   font-size: 1rem;
-  color: rgb(60, 236, 200);
+  color: rgb(60, 236, 200) !important;
 }
 
 .semibold-ligth-green-med:hover {
   font-weight: 600;
   font-size: 1rem;
-  color: rgb(0, 167, 126);
+  color: rgb(0, 167, 126) !important;
 }
 
 .regular-ligth-green-med {

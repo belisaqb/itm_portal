@@ -1,4 +1,61 @@
 <template>
+  <!-- Register section -->
+  <div id="registration-popup" class="registration-popup">
+    <div class="registration-modal">
+      <span class="close-popup-button">&times;</span>
+      <h2>REGISTRARSE</h2>
+      <form class="form-display">
+        <label for="nombre">NOMBRE</label>
+        <input type="text" id="nombre" class="input-field" placeholder="nombre" required>
+
+        <label for="apellidos">APELLIDOS</label>
+        <input type="text" id="apellidos" class="input-field" placeholder="apellidos" required>
+
+        <label for="carnet">CARNET</label>
+        <input type="text" id="carnet" class="input-field" placeholder="carnet" required>
+
+        <label for="correo">CORREO ELECTRONICO</label>
+        <input type="email" id="correo" class="input-field" placeholder="correo electrónico" required>
+
+        <label for="contraseña">CONTRASEÑA</label>
+        <input type="password" id="contraseña" class="input-field" placeholder="contraseña" required>
+
+        <label for="verificar-contraseña">VERIFICAR CONTRASEÑA</label>
+        <input type="password" id="verificar-contraseña" class="input-field" placeholder="verificar contraseña" required>
+
+        <div class="button-container">
+          <button type="button" class="register-button">REGISTRAR</button>
+          <hr class="line-between-buttons">
+          <button id="login-button" type="button" class="login-button">INICIAR SESION</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Register section -->
+
+  <!-- Login section -->
+  <div id="login-popup" class="registration-popup">
+    <div class="registration-modal">
+      <span id="close-login-popup" class="close-popup-button">&times;</span>
+      <h2>Iniciar Sesión</h2>
+      <form class="form-display">
+
+        <label for="correo">CORREO ELECTRONICO</label>
+        <input type="email" id="correo" class="input-field" placeholder="correo electrónico" required>
+
+        <label for="contraseña">CONTRASEÑA</label>
+        <input type="password" id="contraseña" class="input-field" placeholder="contraseña" required>
+
+        <div class="button-container">
+          <button type="button" class="register-button">INICIAR SESION</button>
+          <hr class="line-between-buttons">
+          <button id="register-button" type="button" class="login-button">REGISTRAR</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Login section -->
+
   <!-- Form to Login -->
   <div>
     <template v-if="isLogin">
@@ -19,7 +76,7 @@
         <a href="#" @click="isLogin = false">¿No tienes cuenta? Registrarse</a>
         <input :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2" value="Iniciar Sesión">
         <!-- <button @click="$emit('doLogin')" type="submit" class="btn btn-primary">Iniciar Sesión</button> -->
-        
+
       </form>
 
       <button @click="doLogOut" v-show="isLoggedIn" class="btn btn-primary">Cerrar Sesión</button>
@@ -43,7 +100,7 @@
           <input v-model="inputPassword" type="password" name="password" class="form-control">
         </div>
         <a href="#" @click="isLogin = true">¿Ya tienes cuenta? Inicia Sesión</a>
-        <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2">Registrarse</button>        
+        <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2">Registrarse</button>
       </form>
     </template>
 
@@ -91,7 +148,7 @@ export default {
       signInWithEmailAndPassword(auth, this.inputEmail, this.inputPassword)
         .then((cred) => {
           console.log('The user logged in:', cred.user)
-           this.isLoggedIn = true
+          this.isLoggedIn = true
         })
         .catch((err) => {
           console.log(err.message)

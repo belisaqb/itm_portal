@@ -22,10 +22,7 @@
                         </li>
                         <li class="nav-item">
                             <a class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
-                        </li>
-                        <li class="nav-item">
-                            <a @click="goProjectRegister" class="link-nav semibold-ligth-green-med" href="#">REGISTRAR PROYECTO</a>
-                        </li>
+                        </li>                        
                     </ul>
                     <div class="img-user">
                         <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
@@ -82,9 +79,6 @@ export default {
         }
     }
 }
-
-
-
 
 
 </script>

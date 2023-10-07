@@ -28,7 +28,7 @@
           <div class="row mx-1">
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img1.jpg" alt="img">
                   <div class="position-absolute w-100 overlay ">
@@ -46,7 +46,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -63,7 +63,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -80,7 +80,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -98,7 +98,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img1.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -116,7 +116,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -133,7 +133,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -150,7 +150,7 @@
             </div>
 
             <div class="col-md-6 mb-4">
-              <div class="card-content card">
+              <div class="card-content ">
                 <div class="card-container">
                   <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
                   <div class="position-absolute w-100 overlay">
@@ -192,10 +192,13 @@
       </ProjectDetails>
     </div>
 
-    <div v-if="authUser" class="m-5">
+    <div v-show="authUser" class="m-5">
       <AuthUser class="col-6"></AuthUser>
     </div>
   </div>
+
+   
+
 
   
 </template>
@@ -205,6 +208,9 @@
 <script>
 import './js/navbar'
 import './js/sidebar'
+
+import './js/login'
+import './js/register'
 
 import AuthUser from './components/AuthUser.vue'
 import NavBar from './components/NavBar.vue';

@@ -3,11 +3,11 @@
 @use "../abstracts/media-queries";
 
 .semibold-ligth-green-med{
-    @include mixins.set-font(vars.$fw-semibold, vars.$fs-med, vars.$clr-ligth-green);
+    @include mixins.set-font(vars.$fw-semibold, vars.$fs-med, vars.$clr-ligth-green !important);
 }
 
 .semibold-ligth-green-med:hover{
-    @include mixins.set-font(vars.$fw-semibold, vars.$fs-med, vars.$clr-green);
+    @include mixins.set-font(vars.$fw-semibold, vars.$fs-med, vars.$clr-green !important);
 }
 
 .regular-ligth-green-med{

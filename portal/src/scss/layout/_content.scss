@@ -40,11 +40,11 @@ main {
 }
 
 .dropdown-menu{
-    @include mixins.set-background-color(vars.$clr-dark-blue);
+    @include mixins.set-background-color(vars.$clr-dark-blue !important);
     
 }
 
 .dropdown-menu :hover{
-    @include mixins.set-background-color(vars.$clr-dark-blue);
+    @include mixins.set-background-color(vars.$clr-dark-blue !important);
     
 }
