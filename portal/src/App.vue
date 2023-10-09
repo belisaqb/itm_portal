@@ -193,7 +193,7 @@
     </div>
 
     <div v-show="authUser" class="m-5">
-      <AuthUser class="col-6"></AuthUser>
+      <AuthUser></AuthUser>
     </div>
   </div>
 

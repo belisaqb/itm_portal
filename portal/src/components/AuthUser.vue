@@ -1,39 +1,43 @@
 <template>
-  <!-- Register section -->
+
+  <!-- REGISTER SECTION -->
   <div id="registration-popup" class="registration-popup">
     <div class="registration-modal">
       <span class="close-popup-button">&times;</span>
       <h2>REGISTRARSE</h2>
-      <form class="form-display">
-        <label for="nombre">NOMBRE</label>
-        <input type="text" id="nombre" class="input-field" placeholder="nombre" required>
+      <form @submit.prevent="doRegister" class="add form-display">
+        <label for="firstname">NOMBRE</label>
+        <input v-model="firstname" type="text" id="firstname" class="input-field" placeholder="nombre" required>
 
-        <label for="apellidos">APELLIDOS</label>
-        <input type="text" id="apellidos" class="input-field" placeholder="apellidos" required>
+        <label for="lastname">APELLIDOS</label>
+        <input v-model="lastname" type="text" id="lastname" class="input-field" placeholder="apellidos" required>
 
         <label for="carnet">CARNET</label>
-        <input type="text" id="carnet" class="input-field" placeholder="carnet" required>
+        <input v-model="carnet" type="text" id="carnet" class="input-field" placeholder="carnet" required>
 
-        <label for="correo">CORREO ELECTRONICO</label>
-        <input type="email" id="correo" class="input-field" placeholder="correo electrónico" required>
+        <label for="inputEmail">CORREO ELECTRONICO</label>
+        <input v-model="inputEmail" type="email" id="inputEmail" class="input-field" placeholder="correo electronico" required>
 
-        <label for="contraseña">CONTRASEÑA</label>
-        <input type="password" id="contraseña" class="input-field" placeholder="contraseña" required>
+        <label for="inputPassword">CONTRASEÑA</label>
+        <input v-model="inputPassword" type="password" id="inputPassword" class="input-field" placeholder="contraseña" required>
 
-        <label for="verificar-contraseña">VERIFICAR CONTRASEÑA</label>
-        <input type="password" id="verificar-contraseña" class="input-field" placeholder="verificar contraseña" required>
+        <label for="verifyPassword">VERIFICAR CONTRASEÑA</label>
+        <input type="password" id="verifyPassword" class="input-field" placeholder="verificar contraseña" required>
+        <div id="password-error" class="error-message" style="color: red; display: none;">Las contraseñas no coinciden</div>
 
         <div class="button-container">
-          <button type="button" class="register-button">REGISTRAR</button>
+          <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button" class="register-button">REGISTRAR</button>
           <hr class="line-between-buttons">
-          <button id="login-button" type="button" class="login-button">INICIAR SESION</button>
+          <button @click="isLogin = true" id="login-button" type="button" class="login-button">INICIAR SESION</button>
         </div>
+
       </form>
     </div>
   </div>
-  <!-- Register section -->
+  <!-- REGISTER SECTION -->
 
-  <!-- Login section -->
+
+  <!-- LOGIN SECTION -->
   <div id="login-popup" class="registration-popup">
     <div class="registration-modal">
       <span id="close-login-popup" class="close-popup-button">&times;</span>
@@ -54,9 +58,10 @@
       </form>
     </div>
   </div>
-  <!-- Login section -->
+  <!-- LOGIN SECTION -->
 
-  <!-- Form to Login -->
+
+  <!-- LOGIN FORM -->
   <div>
     <template v-if="isLogin">
       <h3>Inicio de Sesión</h3>
@@ -81,9 +86,10 @@
 
       <button @click="doLogOut" v-show="isLoggedIn" class="btn btn-primary">Cerrar Sesión</button>
     </template>
-    <!-- Form to Login -->
+    <!-- LOGIN FORM -->
 
-    <!-- Form to register -->
+
+    <!-- REGISTER FORM
     <template v-else>
       <h3>Registro de Usuario</h3>
       <form @submit.prevent="doRegister" class="add">
@@ -103,18 +109,22 @@
         <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2">Registrarse</button>
       </form>
     </template>
+     REGISTER FORM -->
 
-    <!-- Form to register -->
   </div>
 </template>
+
 
 <script>
 // import { ref } from 'vue'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from '@/firebase'
+import { db } from "@/firebase";
+import { collection, addDoc } from "firebase/firestore";
 
 // const email = ref('')
 // const password = ref('')
+
 
 export default {
   name: 'AuthUser',
@@ -122,25 +132,70 @@ export default {
     return {
       isLogin: true,
       isLoggedIn: false,
+      passwordError: false,
+      firstname: '',
+      lastname: '',
+      carnet: '',
       inputEmail: '',
       inputPassword: '',
     }
   },
-  methods: {
-    doRegister() {
-      console.log('register')
-      console.log('email: ', this.inputEmail, 'Password: ', this.inputPassword)
 
-      createUserWithEmailAndPassword(auth, this.inputEmail, this.inputPassword)
-        .then((cred) => {
-          console.log('user created:', cred.user)
-          this.isLoggedIn = true
-          // signupForm.reset()
+  /* METODOS */ 
+  methods: {
+
+  /* DOREGISTER METHOD*/  
+  doRegister() {
+    const firstname = document.getElementById('firstname').value;
+    const lastname = document.getElementById('lastname').value;
+    const carnet = document.getElementById('carnet').value;
+    const inputEmail = document.getElementById('inputEmail').value;
+    const inputPassword = document.getElementById('inputPassword').value;
+
+    console.log('REGISTRO')
+    /*console.log('email: ', this.inputEmail, 'Password: ', this.inputPassword)*/
+    console.log('Datos del usuario:', firstname , lastname, carnet, inputEmail, inputPassword);
+
+    // Después de registrar al usuario en Firebase Authentication, guarda sus datos en Firestore
+    createUserWithEmailAndPassword(auth, inputEmail, inputPassword)
+        .then((userCredential) => {
+          const user = userCredential.user;
+          const usuariosCollection = collection(db, "users"); // Reemplaza "users" con el nombre de tu colección
+
+    // Ahora, guarda la información adicional en la colección "users" de Firestore
+    // Crea un objeto con los datos adicionales
+    const userData = {
+      firstname: this.firstname,
+      lastname: this.lastname,
+      carnet: this.carnet,
+      inputEmail: this.inputEmail,
+      inputPassword: this.inputPassword,
+    };
+
+    // Agrega el documento del usuario con los datos adicionales a la colección "users"
+    addDoc(usuariosCollection, userData)
+            .then(() => {
+              console.log("Usuario registrado con éxito", user);
+              this.switchToLoginModal();
+            })
+            .catch((error) => {
+              console.error("Error al guardar datos en Firestore:", error);
+            });
         })
-        .catch((err) => {
-          alert(err.message)
-        })
+        .catch((error) => {
+          console.error("Error al registrar al usuario:", error.message);
+        });
     },
+    /* DOREGISTER METHOD*/
+    
+    switchToLoginModal() {
+      const registrationModal = document.getElementById('registration-popup');
+      registrationModal.style.display = 'none';
+      const loginModal = document.getElementById('login-popup');
+      loginModal.style.display = 'block';
+    },
+
+    /* DOLOGIN METHOD*/
     doLogin() {
       console.log('login')
 
@@ -154,6 +209,9 @@ export default {
           console.log(err.message)
         })
     },
+    /* DOLOGIN METHOD*/
+
+    /* DOLOGOUT METHOD*/
     doLogOut() {
       console.log('logout')
       signOut(auth)
@@ -167,6 +225,8 @@ export default {
           alert(err.message)
         })
     }
+    /* DOLOGOUT METHOD*/
   }
+  /* METODOS */ 
 }
 </script>
