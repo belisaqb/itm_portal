@@ -23,7 +23,7 @@
 
         <label for="verifyPassword">VERIFICAR CONTRASEÑA</label>
         <input type="password" id="verifyPassword" class="input-field" placeholder="verificar contraseña" required>
-        <div id="password-error" class="error-message" style="color: red; display: none;">Las contraseñas no coinciden</div>
+        <div id="password-error" class="error-message" style="color: red; display: none;">Error al registrar usuario</div>
 
         <div class="button-container">
           <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button" class="register-button">REGISTRAR</button>
@@ -152,18 +152,23 @@ export default {
     const inputEmail = document.getElementById('inputEmail').value;
     const inputPassword = document.getElementById('inputPassword').value;
 
+    if (this.inputPassword !== document.getElementById('verifyPassword').value) {
+    document.getElementById('password-error').style.display = 'block';
+    return;
+    }else {
+    document.getElementById('password-error').style.display = 'none';
+  }
+
     console.log('REGISTRO')
-    /*console.log('email: ', this.inputEmail, 'Password: ', this.inputPassword)*/
     console.log('Datos del usuario:', firstname , lastname, carnet, inputEmail, inputPassword);
 
     // Después de registrar al usuario en Firebase Authentication, guarda sus datos en Firestore
     createUserWithEmailAndPassword(auth, inputEmail, inputPassword)
         .then((userCredential) => {
           const user = userCredential.user;
-          const usuariosCollection = collection(db, "users"); // Reemplaza "users" con el nombre de tu colección
+          const usuariosCollection = collection(db, "users");
 
-    // Ahora, guarda la información adicional en la colección "users" de Firestore
-    // Crea un objeto con los datos adicionales
+    // Guarda la información adicional en la colección "users" de Firestore
     const userData = {
       firstname: this.firstname,
       lastname: this.lastname,
@@ -177,13 +182,24 @@ export default {
             .then(() => {
               console.log("Usuario registrado con éxito", user);
               this.switchToLoginModal();
+              this.isLogin = true; 
+              this.inputEmail = '';
+              this.inputPassword = '';
+              this.firstname= '',
+              this.lastname= '',
+              this.carnet= '',
+              this.verifyPassword= '';
             })
             .catch((error) => {
               console.error("Error al guardar datos en Firestore:", error);
+              document.getElementById('password-error').style.display = 'block';
+              return;
             });
         })
         .catch((error) => {
           console.error("Error al registrar al usuario:", error.message);
+          document.getElementById('password-error').style.display = 'block';
+          return;
         });
     },
     /* DOREGISTER METHOD*/
