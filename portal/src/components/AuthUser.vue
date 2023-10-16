@@ -41,52 +41,50 @@
   <div id="login-popup" class="registration-popup">
     <div class="registration-modal">
       <span id="close-login-popup" class="close-popup-button">&times;</span>
+      <!-- <div v-if="isLogin"> v-if -->
       <h2>Iniciar Sesión</h2>
-      <form class="form-display">
+      <form class="form-display" @submit.prevent="doLogin"> <!-- doLogin -->
 
         <label for="correo">CORREO ELECTRONICO</label>
-        <input type="email" id="correo" class="input-field" placeholder="correo electrónico" required>
+        <input v-model="inputEmail" id="correo" class="input-field" type="email" name="correo" placeholder="correo electrónico" required>
 
         <label for="contraseña">CONTRASEÑA</label>
-        <input type="password" id="contraseña" class="input-field" placeholder="contraseña" required>
+        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña" placeholder="contraseña" required>
 
         <div class="button-container">
-          <button type="button" class="register-button">INICIAR SESION</button>
+          <button :disabled="!inputEmail || !inputPassword" @click="doLogin" type="button" class="register-button">INICIAR SESION</button>
           <hr class="line-between-buttons">
           <button id="register-button" type="button" class="login-button">REGISTRAR</button>
         </div>
       </form>
+      <!-- </div> v-if end -->
     </div>
   </div>
   <!-- LOGIN SECTION -->
 
 
-  <!-- LOGIN FORM -->
+  <!-- LOGIN FORM ----------------------------------------------------------------------------------------------------------->
   <div>
-    <template v-if="isLogin">
+    <!-- <template v-if="isLogin">
       <h3>Inicio de Sesión</h3>
       <form @submit.prevent="doLogin">
         <div class="mb-3">
           <label for="email" class="form-label">Correo</label>
-          <input v-model="inputEmail" id="email" class="form-bg form-control" type="text" name="email"
-            placeholder="Email">
-          <!-- <input v-model="userData.email" type="email" class="form-control" id="email"> -->
+          <input v-model="inputEmail" id="email" class="form-bg form-control" type="text" name="email" placeholder="Email">
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Contraseña</label>
-          <!-- <input v-model="userData.password" type="password" class="form-control" id="password"> -->
           <input v-model="inputPassword" id="password" class="form-bg form-control" type="password" name="password"
             placeholder="Password">
         </div>
         <a href="#" @click="isLogin = false">¿No tienes cuenta? Registrarse</a>
         <input :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2" value="Iniciar Sesión">
-        <!-- <button @click="$emit('doLogin')" type="submit" class="btn btn-primary">Iniciar Sesión</button> -->
 
       </form>
 
       <button @click="doLogOut" v-show="isLoggedIn" class="btn btn-primary">Cerrar Sesión</button>
-    </template>
-    <!-- LOGIN FORM -->
+    </template> -->
+    <!-- LOGIN FORM ----------------------------------------------------------------------------------------------------------->
 
 
     <!-- REGISTER FORM
@@ -227,6 +225,23 @@ export default {
     },
     /* DOLOGIN METHOD*/
 
+    /* logii */
+    logiin() {
+      console.log(' metodo logiin')
+
+      console.log(this.inputEmail, this.inputPassword)
+      signInWithEmailAndPassword(auth, this.inputEmail,this.inputEmail)
+      .then((cred) => {
+          console.log('Usuario logeado: ', cred.user)
+          this.isLoggedIn = true
+        })
+        .catch((err) => {
+          console.log(err.message)
+        })
+      
+    },
+    /* logiin */
+
     /* DOLOGOUT METHOD*/
     doLogOut() {
       console.log('logout')
@@ -243,6 +258,7 @@ export default {
     }
     /* DOLOGOUT METHOD*/
   }
+
   /* METODOS */ 
 }
 </script>
