@@ -15,13 +15,13 @@
                 <div class="collapse navbar-collapse div-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a @click="goHome" class="link-nav semibold-ligth-green-med" href="#">PROYECTOS</a>
+                            <a @click="goProjects" class="link-nav semibold-ligth-green-med" href="#">PROYECTOS</a>
                         </li>
                         <li class="nav-item">
                             <a class="link-nav semibold-ligth-green-med" href="#">FOROS</a>
                         </li>
                         <li class="nav-item">
-                            <a class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
+                            <a @click="goHome" class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
                         </li>                        
                     </ul>
                     <div v-if="!isLoggedIn" class="img-user">
@@ -63,6 +63,9 @@ export default {
         },
         goLogout() {
             this.$emit('go-logout')
+        },
+        goProjects() {
+           this.$emit('go-all-projects') 
         },
         userState() {
             onAuthStateChanged(auth, (user) => {
