@@ -2,7 +2,8 @@
   <header class="header">
     <NavBar @go-home="viewHome"
       @go-auth="viewAuth"
-      @go-project-register="viewProjectRegister"></NavBar>
+      @go-project-register="viewProjectRegister"
+      @go-logout="doLogOut"></NavBar>
   </header>
 
   <main>
@@ -195,9 +196,7 @@
     <div v-show="authUser" class="m-5">
       <AuthUser></AuthUser>
     </div>
-  </div>
-
-   
+  </div>  
 
 
   
@@ -285,6 +284,18 @@ export default {
       } else {
         console.log('Documento no encontrado.');
       }
+    },
+    doLogOut() {
+      console.log('logout')
+      signOut(auth)
+        .then(() => {
+          this.isLoggedIn = false
+          alert('The user signed out')
+        })
+        .catch((err) => {
+          console.log(err.message)
+          alert(err.message)
+        })
     },
 
     //------------------------------CHANGE VIEW------------------------------
@@ -378,7 +389,7 @@ export default {
 
   },
   beforeUnmount() {
-
+    this.doLogOut()
   }
 }
 
@@ -388,7 +399,7 @@ export default {
 //-------------------------- imports de Firebase ---------------------------------
 import { onMounted } from 'vue'
 import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
-import { onAuthStateChanged } from "firebase/auth"
+import { onAuthStateChanged, signOut } from "firebase/auth"
 import { db, auth } from '@/firebase'
 
 
@@ -413,8 +424,7 @@ onMounted(() => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      // User is signed in, see docs for a list of available properties
-      // https://firebase.google.com/docs/reference/js/auth.user
+      
       const uid = user.uid
       console.log(uid)
       // ...

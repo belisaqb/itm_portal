@@ -24,49 +24,33 @@
                             <a class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
                         </li>                        
                     </ul>
-                    <div class="img-user">
+                    <div v-if="!isLoggedIn" class="img-user">
                         <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
                     </div>
+                    <div v-if="isLoggedIn" class="img-user">
+                        <button @click="goLogout" class="nav-buttons"><img src="@/assets/svg/logout.svg" alt="logout"></button>
+                    </div>
                     <div class="notifications">
-                        <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="user"></button>
+                        <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="notifications"></button>
                     </div>
                 </div>
             </div>
         </nav>
-
-        <!-- <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                        <li class="nav-item">
-                            <a @click="goHome" class="nav-link active" aria-current="page" href="#">Inicio</a>
-                        </li>
-                        <li class="nav-item">
-                            <a @click="goAuth" class="nav-link" href="#">Auth</a>
-                        </li>
-                        <li class="nav-item">
-                            <a @click="goProjectRegister" class="nav-link" href="#">Crear Proyecto</a>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-                        <button class="btn btn-outline-success" type="submit">Search</button>
-                    </form>
-                </div>
-            </div>
-        </nav> -->
+        
     </div>
 </template>
 
 <script>
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from '@/firebase'
+
 export default {
     name: 'NavBar',
+    data() {
+        return {
+            isLoggedIn: false
+        }
+    },
     methods: {
         goHome() {
             this.$emit('go-home')
@@ -76,8 +60,25 @@ export default {
         },
         goProjectRegister() {
             this.$emit('go-project-register')
+        },
+        goLogout() {
+            this.$emit('go-logout')
+        },
+        userState() {
+            onAuthStateChanged(auth, (user) => {
+                if (user) {        
+                    console.log(user.uid)  
+                    this.isLoggedIn = true                  
+                } else {
+                    this.isLoggedIn = false
+                }
+            });
         }
-    }
+    },
+    mounted() {
+        this.userState()
+    },
+    
 }
 
 
