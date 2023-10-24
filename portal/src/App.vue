@@ -15,6 +15,8 @@
         <h1 v-if="news" class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
         <h1 v-if="allProjects" class="text-center pt-4 black-dark-blue-xlg">PROYECTOS</h1>
 
+        <PruebaProfile v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname" :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"></PruebaProfile>
+
         <div class="d-flex justify-content-center mt-3 dropdown mx-2">
           <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button" data-bs-toggle="dropdown"
             aria-expanded="false">
@@ -116,7 +118,7 @@
     </div>
 
     <div v-show="authUser" class="m-5">
-      <AuthUser></AuthUser>
+      <AuthUser @go-profile="goCurrentUserProfile"></AuthUser>
     </div>
   </div>  
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
@@ -142,6 +144,8 @@ import ProjectDetails from './components/ProjectDetails.vue'
 import SideBar from './components/SideBar.vue'
 import NewsCard from './components/NewsCard.vue'
 
+import PruebaProfile from './components/PruebaProfile.vue'
+
 export default {
   name: 'App',
   data() {
@@ -153,13 +157,16 @@ export default {
       projectDetails: false,
       news: true,
       allProjects: false,
+      currentUserProfile: false,
 
 
       //-------------------Init---------------
       categories: [],
       projects: [],
       projectId: '',
-      singleProject: {}
+      uid: '',
+      singleProject: {},
+      currentUser: {}
     }
   },
   components: {
@@ -169,7 +176,8 @@ export default {
     ProjectCard,
     ProjectDetails,
     SideBar,
-    NewsCard
+    NewsCard,
+    PruebaProfile
   },
   methods: {
     filterCategory(idToMatch) {
@@ -181,7 +189,7 @@ export default {
       this.projectId = data
 
       // console.log('getting: ', this.fetchDataById(data.id))
-      const getProject = await this.fetchDataById(data.id)
+      const getProject = await this.fetchDataById('projects',data.id)
       this.singleProject = getProject
       this.showProjectDetails = true
 
@@ -191,8 +199,8 @@ export default {
 
 
     },
-    async getDocumentById(documentId) {
-      const docRef = doc(db, 'projects', documentId)
+    async getDocumentById(collection, documentId) {
+      const docRef = doc(db, collection, documentId)
       const docSnap = await getDoc(docRef)
       if (docSnap.exists()) {
         // console.log('Datos del documento:', docSnap.data())
@@ -202,8 +210,8 @@ export default {
         return null;
       }
     },
-    async fetchDataById(documentId) {
-      const documentData = await this.getDocumentById(documentId);
+    async fetchDataById(collection, documentId) {
+      const documentData = await this.getDocumentById(collection, documentId);
       if (documentData) {
         // Maneja los datos del documento aquí
         // console.log('Datos del documento:', documentData);
@@ -211,6 +219,15 @@ export default {
       } else {
         console.log('Documento no encontrado.');
       }
+    },
+    async goCurrentUserProfile() {
+      const user = auth.currentUser;    
+
+      const getCurrentUser = await this.fetchDataById('users', user.uid);
+      this.currentUser = getCurrentUser;
+      console.log(this.currentUser)
+
+      this.changeView(5)  
     },
     doLogOut() {
       console.log('logout')
@@ -223,6 +240,7 @@ export default {
           console.log(err.message)
           alert(err.message)
         })
+      this.viewHome();
     },
 
     //------------------------------CHANGE VIEW------------------------------
@@ -235,7 +253,8 @@ export default {
           this.projectDetails = false,
           this.projectRegister = false,
           this.authUser = false
-          this.allProjects = false
+          this.allProjects = false,
+          this.currentUserProfile = false
           break
 
         //Auth
@@ -243,7 +262,8 @@ export default {
           this.home = false
           this.projectDetails = false,
           this.projectRegister = false,
-          this.authUser = true
+          this.authUser = true,
+          this.currentUserProfile = false
           break
         //ProjectDetails
         case 2:
@@ -251,8 +271,9 @@ export default {
           this.news = false,
           this.projectDetails = true,
           this.projectRegister = false,
-            this.authUser = false
-          this.allProjects = false
+          this.authUser = false
+          this.allProjects = false,
+          this.currentUserProfile = false
           break
         //ProjectRegister
         case 3:
@@ -260,8 +281,9 @@ export default {
           this.news = false,
           this.projectDetails = false,
           this.projectRegister = true,
-            this.authUser = false
-          this.allProjects = false
+          this.authUser = false
+          this.allProjects = false,
+          this.currentUserProfile = false
           break
         //AllProjects
         case 4:
@@ -270,7 +292,17 @@ export default {
           this.projectDetails = false,
           this.projectRegister = false,
           this.authUser = false,
-          this.allProjects = true
+          this.allProjects = true,
+          this.currentUserProfile = false
+          break
+        case 5:
+          this.home = false
+          this.news = false,
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false,
+          this.allProjects = false,
+          this.currentUserProfile = true
           break
       }
     },
@@ -285,7 +317,7 @@ export default {
     },
     viewAllProjects() {
       this.changeView(4)
-    }
+    },
 
   },
   mounted: function () {
@@ -332,6 +364,18 @@ export default {
     //-----------------Get Projects------------------------
 
 
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+
+        this.uid = user.uid
+        console.log(this.uid)
+        // ...
+      } else {
+        this.uid = ''
+      }
+    });
+
+
   },
   beforeUnmount() {
     this.doLogOut()
@@ -367,17 +411,17 @@ loadBootstrap();
 
 onMounted(() => {
 
-  onAuthStateChanged(auth, (user) => {
-    if (user) {
+  // onAuthStateChanged(auth, (user) => {
+  //   if (user) {
       
-      const uid = user.uid
-      console.log(uid)
-      // ...
-    } else {
-      // User is signed out
-      // ...
-    }
-  });
+  //     uid = user.uid
+  //     console.log(uid)
+  //     // ...
+  //   } else {
+  //     // User is signed out
+  //     // ...
+  //   }
+  // });
 })
 </script>
 
