@@ -10,8 +10,12 @@
   <main>
     <SideBar></SideBar>
 
+    
+
+
     <section class="content" id="content">
-      <div class="content-section">
+      <div class="content-section ms-5">
+        <PerfilUser></PerfilUser>
         <h1 v-if="news" class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
         <h1 v-if="allProjects" class="text-center pt-4 black-dark-blue-xlg">PROYECTOS</h1>
 
@@ -97,7 +101,7 @@
 
 
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
-  <div class="m-5 p-5">
+  <div class="">
     <div v-if="projectRegister" class="m-5">
       <ProjectRegister class="col-6" :categories="categories">
       </ProjectRegister>
@@ -117,7 +121,7 @@
       </ProjectDetails>
     </div>
 
-    <div v-show="authUser" class="m-5">
+    <div v-show="authUser" class="">
       <AuthUser @go-profile="goCurrentUserProfile"></AuthUser>
     </div>
   </div>  
@@ -143,6 +147,7 @@ import ProjectCard from './components/ProjectCard.vue';
 import ProjectDetails from './components/ProjectDetails.vue'
 import SideBar from './components/SideBar.vue'
 import NewsCard from './components/NewsCard.vue'
+import PerfilUser from './components/PerfilUser.vue'
 
 import PruebaProfile from './components/PruebaProfile.vue'
 
@@ -177,7 +182,8 @@ export default {
     ProjectDetails,
     SideBar,
     NewsCard,
-    PruebaProfile
+    PruebaProfile,
+    PerfilUser
   },
   methods: {
     filterCategory(idToMatch) {

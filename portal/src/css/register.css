@@ -51,6 +51,17 @@
     background: #00376A;
   }
 
+  .perfil-button {
+    border: none;
+    width: 60%;
+    height: 60px;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: white;
+    background: #00376A;
+  }
+
   .register-button:hover {
     color: #00C497;
   }

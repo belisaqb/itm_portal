@@ -35,4 +35,16 @@
     // align-items: center;
 }
 
+.ms-6{
+    margin-left: 15rem;
+}
 
+
+.dark-blue-container{
+    @include mixins.set-background-color(vars.$clr-dark-blue);
+    margin-right: 2rem;
+}
+.dark-blue-container-button{
+    @include mixins.set-background-color(vars.$clr-dark-blue);
+    
+}
