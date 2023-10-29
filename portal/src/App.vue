@@ -8,10 +8,7 @@
   </header>
 
   <main>
-    <SideBar></SideBar>
-
-    
-
+    <SideBar @categorySelected="updateSelectedCategory"></SideBar>
 
     <section class="content" id="content">
       <div class="content-section ms-5">
@@ -108,12 +105,13 @@
     </div>
 
     <div v-if="allProjects" class="row">
-      <div v-for="(project, index) in projects" :key="index" class="col my-2">
+      <div v-for="(project, index) in projectsList" :key="index" class="col my-2">
         <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-          :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
+        :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
         </ProjectCard>
       </div>
     </div>
+
 
     <div v-if="projectDetails">
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
@@ -127,8 +125,6 @@
   </div>  
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
 
-
-  
 </template>
 
 
@@ -163,7 +159,7 @@ export default {
       news: true,
       allProjects: false,
       currentUserProfile: false,
-
+      selectedCategory: null,
 
       //-------------------Init---------------
       categories: [],
@@ -171,7 +167,8 @@ export default {
       projectId: '',
       uid: '',
       singleProject: {},
-      currentUser: {}
+      currentUser: {},
+      projectsList: [],
     }
   },
   components: {
@@ -198,7 +195,7 @@ export default {
       const getProject = await this.fetchDataById('projects',data.id)
       this.singleProject = getProject
       this.showProjectDetails = true
-
+      this.filteredProjects = this.projectsList;
       // console.log(this.singleProject)
 
       this.changeView(2)
@@ -235,6 +232,7 @@ export default {
 
       this.changeView(5)  
     },
+
     doLogOut() {
       console.log('logout')
       signOut(auth)
@@ -248,6 +246,14 @@ export default {
         })
       this.viewHome();
     },
+
+    updateSelectedCategory(categoryId) {
+      console.log('updateSelectedCategory llamado con categoryId:', categoryId);
+      // Filtra los proyectos según la categoría seleccionada (categoryId) y asigna los resultados a projectsList.
+      this.projectsList = this.projects.filter(project => project.id_category === categoryId);
+      this.changeView(4);
+    },
+  
 
     //------------------------------CHANGE VIEW------------------------------
     changeView(view) {
@@ -328,6 +334,8 @@ export default {
   },
   mounted: function () {
 
+    this.projectsList = [];
+
     //----------------------Get Categories-----------------
     const categoriesRef = collection(db, 'categories')
     getDocs(categoriesRef)
@@ -380,12 +388,14 @@ export default {
         this.uid = ''
       }
     });
-
+    console.log('Categorías cargadas:', this.categories);
+    console.log('Proyectos cargados:', this.projects);
 
   },
   beforeUnmount() {
     this.doLogOut()
-  }
+  },
+
 }
 
 </script>
@@ -436,6 +446,3 @@ onMounted(() => {
 
 
 </style>
-
-
-
