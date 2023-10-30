@@ -1,4 +1,5 @@
 <template>
+  
   <header class="header">
     <NavBar @go-home="viewHome"
       @go-auth="viewAuth"
@@ -6,12 +7,12 @@
       @go-logout="doLogOut"
       @go-all-projects="viewAllProjects"></NavBar>
   </header>
-
   <main>
     <SideBar></SideBar>
-
     <section class="content" id="content">
+      
       <div class="content-section">
+    
         <h1 v-if="news" class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
         <h1 v-if="allProjects" class="text-center pt-4 black-dark-blue-xlg">PROYECTOS</h1>
 
@@ -86,9 +87,27 @@
               </div>
             </div>
            
+            <div class="col-md-6 mb-4">
+              <div class="card-content ">
+                <div class="card-container">
+                  <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
+                  <div class="position-absolute w-100 overlay">
+                    <div class="d-flex mx-2 positionY justify-content-between">
+                      <p class="bold-white-lg">ITM OFICIAL</p>
+                      <p class="bold-white-lg">20/26/2023</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="pt-3">
+                  <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
+                  </h2>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+    
     </section>
   </main>
 
@@ -140,7 +159,8 @@ import ProjectRegister from './components/ProjectRegister.vue';
 import ProjectCard from './components/ProjectCard.vue';
 import ProjectDetails from './components/ProjectDetails.vue'
 import SideBar from './components/SideBar.vue'
-import NewsCard from './components/NewsCard.vue'
+//import DetailsProyects from './components/DetailsProyects.vue'
+//import NewsCard from './components/NewsCard.vue'
 
 export default {
   name: 'App',
@@ -169,8 +189,8 @@ export default {
     ProjectCard,
     ProjectDetails,
     SideBar,
-    NewsCard
-  },
+   // DetailsProyects,
+},
   methods: {
     filterCategory(idToMatch) {
       const filteredCategories = this.categories.filter(category => category.id === idToMatch)
