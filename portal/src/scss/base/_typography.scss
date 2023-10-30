@@ -26,6 +26,17 @@
     @include mixins.set-font(vars.$fw-bold, vars.$fs-lg, vars.$clr-dark-blue);
 }
 
+
+.bold-dark-blue-xlg{
+    @include mixins.set-font(vars.$fw-bold, vars.$fs-xlg, vars.$clr-dark-blue);
+}
+.light-dark-blue-xm{
+    @include mixins.set-font(vars.$fw-ligth, vars.$fs-xm, vars.$clr-dark-blue);
+}
+.light-ligth-green-xm{
+    @include mixins.set-font(vars.$fw-ligth, vars.$fs-xm, vars.$clr-ligth-green);
+}
+
 .bold-white-lg{
     @include mixins.set-font(vars.$fw-bold, vars.$fs-lg, vars.$clr-white);
     // background-color: rgba(0, 0, 0, 0.250);

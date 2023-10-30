@@ -435,6 +435,19 @@ main {
   background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0), rgb(0, 0, 0)); /* Ajusta la opacidad y el color del degradado según tus preferencias */
 }
 
+.ms-6 {
+  margin-left: 15rem;
+}
+
+.dark-blue-container {
+  background-color: rgb(0, 45, 92);
+  margin-right: 2rem;
+}
+
+.dark-blue-container-button {
+  background-color: rgb(0, 45, 92);
+}
+
 .semibold-ligth-green-med {
   font-weight: 600;
   font-size: 1rem;
@@ -471,6 +484,24 @@ main {
   color: rgb(0, 45, 92);
 }
 
+.bold-dark-blue-xlg {
+  font-weight: 700;
+  font-size: 2rem;
+  color: rgb(0, 45, 92);
+}
+
+.light-dark-blue-xm {
+  font-weight: 300;
+  font-size: 1.2rem;
+  color: rgb(0, 45, 92);
+}
+
+.light-ligth-green-xm {
+  font-weight: 300;
+  font-size: 1.2rem;
+  color: rgb(60, 236, 200);
+}
+
 .bold-white-lg {
   font-weight: 700;
   font-size: 1.5rem;
@@ -497,4 +528,8 @@ main {
     font-size: 1.2rem;
     color: rgb(255, 255, 255);
   }
+}
+
+.img-button {
+  width: 20%;
 }

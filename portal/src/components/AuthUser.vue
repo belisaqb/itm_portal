@@ -1,5 +1,4 @@
 <template>
-
   <!-- REGISTER SECTION -->
   <div id="registration-popup" class="registration-popup">
     <div class="registration-modal">
@@ -16,17 +15,20 @@
         <input v-model="carnet" type="text" id="carnet" class="input-field" placeholder="carnet" required>
 
         <label for="inputEmail">CORREO ELECTRONICO</label>
-        <input v-model="inputEmail" type="email" id="inputEmail" class="input-field" placeholder="correo electronico" required>
+        <input v-model="inputEmail" type="email" id="inputEmail" class="input-field" placeholder="correo electronico"
+          required>
 
         <label for="inputPassword">CONTRASEÑA</label>
-        <input v-model="inputPassword" type="password" id="inputPassword" class="input-field" placeholder="contraseña" required>
+        <input v-model="inputPassword" type="password" id="inputPassword" class="input-field" placeholder="contraseña"
+          required>
 
         <label for="verifyPassword">VERIFICAR CONTRASEÑA</label>
         <input type="password" id="verifyPassword" class="input-field" placeholder="verificar contraseña" required>
         <div id="password-error" class="error-message" style="color: red; display: none;">Error al registrar usuario</div>
 
         <div class="button-container">
-          <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button" class="register-button">REGISTRAR</button>
+          <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button"
+            class="register-button">REGISTRAR</button>
           <hr class="line-between-buttons">
           <button @click="isLogin = true" id="login-button" type="button" class="login-button">INICIAR SESION</button>
         </div>
@@ -46,13 +48,16 @@
       <form class="form-display" @submit.prevent="doLogin"> <!-- doLogin -->
 
         <label for="correo">CORREO ELECTRONICO</label>
-        <input v-model="inputEmail" id="correo" class="input-field" type="email" name="correo" placeholder="correo electrónico" required>
+        <input v-model="inputEmail" id="correo" class="input-field" type="email" name="correo"
+          placeholder="correo electrónico" required>
 
         <label for="contraseña">CONTRASEÑA</label>
-        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña" placeholder="contraseña" required>
+        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña"
+          placeholder="contraseña" required>
 
         <div class="button-container">
-          <button :disabled="!inputEmail || !inputPassword" @click="doLogin" type="button" class="register-button">INICIAR SESION</button>
+          <button :disabled="!inputEmail || !inputPassword" @click="doLogin" type="button"
+            class="register-button">INICIAR SESION</button>
           <hr class="line-between-buttons">
           <button id="register-button" type="button" class="login-button">REGISTRAR</button>
         </div>
@@ -118,7 +123,7 @@
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth } from '@/firebase'
 import { db } from "@/firebase";
-import { collection, addDoc } from "firebase/firestore";
+import { doc, setDoc } from "firebase/firestore";
 
 // const email = ref('')
 // const password = ref('')
@@ -139,54 +144,56 @@ export default {
     }
   },
 
-  /* METODOS */ 
+  /* METODOS */
   methods: {
 
-  /* DOREGISTER METHOD*/  
-  doRegister() {
-    const firstname = document.getElementById('firstname').value;
-    const lastname = document.getElementById('lastname').value;
-    const carnet = document.getElementById('carnet').value;
-    const inputEmail = document.getElementById('inputEmail').value;
-    const inputPassword = document.getElementById('inputPassword').value;
+    /* DOREGISTER METHOD*/
+    doRegister() {
+      const firstname = document.getElementById('firstname').value;
+      const lastname = document.getElementById('lastname').value;
+      const carnet = document.getElementById('carnet').value;
+      const inputEmail = document.getElementById('inputEmail').value;
+      const inputPassword = document.getElementById('inputPassword').value;
 
-    if (this.inputPassword !== document.getElementById('verifyPassword').value) {
-    document.getElementById('password-error').style.display = 'block';
-    return;
-    }else {
-    document.getElementById('password-error').style.display = 'none';
-  }
+      if (this.inputPassword !== document.getElementById('verifyPassword').value) {
+        document.getElementById('password-error').style.display = 'block';
+        return;
+      } else {
+        document.getElementById('password-error').style.display = 'none';
+      }
 
-    console.log('REGISTRO')
-    console.log('Datos del usuario:', firstname , lastname, carnet, inputEmail, inputPassword);
+      console.log('REGISTRO')
+      console.log('Datos del usuario:', firstname, lastname, carnet, inputEmail, inputPassword);
 
-    // Después de registrar al usuario en Firebase Authentication, guarda sus datos en Firestore
-    createUserWithEmailAndPassword(auth, inputEmail, inputPassword)
+      // Después de registrar al usuario en Firebase Authentication, guarda sus datos en Firestore
+      createUserWithEmailAndPassword(auth, inputEmail, inputPassword)
         .then((userCredential) => {
           const user = userCredential.user;
-          const usuariosCollection = collection(db, "users");
+          // const usuariosCollection = collection(db, "users");
+          const userDocRef = doc(db, 'users', user.uid);
 
-    // Guarda la información adicional en la colección "users" de Firestore
-    const userData = {
-      firstname: this.firstname,
-      lastname: this.lastname,
-      carnet: this.carnet,
-      inputEmail: this.inputEmail,
-      inputPassword: this.inputPassword,
-    };
+          // Guarda la información adicional en la colección "users" de Firestore
+          const userData = {
+            firstname: this.firstname,
+            lastname: this.lastname,
+            carnet: this.carnet,
+            inputEmail: this.inputEmail,
+            inputPassword: this.inputPassword,
+          };
 
-    // Agrega el documento del usuario con los datos adicionales a la colección "users"
-    addDoc(usuariosCollection, userData)
+
+          // Agrega el documento del usuario con los datos adicionales a la colección "users"
+          setDoc(userDocRef, userData)
             .then(() => {
               console.log("Usuario registrado con éxito", user);
               this.switchToLoginModal();
-              this.isLogin = true; 
+              this.isLogin = true;
               this.inputEmail = '';
               this.inputPassword = '';
-              this.firstname= '',
-              this.lastname= '',
-              this.carnet= '',
-              this.verifyPassword= '';
+              this.firstname = '',
+                this.lastname = '',
+                this.carnet = '',
+                this.verifyPassword = '';
             })
             .catch((error) => {
               console.error("Error al guardar datos en Firestore:", error);
@@ -201,7 +208,7 @@ export default {
         });
     },
     /* DOREGISTER METHOD*/
-    
+
     switchToLoginModal() {
       const registrationModal = document.getElementById('registration-popup');
       registrationModal.style.display = 'none';
@@ -218,6 +225,7 @@ export default {
         .then((cred) => {
           console.log('The user logged in:', cred.user)
           this.isLoggedIn = true
+          this.$emit('go-profile');
         })
         .catch((err) => {
           console.log(err.message)
@@ -230,15 +238,15 @@ export default {
       console.log(' metodo logiin')
 
       console.log(this.inputEmail, this.inputPassword)
-      signInWithEmailAndPassword(auth, this.inputEmail,this.inputEmail)
-      .then((cred) => {
+      signInWithEmailAndPassword(auth, this.inputEmail, this.inputEmail)
+        .then((cred) => {
           console.log('Usuario logeado: ', cred.user)
           this.isLoggedIn = true
         })
         .catch((err) => {
           console.log(err.message)
         })
-      
+
     },
     /* logiin */
 
@@ -255,10 +263,10 @@ export default {
           console.log(err.message)
           alert(err.message)
         })
-    }
+    },
     /* DOLOGOUT METHOD*/
   }
 
-  /* METODOS */ 
+  /* METODOS */
 }
 </script>

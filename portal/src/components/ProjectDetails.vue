@@ -18,11 +18,11 @@
 export default {
     name: 'ProjectDetails',
     props: {
-        id: String,
-        image: { type: String, default: 'https://firebasestorage.googleapis.com/v0/b/portal-itm.appspot.com/o/images%2Fplaceholder-image.png?alt=media&token=614d5ce1-6099-4572-ace6-10d240c44e68' },
-        projectName: String,
-        projectDescription: String,
-        projectCategory: String
+      id: String,
+      image: { type: String, default: 'https://firebasestorage.googleapis.com/v0/b/portal-itm.appspot.com/o/images%2Fplaceholder-image.png?alt=media&token=614d5ce1-6099-4572-ace6-10d240c44e68' },
+      projectName: String,
+      projectDescription: String,
+      projectCategory: String
     }
 }
 </script>
