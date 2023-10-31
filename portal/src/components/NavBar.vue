@@ -71,7 +71,7 @@ export default {
         userState() {
             onAuthStateChanged(auth, (user) => {
                 if (user) {
-                    console.log(user.uid)
+                    // console.log(user.uid)
                     this.isLoggedIn = true
                 } else {
                     this.isLoggedIn = false

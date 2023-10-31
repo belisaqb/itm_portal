@@ -13,7 +13,7 @@
     <section class="content" id="content">
       <div class="content-section ms-5">
 
-        <DetailsProject></DetailsProject>
+        
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
         <PerfilUser v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname"
@@ -185,6 +185,14 @@
         </div>
 
 
+        <!----------------- DETALLE DE PROYECTO ------------------------->
+        <DetailsProject v-if="projectDetails" :image="singleProject.image" :projectName="singleProject.name"
+          :projectDescription="singleProject.description" :projectCategory="singleProject.category"></DetailsProject>
+
+
+
+        <!----------------- PANEL ADMIN ------------------------->
+        <AdminView v-if="adminPanel"></AdminView>
 
 
       </div>
@@ -198,7 +206,8 @@
 
 
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
-  <div class="">
+  <div class="">    
+
     <div v-if="projectRegister" class="m-5">
       <ProjectRegister class="col-6" :categories="categories">
       </ProjectRegister>
@@ -250,6 +259,8 @@ import PerfilUser from './components/PerfilUser.vue'
 import DetailsProject from './components/DetailsProject.vue'
 import LowFooter from './components/LowFooter.vue'
 
+import AdminView from './components/AdminView.vue'
+
 
 export default {
   name: 'App',
@@ -263,6 +274,7 @@ export default {
       news: true,
       allProjects: false,
       currentUserProfile: false,
+      adminPanel: false,
       selectedCategory: null,
 
       //-------------------Variables Init---------------
@@ -289,7 +301,8 @@ export default {
     NewsCard,
     PerfilUser,
     DetailsProject,
-    LowFooter
+    LowFooter,
+    AdminView
   },
 
   //---------------Methods---------------------
@@ -337,14 +350,20 @@ export default {
 
       const getCurrentUser = await this.fetchDataById('users', user.uid);
       this.currentUser = getCurrentUser;
-      console.log(this.currentUser)
+      
 
-      this.changeView(5)
+      if (user.uid == 'YRsNBEnQm3eykok24Wu2DedqeNp2') {
+        this.viewAdminPanel()
+      } else {
+        this.changeView(5)
+      }
+
+      
     },
 
     doLogOut() {
       //------------Method to logOut--------------
-      console.log('logout')
+      // console.log('logout')
       signOut(auth)
         .then(() => {
           this.isLoggedIn = false
@@ -362,8 +381,8 @@ export default {
       console.log('updateSelectedCategory llamado con categoryId:', categoryId);
       // Filtra los proyectos según la categoría seleccionada (categoryId) y asigna los resultados a projectsList.
       this.projects = this.allProjectsList.filter(project => project.category === categoryId);
-      console.log(this.allProjectsList)
-      console.log(this.projects)
+      // console.log(this.allProjectsList)
+      // console.log(this.projects)
       this.changeView(4);
     },
 
@@ -374,61 +393,78 @@ export default {
         ///////////////////Home-News///////////////////////
         case 0:
           this.home = true,
-            this.news = true,
-            this.projectDetails = false,
-            this.projectRegister = false,
-            this.authUser = false
+          this.news = true,
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false
           this.allProjects = false,
-            this.currentUserProfile = false
+          this.currentUserProfile = false,
+          this.adminPanel = false
           break
 
         ///////////////////Auth//////////////////
         case 1:
           this.home = false
           this.projectDetails = false,
-            this.projectRegister = false,
-            this.authUser = true,
-            this.currentUserProfile = false
+          this.projectRegister = false,
+          this.authUser = true,
+          this.currentUserProfile = false,
+          this.adminPanel = false
           break
         ///////////////////ProjectDetails///////////////////
         case 2:
           this.home = false
           this.news = false,
-            this.projectDetails = true,
-            this.projectRegister = false,
-            this.authUser = false
+          this.projectDetails = true,
+          this.projectRegister = false,
+          this.authUser = false
           this.allProjects = false,
-            this.currentUserProfile = false
+          this.currentUserProfile = false,
+          this.adminPanel = false
           break
         ///////////////////ProjectRegister///////////////////
         case 3:
           this.home = false
           this.news = false,
-            this.projectDetails = false,
-            this.projectRegister = true,
-            this.authUser = false
+          this.projectDetails = false,
+          this.projectRegister = true,
+          this.authUser = false
           this.allProjects = false,
-            this.currentUserProfile = false
+          this.currentUserProfile = false,
+          this.adminPanel = false
           break
         ///////////////////AllProjects///////////////////
         case 4:
           this.home = false
           this.news = false,
-            this.projectDetails = false,
-            this.projectRegister = false,
-            this.authUser = false,
-            this.allProjects = true,
-            this.currentUserProfile = false
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false,
+          this.allProjects = true,
+          this.currentUserProfile = false,
+          this.adminPanel = false
           break
         ///////////////////Current User Profile////////////////////
         case 5:
           this.home = false
           this.news = false,
-            this.projectDetails = false,
-            this.projectRegister = false,
-            this.authUser = false,
-            this.allProjects = false,
-            this.currentUserProfile = true
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false,
+          this.allProjects = false,
+          this.currentUserProfile = true,
+          this.adminPanel = false
+          break
+        ///////////////////Admin Panel View////////////////////
+        case 6:
+          this.home = false
+          this.news = false,
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false,
+          this.allProjects = false,
+          this.currentUserProfile = false,
+          this.adminPanel = true
           break
       }
     },
@@ -447,6 +483,9 @@ export default {
     },
     viewFilteredProjects() {
       this.changeView(4)
+    },
+    viewAdminPanel() {
+      this.changeView(6)
     }
 
   },
@@ -505,8 +544,8 @@ export default {
       if (user) {
 
         this.uid = user.uid
-        console.log(this.uid)
-        // ...
+        // console.log(this.uid)
+        
       } else {
         this.uid = ''
       }

@@ -120,7 +120,7 @@
 
 <script>
 // import { ref } from 'vue'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '@/firebase'
 import { db } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -131,6 +131,7 @@ import { doc, setDoc } from "firebase/firestore";
 
 export default {
   name: 'AuthUser',
+  emits: ['go-profile'],
   data() {
     return {
       isLogin: true,
@@ -234,38 +235,38 @@ export default {
     },
     /* DOLOGIN METHOD*/
 
-    /* logii */
-    logiin() {
-      console.log(' metodo logiin')
+    // /* logii */
+    // logiin() {
+    //   console.log(' metodo logiin')
 
-      console.log(this.inputEmail, this.inputPassword)
-      signInWithEmailAndPassword(auth, this.inputEmail, this.inputEmail)
-        .then((cred) => {
-          console.log('Usuario logeado: ', cred.user)
-          this.isLoggedIn = true
-        })
-        .catch((err) => {
-          console.log(err.message)
-        })
+    //   console.log(this.inputEmail, this.inputPassword)
+    //   signInWithEmailAndPassword(auth, this.inputEmail, this.inputEmail)
+    //     .then((cred) => {
+    //       console.log('Usuario logeado: ', cred.user)
+    //       this.isLoggedIn = true
+    //     })
+    //     .catch((err) => {
+    //       console.log(err.message)
+    //     })
 
-    },
+    // },
     /* logiin */
 
     /* DOLOGOUT METHOD*/
-    doLogOut() {
-      console.log('logout')
-      signOut(auth)
-        .then((cred) => {
-          this.isLoggedIn = false
-          console.log('The user logged in:', cred.user)
-          // alert('The user signed out')
-        })
-        .catch((err) => {
-          console.log(err.message)
-          alert(err.message)
-        })
-    },
-    /* DOLOGOUT METHOD*/
+    // doLogOut() {
+    //   // console.log('logout')
+    //   signOut(auth)
+    //     .then((cred) => {
+    //       this.isLoggedIn = false
+    //       console.log('The user logged in:', cred.user)
+    //       // alert('The user signed out')
+    //     })
+    //     .catch((err) => {
+    //       console.log(err.message)
+    //       alert(err.message)
+    //     })
+    // },
+    // /* DOLOGOUT METHOD*/
   }
 
   /* METODOS */
