@@ -8,10 +8,12 @@
   <main>
     <!----------------- COMPONENT SIDE BAR ------------------------->
     <SideBar @categorySelected="updateSelectedCategory"></SideBar>
-    
+
     <!----------------- MAIN SECTION ------------------------->
     <section class="content" id="content">
       <div class="content-section ms-5">
+
+        <DetailsProject></DetailsProject>
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
         <PerfilUser v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname"
@@ -21,11 +23,11 @@
 
         <!----------------- NOVEDADES ------------------------->
         <div v-if="news">
-          <h1  class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
+          <h1 class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
 
           <div class="d-flex justify-content-center mt-3 dropdown mx-2">
-            <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button" data-bs-toggle="dropdown"
-              aria-expanded="false">
+            <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
               ORDENAR POR
             </button>
             <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
@@ -99,93 +101,100 @@
 
 
         </div>
-        
-        
+
+
         <!----------------- PROYECTOS ------------------------->
         <div v-if="allProjects">
-            <h1 class="text-center pt-4 black-dark-blue-xlg">PROYECTOS</h1>
+          <h1 class="text-center pt-4 black-dark-blue-xlg">PROYECTOS</h1>
 
-            <div class="d-flex justify-content-center mt-3 dropdown mx-2">
-              <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                ORDENAR POR
-              </button>
-              <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
-                <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
-                <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
-              </ul>
-            </div>
-
-            <div class="container mt-4">
-
-              <div class="row mx-1">
-
-                <NewsCard></NewsCard>
-                <NewsCard></NewsCard>
-                <NewsCard></NewsCard>
-
-                <div class="col-md-6 mb-4">
-                  <div class="card-content ">
-                    <div class="card-container">
-                      <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                      <div class="position-absolute w-100 overlay">
-                        <div class="d-flex mx-2 positionY justify-content-between">
-                          <p class="bold-white-lg">ITM OFICIAL</p>
-                          <p class="bold-white-lg">20/26/2023</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="pt-3">
-                      <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6 mb-4">
-                  <div class="card-content ">
-                    <div class="card-container">
-                      <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                      <div class="position-absolute w-100 overlay">
-                        <div class="d-flex mx-2 positionY justify-content-between">
-                          <p class="bold-white-lg">ITM OFICIAL</p>
-                          <p class="bold-white-lg">20/26/2023</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="pt-3">
-                      <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                    </div>
-                  </div>
-                </div>
-
-                <div class="col-md-6 mb-4">
-                  <div class="card-content ">
-                    <div class="card-container">
-                      <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                      <div class="position-absolute w-100 overlay">
-                        <div class="d-flex mx-2 positionY justify-content-between">
-                          <p class="bold-white-lg">ITM OFICIAL</p>
-                          <p class="bold-white-lg">20/26/2023</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div class="pt-3">
-                      <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                      </h2>
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-
+          <div class="d-flex justify-content-center mt-3 dropdown mx-2">
+            <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button"
+              data-bs-toggle="dropdown" aria-expanded="false">
+              ORDENAR POR
+            </button>
+            <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
+            </ul>
           </div>
+
+          <div class="container mt-4">
+
+            <div class="row mx-1">
+
+              <NewsCard></NewsCard>
+              <NewsCard></NewsCard>
+              <NewsCard></NewsCard>
+
+              <div class="col-md-6 mb-4">
+                <div class="card-content ">
+                  <div class="card-container">
+                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
+                    <div class="position-absolute w-100 overlay">
+                      <div class="d-flex mx-2 positionY justify-content-between">
+                        <p class="bold-white-lg">ITM OFICIAL</p>
+                        <p class="bold-white-lg">20/26/2023</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-3">
+                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <div class="card-content ">
+                  <div class="card-container">
+                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
+                    <div class="position-absolute w-100 overlay">
+                      <div class="d-flex mx-2 positionY justify-content-between">
+                        <p class="bold-white-lg">ITM OFICIAL</p>
+                        <p class="bold-white-lg">20/26/2023</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-3">
+                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <div class="card-content ">
+                  <div class="card-container">
+                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
+                    <div class="position-absolute w-100 overlay">
+                      <div class="d-flex mx-2 positionY justify-content-between">
+                        <p class="bold-white-lg">ITM OFICIAL</p>
+                        <p class="bold-white-lg">20/26/2023</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-3">
+                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
+                    </h2>
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+
+        </div>
+
+
+
 
       </div>
     </section>
+
+
   </main>
 
+  <!------------------ FOOTER --------------------------->
+  <LowFooter></LowFooter>
 
 
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
@@ -196,7 +205,7 @@
     </div>
 
     <div v-if="allProjects" class="row">
-      <div v-for="(project, index) in projectsList" :key="index" class="col my-2">
+      <div v-for="(project, index) in projects" :key="index" class="col my-2">
         <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
           :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
         </ProjectCard>
@@ -238,6 +247,8 @@ import ProjectDetails from './components/ProjectDetails.vue'
 import SideBar from './components/SideBar.vue'
 import NewsCard from './components/NewsCard.vue'
 import PerfilUser from './components/PerfilUser.vue'
+import DetailsProject from './components/DetailsProject.vue'
+import LowFooter from './components/LowFooter.vue'
 
 
 export default {
@@ -257,6 +268,7 @@ export default {
       //-------------------Variables Init---------------
       categories: [],
       projects: [],
+      allProjectsList: [],
       projectId: '',
       uid: '',
       singleProject: {},
@@ -267,7 +279,7 @@ export default {
 
   //------------Components---------------------
   components: {
-    
+
     NavBar,
     AuthUser,
     ProjectRegister,
@@ -275,7 +287,9 @@ export default {
     ProjectDetails,
     SideBar,
     NewsCard,
-    PerfilUser
+    PerfilUser,
+    DetailsProject,
+    LowFooter
   },
 
   //---------------Methods---------------------
@@ -347,7 +361,9 @@ export default {
       //------------Method to filter by category with the sidebar --------------
       console.log('updateSelectedCategory llamado con categoryId:', categoryId);
       // Filtra los proyectos según la categoría seleccionada (categoryId) y asigna los resultados a projectsList.
-      this.projectsList = this.projects.filter(project => project.id_category === categoryId);
+      this.projects = this.allProjectsList.filter(project => project.category === categoryId);
+      console.log(this.allProjectsList)
+      console.log(this.projects)
       this.changeView(4);
     },
 
@@ -426,8 +442,12 @@ export default {
       this.changeView(3)
     },
     viewAllProjects() {
+      this.projects = this.allProjectsList
       this.changeView(4)
     },
+    viewFilteredProjects() {
+      this.changeView(4)
+    }
 
   },
   mounted: function () {
@@ -475,6 +495,8 @@ export default {
       .catch((error) => {
         console.error('Error al obtener documentos: ', error)
       });
+
+    this.allProjectsList = this.projects;
     //-----------------Get Projects------------------------
 
 
@@ -492,12 +514,7 @@ export default {
     //----------------Get the currentUser-----------------
 
 
-    console.log('Categorías cargadas:', this.categories);
-    console.log('Proyectos cargados:', this.projects);
-    
-
-
-  },  
+  },
   beforeUnmount() {
     //---------------Before getting rid of the component-----------------
     this.doLogOut()
@@ -532,5 +549,4 @@ loadBootstrap();
 
 </script>
 
-<style>
-</style>
+<style></style>

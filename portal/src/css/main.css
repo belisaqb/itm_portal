@@ -146,7 +146,8 @@
 /* Centra el ul  */
 @media (max-width: 991.98px) {
   .navbar-nav {
-    text-align: center; /* Centra los elementos */
+    text-align: center;
+    /* Centra los elementos */
   }
   .img-user {
     margin-right: 2.45rem;
@@ -156,18 +157,36 @@
     margin-right: 2.45rem;
     margin-bottom: 0.45rem;
   }
+}
+@media only screen and (max-width: 991.98px) and (min-width: 768px) and (max-width: 993px) {
+  .notifications {
+    margin-bottom: 1rem;
+  }
+}
+@media only screen and (max-width: 991.98px) and (max-width: 767px) {
+  .notifications {
+    margin-bottom: 1rem;
+  }
+}
+@media (max-width: 991.98px) {
   .btn-hamburguer {
     /* Establece un ancho de 0 y un margen derecho de 0 para cerrar el botón */
     overflow: hidden;
   }
   .navbar-nav .nav-item {
-    margin: 0.5rem 0; /* Espaciado entre elementos */
+    margin: 0.5rem 0;
+    /* Espaciado entre elementos */
   }
   .navbar-collapse {
-    text-align: center; /* Centra el contenido del collapse */
+    text-align: center;
+    /* Centra el contenido del collapse */
   }
   .navbar-collapse .navbar-nav {
     margin: auto;
+  }
+  .nav-center {
+    padding-right: 0;
+    padding-left: 2rem;
   }
 }
 /* Animations */
@@ -299,6 +318,8 @@
           box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.175);
   border-top: none;
   padding-bottom: 2.1rem;
+  -webkit-transition: top 0.3s ease;
+  transition: top 0.3s ease;
 }
 @media only screen and (max-width: 560px) {
   #optionsContainer {
@@ -309,6 +330,11 @@
 .padding-options {
   padding-top: 3rem;
   padding-left: 0.3rem;
+}
+@media only screen and (max-width: 560px) {
+  .padding-options {
+    padding-top: 1.5rem;
+  }
 }
 
 #optionsContainer.show {
@@ -352,6 +378,16 @@
     display: inline-block;
   }
 }
+.floating-filter {
+  -webkit-transition: top 0.3s ease;
+  transition: top 0.3s ease;
+}
+
+.animate-down {
+  top: 170px !important;
+  /* Ajusta la posición debajo de las opciones */
+}
+
 main {
   display: -webkit-box;
   display: -ms-flexbox;
@@ -404,6 +440,21 @@ main {
 
 .dropdown-menu :hover {
   background-color: rgb(0, 45, 92) !important;
+}
+
+.footer-proyects {
+  background-color: rgb(0, 45, 92);
+  border: 4px solid rgb(0, 196, 151);
+}
+
+.txt-footer1 {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgb(0, 196, 151);
+}
+
+.margin-top-cart-proyects {
+  margin-top: 1rem;
 }
 
 .card-container {

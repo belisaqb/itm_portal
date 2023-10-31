@@ -1,12 +1,12 @@
 /* Sidebar */
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const floatingFilter = document.getElementById('filter');
     const optionsContainer = document.getElementById('optionsContainer');
     const closeButton = document.getElementById('closeButton');
 
     let isOpen = false;
 
-    floatingFilter.addEventListener('click', function(event) {
+    floatingFilter.addEventListener('click', function (event) {
         event.stopPropagation();
 
         if (!isOpen) {
@@ -16,8 +16,8 @@ document.addEventListener('DOMContentLoaded', function() {
             document.body.appendChild(optionsContainer);
             isOpen = true;
         } else {
-            optionsContainer.classList.remove('show');
-            optionsContainer.classList.add('hide');
+            //optionsContainer.classList.remove('show');
+            //optionsContainer.classList.add('hide');
             setTimeout(() => {
                 optionsContainer.style.display = 'none';
             }, 500); // 500ms es la duración de la animación
@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    closeButton.addEventListener('click', function(event) {
+    closeButton.addEventListener('click', function (event) {
         event.stopPropagation();
 
         optionsContainer.classList.remove('show');
@@ -37,7 +37,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 /* Sidebar */
-
 
 
 

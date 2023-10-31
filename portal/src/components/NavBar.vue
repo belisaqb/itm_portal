@@ -7,12 +7,12 @@
                     <input type="search" class="search-input" placeholder="Buscar">
                     <button class="search-button" type="submit"><img src="@/assets/svg/search2.svg" alt="search"></button>
                 </form>
-                <button class="navbar-toggler btn-hamburguer" id="hamburguer" type="button" data-bs-toggle="collapse"
-                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
-                    aria-label="Toggle navigation">
+                <button style="font-size: 0;" class="navbar-toggler btn-hamburguer" id="hamburguer" type="button"
+                    data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span><img src="@/assets/svg/menuHamburguesa.svg" alt="menu"></span>
                 </button>
-                <div class="collapse navbar-collapse div-collapse" id="navbarSupportedContent">
+                <div class=" nav-center collapse navbar-collapse div-collapse" id="navbarSupportedContent">
                     <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
                             <a @click="goProjects" class="link-nav semibold-ligth-green-med" href="#">PROYECTOS</a>
@@ -22,13 +22,14 @@
                         </li>
                         <li class="nav-item">
                             <a @click="goHome" class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
-                        </li>                        
+                        </li>
                     </ul>
                     <div v-if="!isLoggedIn" class="img-user">
                         <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
                     </div>
                     <div v-if="isLoggedIn" class="img-user">
-                        <button @click="goLogout" class="nav-buttons"><img src="@/assets/svg/logout.svg" alt="logout"></button>
+                        <button @click="goLogout" class="nav-buttons"><img src="@/assets/svg/logout.svg"
+                                alt="logout"></button>
                     </div>
                     <div class="notifications">
                         <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="notifications"></button>
@@ -36,7 +37,7 @@
                 </div>
             </div>
         </nav>
-        
+
     </div>
 </template>
 
@@ -65,13 +66,13 @@ export default {
             this.$emit('go-logout')
         },
         goProjects() {
-           this.$emit('go-all-projects') 
+            this.$emit('go-all-projects')
         },
         userState() {
             onAuthStateChanged(auth, (user) => {
-                if (user) {        
-                    console.log(user.uid)  
-                    this.isLoggedIn = true                  
+                if (user) {
+                    console.log(user.uid)
+                    this.isLoggedIn = true
                 } else {
                     this.isLoggedIn = false
                 }
@@ -81,7 +82,7 @@ export default {
     mounted() {
         this.userState()
     },
-    
+
 }
 
 

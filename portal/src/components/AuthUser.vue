@@ -186,7 +186,7 @@ export default {
           setDoc(userDocRef, userData)
             .then(() => {
               console.log("Usuario registrado con éxito", user);
-              this.switchToLoginModal();
+              // this.switchToLoginModal();
               this.isLogin = true;
               this.inputEmail = '';
               this.inputPassword = '';
@@ -194,6 +194,7 @@ export default {
                 this.lastname = '',
                 this.carnet = '',
                 this.verifyPassword = '';
+              this.$emit('go-profile');
             })
             .catch((error) => {
               console.error("Error al guardar datos en Firestore:", error);
