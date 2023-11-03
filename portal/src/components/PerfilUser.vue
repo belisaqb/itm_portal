@@ -1,11 +1,24 @@
 <template>
-  <div class="ps-4 ">
+  <div class="ps-4">
     <div class="row pt-4 mb-4">
       <div class="col-auto">
         <img src="../assets/svg/user-dark.svg" style="width: 70%;">
       </div>
       <div class="col mr-4">
-        <h1 class="bold-dark-blue-xlg">{{ firstName }} {{ lastName }}</h1>
+        <div style="display: flex;">
+          <h1 class="bold-dark-blue-xlg">
+            <span v-if="!editing">{{ editedFirstName }} {{ editedLastName }}</span>
+            <span v-else>
+              <input v-model="editedFirstName" type="text" />
+              <input v-model="editedLastName" type="text" />
+            </span>
+          </h1>
+          <button class="edit-button" @click="activateEditMode">
+            <img class="edit-img" src="../assets/svg/edit.svg">
+          </button>
+          <button @click="saveChanges" v-if="editing">Guardar</button>
+          <button @click="cancelEdit" v-if="editing">Cancelar</button>
+        </div>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
       </div>
       <div v-if="currentUser" class="col ms-6">
@@ -16,8 +29,7 @@
     </div>
 
     <div class="dark-blue-container">
-      <p class="light-ligth-green-xm p-3">ESTUDIANTE DE TERCER AÑO DE CARRERA, EL ÁREA QUE MAS LE GUSTA DE LA CARRERA ES
-        EL BACK'END Y EL FRONT-END</p>
+        <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange" placeholder="AGREGAR DESCRIPCION DEL USUARIO"></textarea>
     </div>
 
     <div class="row pt-4 mb-4 ms-1">
@@ -70,6 +82,9 @@ import ProjectCard from './ProjectCard.vue';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { db } from '@/firebase';
 
+import { db } from '@/firebase'
+import { collection, doc, updateDoc } from 'firebase/firestore'
+import NewsCard from './NewsCard.vue';
 
 export default {
   name: 'PerfilUser',
@@ -87,40 +102,67 @@ export default {
     email: String,
     carnet: String,
     uid: String,
-    currentUser: Boolean
+  },
+  data() {
+    return {
+      editing: false,
+      editedFirstName: this.firstName,
+      editedLastName: this.lastName, 
+      userDescription: '',
+    };
   },
   methods: {
-    addProject() {
-      this.$emit('add-project')
-      // this.$emit('add-project', { userId: this.uid })
+    activateEditMode() {
+      this.editing = true;
     },
-    getUserProjects() {
-      // Define la categoría por la que deseas filtrar
-      const authorId = this.uid; // Cambia esto según tu categoría deseada
+    cancelEdit() {
+      this.editing = false;
+      // Revierte a los valores originales si se cancela la edición
+      this.editedFirstName = this.firstName;
+      this.editedLastName = this.lastName;
+    },
+    saveChanges() {
+    // Emitir eventos para actualizar los valores en el componente padre
+    this.$emit('update:firstName', this.editedFirstName);
+    this.$emit('update:lastName', this.editedLastName);
 
-      // Crea una referencia a la colección "productos"
-      const projectsRef = collection(db, 'projects');
-
-      // Crea una consulta para filtrar por la categoría
-      const consultaFiltrada = query(projectsRef, where('userId', '==', authorId));
-
-      getDocs(consultaFiltrada)
-        .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            // Accede a los datos de cada producto
-            const project = doc.data();
-            this.ownProjects.push(project)
-          });
-        })
-        .catch((error) => {
-          console.error('Error al obtener proyectos filtrados:', error);
-        });
-      console.log(this.ownProjects)
+    // Verificar si this.uid tiene un valor válido
+    if (!this.uid) {
+      console.error('this.uid no está definido o es inválido.');
+      return;
     }
-  },
-  mounted() {
-    this.getUserProjects()
-  },
-}
 
+    // Crear una referencia al documento del usuario en Firebase
+    const userRef = doc(db, 'users', this.uid);
+
+    // Actualizar el documento del usuario en Firebase
+    updateDoc(userRef, {
+      firstName: this.editedFirstName,
+      lastName: this.editedLastName,
+    })
+      .then(() => {
+        this.editing = false;
+      })
+      .catch((error) => {
+        console.error('Error al guardar los cambios: ', error);
+      });
+    },
+
+    onDescriptionChange() {
+      // Este método se llama cuando el usuario cambia la descripción
+      if (this.auth && this.uid) {
+        const userRef = collection(db, 'users').doc(this.uid);
+        userRef.update({
+          description: this.userDescription, // Actualiza el campo de descripción
+        })
+          .then(() => {
+            console.log('Descripción actualizada con éxito.');
+          })
+          .catch((error) => {
+            console.error('Error al actualizar la descripción:', error);
+          });
+      }
+    },
+  },
+};
 </script>

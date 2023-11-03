@@ -27,9 +27,12 @@
                     <div v-if="!isLoggedIn" class="img-user">
                         <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
                     </div>
-                    <div v-if="isLoggedIn" class="img-user">
-                        <button @click="goLogout" class="nav-buttons"><img src="@/assets/svg/logout.svg"
-                                alt="logout"></button>
+                    <div v-if="isLoggedIn" class="img-user dropdown">
+                        <button class="nav-buttons" data-bs-toggle="dropdown"><img src="@/assets/svg/user.svg" alt="user"></button>
+                        <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+                            <li><a @click="goCurrentUserProfile" class="dropdown-item semibold-ligth-green-med" href="#">VER PERFIL</a></li>
+                            <li><a @click="goLogout" class="dropdown-item semibold-ligth-green-med" href="#">CERRAR SESIÓN</a></li>
+                        </ul>
                     </div>
                     <div class="notifications">
                         <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="notifications"></button>
@@ -77,6 +80,9 @@ export default {
                     this.isLoggedIn = false
                 }
             });
+        },
+        goCurrentUserProfile(){
+            this.$emit('go-current-user-profile')
         }
     },
     mounted() {

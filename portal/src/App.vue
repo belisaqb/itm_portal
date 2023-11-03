@@ -2,7 +2,7 @@
   <header class="header">
     <!----------------- COMPONENT NAV BAR ------------------------->
     <NavBar @go-home="viewHome" @go-auth="viewAuth" @go-project-register="viewProjectRegister" @go-logout="doLogOut"
-      @go-all-projects="viewAllProjects"></NavBar>
+      @go-all-projects="viewAllProjects" @go-current-user-profile="goCurrentUserProfile"></NavBar>
   </header>
 
   <main>
@@ -16,6 +16,9 @@
 
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
+        <PerfilUser v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname"
+          :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
+          :description="currentUser.description" @update:firstName="updateFirstName" @update:lastName="updateLastName">
         <PerfilUser v-if="currentUserProfile" :currentUser="true" :uid="currentUser.userId" :firstName="currentUser.firstname"
           :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
           @add-project="createProject">
@@ -237,6 +240,8 @@ export default {
       adminPanel: false,
       selectedCategory: null,
       authorUserProfile: false,
+      firstName: '',
+      lastName: '',
 
       //-------------------Variables Init---------------
       categories: [],
@@ -366,6 +371,17 @@ export default {
       this.changeView(4);
     },
 
+    updateFirstName(newFirstName) {
+      // Actualizar firstName en el objeto user
+      this.$emit('update:firstName', newFirstName);
+      this.editedFirstName = newFirstName;
+    },
+
+    updateLastName(newLastName) {
+      // Actualizar lastName en el objeto user
+      this.$emit('update:lastName', newLastName);
+      this.editedLastName = newLastName;
+    },
 
     //------------------------------CHANGE VIEW------------------------------
     changeView(view) {
