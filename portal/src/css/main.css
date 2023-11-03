@@ -499,6 +499,14 @@ main {
   background-color: rgb(0, 45, 92);
 }
 
+.limit-lines {
+  max-height: 2.4em;
+  line-height: 1.5em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .semibold-ligth-green-med {
   font-weight: 600;
   font-size: 1rem;

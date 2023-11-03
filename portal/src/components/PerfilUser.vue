@@ -5,11 +5,11 @@
         <img src="../assets/svg/user-dark.svg" style="width: 70%;">
       </div>
       <div class="col mr-4">
-        <h1 class="bold-dark-blue-xlg">{{ firstName }}  {{ lastName }}</h1>
+        <h1 class="bold-dark-blue-xlg">{{ firstName }} {{ lastName }}</h1>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
       </div>
-      <div class="col ms-6">
-        <button class="perfil-button">
+      <div v-if="currentUser" class="col ms-6">
+        <button @click="addProject" class="perfil-button">
           <img src="../assets/svg/plus-button.svg" alt="" class="img-button">
         </button>
       </div>
@@ -48,87 +48,79 @@
         </ul>
       </div>
 
-    </div>  
+    </div>
 
-    <div class="row mx-1">
+    <div class="container mt-4">
+      <div class="row mx-1">
 
-      <NewsCard></NewsCard>
-      <NewsCard></NewsCard>
-      <NewsCard></NewsCard>
-
-      <div class="col-md-6 mb-4">
-        <div class="card-content ">
-          <div class="card-container">
-            <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-            <div class="position-absolute w-100 overlay">
-              <div class="d-flex mx-2 positionY justify-content-between">
-                <p class="bold-white-lg">ITM OFICIAL</p>
-                <p class="bold-white-lg">20/26/2023</p>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3">
-            <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-          </div>
+        <div v-for="(project, index) in ownProjects" :key="index" class="col-md-6 mb-4">
+          <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id"
+            :image="project.image" :projectName="project.name" :projectDescription="project.description"
+            :projectCategory="project.category" :authorName="project.author"></ProjectCard>
         </div>
-      </div>
 
-      <div class="col-md-6 mb-4">
-        <div class="card-content ">
-          <div class="card-container">
-            <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-            <div class="position-absolute w-100 overlay">
-              <div class="d-flex mx-2 positionY justify-content-between">
-                <p class="bold-white-lg">ITM OFICIAL</p>
-                <p class="bold-white-lg">20/26/2023</p>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3">
-            <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-          </div>
-        </div>
       </div>
-
-      <div class="col-md-6 mb-4">
-        <div class="card-content ">
-          <div class="card-container">
-            <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-            <div class="position-absolute w-100 overlay">
-              <div class="d-flex mx-2 positionY justify-content-between">
-                <p class="bold-white-lg">ITM OFICIAL</p>
-                <p class="bold-white-lg">20/26/2023</p>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3">
-            <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-            </h2>
-          </div>
-        </div>
-      </div>
-
     </div>
 
   </div>
 </template>
 
 <script>
-import NewsCard from './NewsCard.vue'
+import ProjectCard from './ProjectCard.vue';
+import { collection, query, where, getDocs } from 'firebase/firestore';
+import { db } from '@/firebase';
 
 
 export default {
   name: 'PerfilUser',
+  data() {
+    return {
+      ownProjects: []
+    }
+  },
   components: {
-    NewsCard,
+    ProjectCard,
   },
   props: {
     firstName: String,
     lastName: String,
     email: String,
     carnet: String,
-    uid: String
-  }
+    uid: String,
+    currentUser: Boolean
+  },
+  methods: {
+    addProject() {
+      this.$emit('add-project')
+      // this.$emit('add-project', { userId: this.uid })
+    },
+    getUserProjects() {
+      // Define la categoría por la que deseas filtrar
+      const authorId = this.uid; // Cambia esto según tu categoría deseada
+
+      // Crea una referencia a la colección "productos"
+      const projectsRef = collection(db, 'projects');
+
+      // Crea una consulta para filtrar por la categoría
+      const consultaFiltrada = query(projectsRef, where('userId', '==', authorId));
+
+      getDocs(consultaFiltrada)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // Accede a los datos de cada producto
+            const project = doc.data();
+            this.ownProjects.push(project)
+          });
+        })
+        .catch((error) => {
+          console.error('Error al obtener proyectos filtrados:', error);
+        });
+      console.log(this.ownProjects)
+    }
+  },
+  mounted() {
+    this.getUserProjects()
+  },
 }
 
 </script>

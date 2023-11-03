@@ -13,11 +13,15 @@
     <section class="content" id="content">
       <div class="content-section ms-5">
 
-        
+
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
-        <PerfilUser v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname"
-          :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet">
+        <PerfilUser v-if="currentUserProfile" :currentUser="true" :uid="currentUser.userId" :firstName="currentUser.firstname"
+          :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
+          @add-project="createProject">
+        </PerfilUser>
+        <PerfilUser v-if="authorUserProfile" :currentUser="false" :uid="authorUser.userId" :firstName="authorUser.firstname"
+            :lastName="authorUser.lastname" :email="authorUser.inputEmail" :carnet="authorUser.carnet">           
         </PerfilUser>
 
 
@@ -122,60 +126,10 @@
 
             <div class="row mx-1">
 
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                  </div>
-                </div>
+              <div v-for="(project, index) in projects" :key="index" class="col-md-6 mb-4">
+                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+                  :projectName="project.name" :projectDescription="project.description"
+                  :projectCategory="project.category" :authorName="project.author"></ProjectCard>
               </div>
 
             </div>
@@ -186,8 +140,14 @@
 
 
         <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" :image="singleProject.image" :projectName="singleProject.name"
-          :projectDescription="singleProject.description" :projectCategory="singleProject.category"></DetailsProject>
+        <DetailsProject v-if="projectDetails" 
+          @go-author-profile="viewAuthorProfile"
+
+          :image="singleProject.image" 
+          :projectName="singleProject.name"
+          :projectDescription="singleProject.description" 
+          :projectCategory="singleProject.category" 
+          :authorId="singleProject.authorId" ></DetailsProject>
 
 
 
@@ -206,27 +166,27 @@
 
 
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
-  <div class="">    
+  <div class="">
 
     <div v-if="projectRegister" class="m-5">
       <ProjectRegister class="col-6" :categories="categories">
       </ProjectRegister>
     </div>
 
-    <div v-if="allProjects" class="row">
+    <!-- <div v-if="allProjects" class="row">
       <div v-for="(project, index) in projects" :key="index" class="col my-2">
         <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
           :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
         </ProjectCard>
       </div>
-    </div>
+    </div> -->
 
 
-    <div v-if="projectDetails">
+    <!-- <div v-if="projectDetails">
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
         :projectDescription="singleProject.description" :projectCategory="singleProject.category">
       </ProjectDetails>
-    </div>
+    </div> -->
 
     <div v-show="authUser" class="">
       <AuthUser @go-profile="goCurrentUserProfile"></AuthUser>
@@ -252,7 +212,7 @@ import AuthUser from './components/AuthUser.vue'
 import NavBar from './components/NavBar.vue';
 import ProjectRegister from './components/ProjectRegister.vue';
 import ProjectCard from './components/ProjectCard.vue';
-import ProjectDetails from './components/ProjectDetails.vue'
+// import ProjectDetails from './components/ProjectDetails.vue'
 import SideBar from './components/SideBar.vue'
 import NewsCard from './components/NewsCard.vue'
 import PerfilUser from './components/PerfilUser.vue'
@@ -276,16 +236,18 @@ export default {
       currentUserProfile: false,
       adminPanel: false,
       selectedCategory: null,
+      authorUserProfile: false,
 
       //-------------------Variables Init---------------
       categories: [],
+      users: [],
       projects: [],
       allProjectsList: [],
       projectId: '',
       uid: '',
       singleProject: {},
       currentUser: {},
-      projectsList: [],
+      authorUser: {}
     }
   },
 
@@ -296,7 +258,6 @@ export default {
     AuthUser,
     ProjectRegister,
     ProjectCard,
-    ProjectDetails,
     SideBar,
     NewsCard,
     PerfilUser,
@@ -312,12 +273,25 @@ export default {
       const filteredCategories = this.categories.filter(category => category.id === idToMatch)
       return filteredCategories
     },
+    filterUser(idToMatch) {
+      //------------Method to get the correct user for the project--------------
+      const filteredUsers = this.users.filter(user => user.id === idToMatch)
+      return filteredUsers
+    },
     async goProjectDetails(data) {
       //------------Method to show a single project--------------
       this.projectId = data
 
       const getProject = await this.fetchDataById('projects', data.id)
-      this.singleProject = getProject
+      const filteredCategory = this.filterCategory(getProject.id_category)[0].category
+
+      this.singleProject.name = getProject.name
+      this.singleProject.description = getProject.description
+      this.singleProject.category = filteredCategory 
+      this.singleProject.image = getProject.image
+      this.singleProject.authorId = getProject.userId
+
+      console.log(this.singleProject)
       this.showProjectDetails = true
       this.filteredProjects = this.projectsList;
 
@@ -350,7 +324,8 @@ export default {
 
       const getCurrentUser = await this.fetchDataById('users', user.uid);
       this.currentUser = getCurrentUser;
-      
+      Object.assign(this.currentUser, { userId: user.uid })
+      // console.log(this.currentUser)
 
       if (user.uid == 'YRsNBEnQm3eykok24Wu2DedqeNp2') {
         this.viewAdminPanel()
@@ -358,7 +333,12 @@ export default {
         this.changeView(5)
       }
 
-      
+
+    },
+    createProject() {
+      //------------Method to create a new project for the user logged in-------------- 
+      // console.log(data.userId)
+      this.viewProjectRegister()
     },
 
     doLogOut() {
@@ -393,78 +373,91 @@ export default {
         ///////////////////Home-News///////////////////////
         case 0:
           this.home = true,
-          this.news = true,
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false
-          this.allProjects = false,
-          this.currentUserProfile = false,
-          this.adminPanel = false
+            this.news = true,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false
           break
 
         ///////////////////Auth//////////////////
-        case 1:
-          this.home = false
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = true,
-          this.currentUserProfile = false,
-          this.adminPanel = false
+        case 1:        
+          this.authUser = true          
           break
         ///////////////////ProjectDetails///////////////////
         case 2:
           this.home = false
           this.news = false,
-          this.projectDetails = true,
-          this.projectRegister = false,
-          this.authUser = false
+            this.projectDetails = true,
+            this.projectRegister = false,
+            this.authUser = false
           this.allProjects = false,
-          this.currentUserProfile = false,
-          this.adminPanel = false
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false
           break
         ///////////////////ProjectRegister///////////////////
         case 3:
           this.home = false
           this.news = false,
-          this.projectDetails = false,
-          this.projectRegister = true,
-          this.authUser = false
+            this.projectDetails = false,
+            this.projectRegister = true,
+            this.authUser = false
           this.allProjects = false,
-          this.currentUserProfile = false,
-          this.adminPanel = false
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false
           break
         ///////////////////AllProjects///////////////////
         case 4:
           this.home = false
           this.news = false,
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false,
-          this.allProjects = true,
-          this.currentUserProfile = false,
-          this.adminPanel = false
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = true,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false
           break
         ///////////////////Current User Profile////////////////////
         case 5:
           this.home = false
           this.news = false,
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false,
-          this.allProjects = false,
-          this.currentUserProfile = true,
-          this.adminPanel = false
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = true,
+            this.adminPanel = false,
+            this.authorUserProfile = false
           break
         ///////////////////Admin Panel View////////////////////
         case 6:
           this.home = false
           this.news = false,
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false,
-          this.allProjects = false,
-          this.currentUserProfile = false,
-          this.adminPanel = true
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = true,
+            this.authorUserProfile = false            
+          break
+          ///////////////////Current User Profile////////////////////
+        case 7:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = true
           break
       }
     },
@@ -486,6 +479,17 @@ export default {
     },
     viewAdminPanel() {
       this.changeView(6)
+    },
+    async viewAuthorProfile(data) {
+      console.log(data.authorId)
+
+
+      const getAuthorUser = await this.fetchDataById('users', data.authorId);
+      this.authorUser = getAuthorUser
+      Object.assign(this.authorUser, { userId: data.authorId })
+
+      // console.log(this.authorUser)
+      this.changeView(7)
     }
 
   },
@@ -493,7 +497,6 @@ export default {
 
     //--------------------App.vue mounted-------------------------
 
-    this.projectsList = [];
 
     //----------------------Get Categories-----------------
     const categoriesRef = collection(db, 'categories')
@@ -508,7 +511,27 @@ export default {
         });
       })
       .catch((error) => {
-        console.error('Error al obtener documentos: ', error);
+        console.error('Error al obtener categories: ', error);
+      });
+    //----------------------Get Categories-----------------
+
+
+    //----------------------Get Users-----------------
+    const usersRef = collection(db, 'users')
+    getDocs(usersRef)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.id, ' => ', doc.data());
+          this.users.push({
+            id: doc.id,
+            authorName: doc.data().firstname,
+            authorLastName: doc.data().lastname
+          })
+
+        });
+      })
+      .catch((error) => {
+        console.error('Error al obtener users: ', error);
       });
     //----------------------Get Categories-----------------
 
@@ -519,22 +542,24 @@ export default {
     getDocs(projectsRef)
       .then((querySnapshot) => {
         querySnapshot.forEach((doc) => {
-          const filterCategories = this.filterCategory(doc.data().id_category);
+          const filterCategories = this.filterCategory(doc.data().id_category)
+          const filterUsers = this.filterUser(doc.data().userId)
           // console.log(doc.data().image)
           this.projects.push({
             id: doc.id,
             name: doc.data().name,
             description: doc.data().description,
             category: filterCategories[0].category,
-            image: doc.data().image
+            image: doc.data().image,
+            userId: doc.data().userId,
+            author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName
           });
         });
 
       })
       .catch((error) => {
-        console.error('Error al obtener documentos: ', error)
+        console.error('Error al obtener projects: ', error)
       });
-
     this.allProjectsList = this.projects;
     //-----------------Get Projects------------------------
 
@@ -545,7 +570,7 @@ export default {
 
         this.uid = user.uid
         // console.log(this.uid)
-        
+
       } else {
         this.uid = ''
       }
