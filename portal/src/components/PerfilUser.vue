@@ -1,11 +1,24 @@
 <template>
-  <div class="ps-4 ">
+  <div class="ps-4">
     <div class="row pt-4 mb-4">
       <div class="col-auto">
         <img src="../assets/svg/user-dark.svg" style="width: 70%;">
       </div>
       <div class="col mr-4">
-        <h1 class="bold-dark-blue-xlg">{{ firstName }}  {{ lastName }}</h1>
+        <div style="display: flex;">
+          <h1 class="bold-dark-blue-xlg">
+            <span v-if="!editing">{{ editedFirstName }} {{ editedLastName }}</span>
+            <span v-else>
+              <input v-model="editedFirstName" type="text" />
+              <input v-model="editedLastName" type="text" />
+            </span>
+          </h1>
+          <button class="edit-button" @click="activateEditMode">
+            <img class="edit-img" src="../assets/svg/edit.svg">
+          </button>
+          <button @click="saveChanges" v-if="editing">Guardar</button>
+          <button @click="cancelEdit" v-if="editing">Cancelar</button>
+        </div>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
       </div>
       <div class="col ms-6">
@@ -16,8 +29,7 @@
     </div>
 
     <div class="dark-blue-container">
-      <p class="light-ligth-green-xm p-3">ESTUDIANTE DE TERCER AÑO DE CARRERA, EL ÁREA QUE MAS LE GUSTA DE LA CARRERA ES
-        EL BACK'END Y EL FRONT-END</p>
+        <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange" placeholder="AGREGAR DESCRIPCION DEL USUARIO"></textarea>
     </div>
 
     <div class="row pt-4 mb-4 ms-1">
@@ -114,8 +126,10 @@
 </template>
 
 <script>
-import NewsCard from './NewsCard.vue'
 
+import { db } from '@/firebase'
+import { collection, doc, updateDoc } from 'firebase/firestore'
+import NewsCard from './NewsCard.vue';
 
 export default {
   name: 'PerfilUser',
@@ -127,8 +141,68 @@ export default {
     lastName: String,
     email: String,
     carnet: String,
-    uid: String
-  }
-}
+    uid: String,
+  },
+  data() {
+    return {
+      editing: false,
+      editedFirstName: this.firstName,
+      editedLastName: this.lastName, 
+      userDescription: '',
+    };
+  },
+  methods: {
+    activateEditMode() {
+      this.editing = true;
+    },
+    cancelEdit() {
+      this.editing = false;
+      // Revierte a los valores originales si se cancela la edición
+      this.editedFirstName = this.firstName;
+      this.editedLastName = this.lastName;
+    },
+    saveChanges() {
+    // Emitir eventos para actualizar los valores en el componente padre
+    this.$emit('update:firstName', this.editedFirstName);
+    this.$emit('update:lastName', this.editedLastName);
 
+    // Verificar si this.uid tiene un valor válido
+    if (!this.uid) {
+      console.error('this.uid no está definido o es inválido.');
+      return;
+    }
+
+    // Crear una referencia al documento del usuario en Firebase
+    const userRef = doc(db, 'users', this.uid);
+
+    // Actualizar el documento del usuario en Firebase
+    updateDoc(userRef, {
+      firstName: this.editedFirstName,
+      lastName: this.editedLastName,
+    })
+      .then(() => {
+        this.editing = false;
+      })
+      .catch((error) => {
+        console.error('Error al guardar los cambios: ', error);
+      });
+    },
+
+    onDescriptionChange() {
+      // Este método se llama cuando el usuario cambia la descripción
+      if (this.auth && this.uid) {
+        const userRef = collection(db, 'users').doc(this.uid);
+        userRef.update({
+          description: this.userDescription, // Actualiza el campo de descripción
+        })
+          .then(() => {
+            console.log('Descripción actualizada con éxito.');
+          })
+          .catch((error) => {
+            console.error('Error al actualizar la descripción:', error);
+          });
+      }
+    },
+  },
+};
 </script>

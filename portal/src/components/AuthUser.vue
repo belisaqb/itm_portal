@@ -209,6 +209,7 @@ export default {
           return;
         });
     },
+    
     /* DOREGISTER METHOD*/
 
     switchToLoginModal() {
