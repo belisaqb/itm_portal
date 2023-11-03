@@ -16,16 +16,14 @@
 
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
-        <PerfilUser v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname"
+        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId" :firstName="currentUser.firstname"
           :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
-          :description="currentUser.description" @update:firstName="updateFirstName" @update:lastName="updateLastName"></PerfilUser>
-        <PerfilUser v-if="currentUserProfile" :currentUser="true" :uid="currentUser.userId" :firstName="currentUser.firstname"
-          :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
-          @add-project="createProject">
-        </PerfilUser>
-        <PerfilUser v-if="authorUserProfile" :currentUser="false" :uid="authorUser.userId" :firstName="authorUser.firstname"
+          :description="currentUser.description" @update:firstName="updateFirstName" @update:lastName="updateLastName" @add-project="createProject"></PerfilUser>
+
+
+        <PerfilUser v-if="authorUserProfile" :authorLoggedIn="authorLoggedIn" :uid="authorUser.userId" :firstName="authorUser.firstname"
             :lastName="authorUser.lastname" :email="authorUser.inputEmail" :carnet="authorUser.carnet">           
-        </PerfilUser>
+        </PerfilUser> 
 
 
         <!----------------- NOVEDADES ------------------------->
@@ -250,6 +248,7 @@ export default {
       allProjectsList: [],
       projectId: '',
       uid: '',
+      authorLoggedIn: false,
       singleProject: {},
       currentUser: {},
       authorUser: {}
@@ -330,7 +329,8 @@ export default {
       const getCurrentUser = await this.fetchDataById('users', user.uid);
       this.currentUser = getCurrentUser;
       Object.assign(this.currentUser, { userId: user.uid })
-      // console.log(this.currentUser)
+      // console.log(this.currentUser.uid)
+      this.authorLoggedIn = 'true'
 
       if (user.uid == 'YRsNBEnQm3eykok24Wu2DedqeNp2') {
         this.viewAdminPanel()
@@ -463,17 +463,17 @@ export default {
             this.adminPanel = true,
             this.authorUserProfile = false            
           break
-          ///////////////////Current User Profile////////////////////
+          ///////////////////Project Author User Profile////////////////////
         case 7:
           this.home = false
           this.news = false,
-            this.projectDetails = false,
-            this.projectRegister = false,
-            this.authUser = false,
-            this.allProjects = false,
-            this.currentUserProfile = false,
-            this.adminPanel = false,
-            this.authorUserProfile = true
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false,
+          this.allProjects = false,
+          this.currentUserProfile = false,
+          this.adminPanel = false,
+          this.authorUserProfile = true
           break
       }
     },
@@ -503,6 +503,18 @@ export default {
       const getAuthorUser = await this.fetchDataById('users', data.authorId);
       this.authorUser = getAuthorUser
       Object.assign(this.authorUser, { userId: data.authorId })
+
+      if (this.uid != '') {
+        console.log(this.uid)
+        if (this.uid == this.authorUser.userId) {
+          this.authorLoggedIn = true
+        } else {
+          this.authorLoggedIn = false
+        }
+      } else {
+        console.log(this.uid)
+        this.authorLoggedIn = false
+      }
 
       // console.log(this.authorUser)
       this.changeView(7)
@@ -597,6 +609,7 @@ export default {
   },
   beforeUnmount() {
     //---------------Before getting rid of the component-----------------
+    this.authorLoggedIn = false
     this.doLogOut()
   },
 

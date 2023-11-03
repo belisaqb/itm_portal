@@ -21,7 +21,7 @@
         </div>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
       </div>
-      <div v-if="currentUser" class="col ms-6">
+      <div v-if="authorLoggedIn" class="col ms-6">
         <button @click="addProject" class="perfil-button">
           <img src="../assets/svg/plus-button.svg" alt="" class="img-button">
         </button>
@@ -88,7 +88,7 @@ import { collection, doc, updateDoc } from 'firebase/firestore'
 
 
 export default {
-  name: 'PerfilUser',  
+  name: 'PerfilUser',
   components: {
     ProjectCard,
   },
@@ -98,6 +98,7 @@ export default {
     email: String,
     carnet: String,
     uid: String,
+    authorLoggedIn: Boolean
   },
   data() {
     return {
@@ -105,7 +106,7 @@ export default {
       editedFirstName: this.firstName,
       editedLastName: this.lastName,
       userDescription: '',
-       ownProjects: []
+      ownProjects: []
     };
   },
   methods: {
@@ -169,6 +170,7 @@ export default {
       // Define la categoría por la que deseas filtrar
       const authorId = this.uid; // Cambia esto según tu categoría deseada
 
+      console.log("AuthorID" + authorId)
       // Crea una referencia a la colección "productos"
       const projectsRef = collection(db, 'projects');
 
@@ -193,6 +195,7 @@ export default {
 
   },
   mounted() {
+    console.log('OnMounted ' + this.uid)
     this.getUserProjects()
   },
 
