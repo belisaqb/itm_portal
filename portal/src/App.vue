@@ -18,7 +18,7 @@
         <!----------------- COMPONENT PERFIL USER ------------------------->
         <PerfilUser v-if="currentUserProfile" :uid="currentUser.id" :firstName="currentUser.firstname"
           :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
-          :description="currentUser.description" @update:firstName="updateFirstName" @update:lastName="updateLastName">
+          :description="currentUser.description" @update:firstName="updateFirstName" @update:lastName="updateLastName"></PerfilUser>
         <PerfilUser v-if="currentUserProfile" :currentUser="true" :uid="currentUser.userId" :firstName="currentUser.firstname"
           :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
           @add-project="createProject">

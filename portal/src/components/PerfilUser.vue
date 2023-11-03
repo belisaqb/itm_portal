@@ -29,7 +29,8 @@
     </div>
 
     <div class="dark-blue-container">
-        <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange" placeholder="AGREGAR DESCRIPCION DEL USUARIO"></textarea>
+      <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange"
+        placeholder="AGREGAR DESCRIPCION DEL USUARIO"></textarea>
     </div>
 
     <div class="row pt-4 mb-4 ms-1">
@@ -66,9 +67,9 @@
       <div class="row mx-1">
 
         <div v-for="(project, index) in ownProjects" :key="index" class="col-md-6 mb-4">
-          <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id"
-            :image="project.image" :projectName="project.name" :projectDescription="project.description"
-            :projectCategory="project.category" :authorName="project.author"></ProjectCard>
+          <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+            :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
+            :authorName="project.author"></ProjectCard>
         </div>
 
       </div>
@@ -79,20 +80,15 @@
 
 <script>
 import ProjectCard from './ProjectCard.vue';
-import { collection, query, where, getDocs } from 'firebase/firestore';
-import { db } from '@/firebase';
+import { query, where, getDocs } from 'firebase/firestore';
+
 
 import { db } from '@/firebase'
 import { collection, doc, updateDoc } from 'firebase/firestore'
-import NewsCard from './NewsCard.vue';
+
 
 export default {
-  name: 'PerfilUser',
-  data() {
-    return {
-      ownProjects: []
-    }
-  },
+  name: 'PerfilUser',  
   components: {
     ProjectCard,
   },
@@ -107,8 +103,9 @@ export default {
     return {
       editing: false,
       editedFirstName: this.firstName,
-      editedLastName: this.lastName, 
+      editedLastName: this.lastName,
       userDescription: '',
+       ownProjects: []
     };
   },
   methods: {
@@ -122,30 +119,30 @@ export default {
       this.editedLastName = this.lastName;
     },
     saveChanges() {
-    // Emitir eventos para actualizar los valores en el componente padre
-    this.$emit('update:firstName', this.editedFirstName);
-    this.$emit('update:lastName', this.editedLastName);
+      // Emitir eventos para actualizar los valores en el componente padre
+      this.$emit('update:firstName', this.editedFirstName);
+      this.$emit('update:lastName', this.editedLastName);
 
-    // Verificar si this.uid tiene un valor válido
-    if (!this.uid) {
-      console.error('this.uid no está definido o es inválido.');
-      return;
-    }
+      // Verificar si this.uid tiene un valor válido
+      if (!this.uid) {
+        console.error('this.uid no está definido o es inválido.');
+        return;
+      }
 
-    // Crear una referencia al documento del usuario en Firebase
-    const userRef = doc(db, 'users', this.uid);
+      // Crear una referencia al documento del usuario en Firebase
+      const userRef = doc(db, 'users', this.uid);
 
-    // Actualizar el documento del usuario en Firebase
-    updateDoc(userRef, {
-      firstName: this.editedFirstName,
-      lastName: this.editedLastName,
-    })
-      .then(() => {
-        this.editing = false;
+      // Actualizar el documento del usuario en Firebase
+      updateDoc(userRef, {
+        firstName: this.editedFirstName,
+        lastName: this.editedLastName,
       })
-      .catch((error) => {
-        console.error('Error al guardar los cambios: ', error);
-      });
+        .then(() => {
+          this.editing = false;
+        })
+        .catch((error) => {
+          console.error('Error al guardar los cambios: ', error);
+        });
     },
 
     onDescriptionChange() {
@@ -163,6 +160,50 @@ export default {
           });
       }
     },
+
+    addProject() {
+      this.$emit('add-project')
+      // this.$emit('add-project', { userId: this.uid })
+    },
+    getUserProjects() {
+      // Define la categoría por la que deseas filtrar
+      const authorId = this.uid; // Cambia esto según tu categoría deseada
+
+      // Crea una referencia a la colección "productos"
+      const projectsRef = collection(db, 'projects');
+
+      // Crea una consulta para filtrar por la categoría
+      const consultaFiltrada = query(projectsRef, where('userId', '==', authorId));
+
+      getDocs(consultaFiltrada)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            // Accede a los datos de cada producto
+            const project = doc.data();
+            this.ownProjects.push(project)
+          });
+        })
+        .catch((error) => {
+          console.error('Error al obtener proyectos filtrados:', error);
+        });
+      console.log(this.ownProjects)
+    }
+
+
+
   },
-};
+  mounted() {
+    this.getUserProjects()
+  },
+
+}
+
+
+
+
+
+
+
+
+
 </script>
