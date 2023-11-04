@@ -85,6 +85,7 @@ import { query, where, getDocs } from 'firebase/firestore';
 
 import { db } from '@/firebase'
 import { collection, doc, updateDoc } from 'firebase/firestore'
+import { onSnapshot } from 'firebase/firestore';
 
 
 export default {
@@ -98,7 +99,7 @@ export default {
     email: String,
     carnet: String,
     uid: String,
-    authorLoggedIn: Boolean
+    authorLoggedIn: Boolean,
   },
   data() {
     return {
@@ -106,9 +107,28 @@ export default {
       editedFirstName: this.firstName,
       editedLastName: this.lastName,
       userDescription: '',
-      ownProjects: []
+      ownProjects: [],
     };
   },
+
+  async mounted() {
+  console.log('OnMounted ' + this.uid);
+
+  const userRef = doc(db, 'users', this.uid);
+
+  // Escuchar cambios en el documento del usuario
+  onSnapshot(userRef, (doc) => {
+    if (doc.exists()) {
+      this.userDescription = doc.data().description || '';
+    } else {
+      this.userDescription = '';
+    }
+
+    this.getUserProjects();
+  });
+},
+
+
   methods: {
     activateEditMode() {
       this.editing = true;
@@ -124,19 +144,13 @@ export default {
       this.$emit('update:firstName', this.editedFirstName);
       this.$emit('update:lastName', this.editedLastName);
 
-      // Verificar si this.uid tiene un valor válido
-      if (!this.uid) {
-        console.error('this.uid no está definido o es inválido.');
-        return;
-      }
-
       // Crear una referencia al documento del usuario en Firebase
       const userRef = doc(db, 'users', this.uid);
 
       // Actualizar el documento del usuario en Firebase
       updateDoc(userRef, {
-        firstName: this.editedFirstName,
-        lastName: this.editedLastName,
+        firstname: this.editedFirstName,
+        lastname: this.editedLastName,
       })
         .then(() => {
           this.editing = false;
@@ -146,21 +160,17 @@ export default {
         });
     },
 
-    onDescriptionChange() {
+    async onDescriptionChange() {
       // Este método se llama cuando el usuario cambia la descripción
-      if (this.auth && this.uid) {
-        const userRef = collection(db, 'users').doc(this.uid);
-        userRef.update({
-          description: this.userDescription, // Actualiza el campo de descripción
-        })
-          .then(() => {
-            console.log('Descripción actualizada con éxito.');
-          })
-          .catch((error) => {
-            console.error('Error al actualizar la descripción:', error);
+      const userRef = doc(db, 'users', this.uid);
+      try {
+          await updateDoc(userRef, {
+            description: this.userDescription, // Actualiza el campo de descripción
           });
-      }
-    },
+        } catch (error) {
+          console.error('Error al actualizar la descripción:', error);
+        }
+      },
 
     addProject() {
       this.$emit('add-project')
@@ -190,23 +200,7 @@ export default {
         });
       console.log(this.ownProjects)
     }
-
-
-
-  },
-  mounted() {
-    console.log('OnMounted ' + this.uid)
-    this.getUserProjects()
-  },
-
+  }
 }
-
-
-
-
-
-
-
-
 
 </script>
