@@ -31,6 +31,7 @@
         <div v-if="news">
           <h1 class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
 
+
           <div class="d-flex justify-content-center mt-3 dropdown mx-2">
             <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button"
               data-bs-toggle="dropdown" aria-expanded="false">
@@ -219,6 +220,7 @@ import SideBar from './components/SideBar.vue'
 import NewsCard from './components/NewsCard.vue'
 import PerfilUser from './components/PerfilUser.vue'
 import DetailsProject from './components/DetailsProject.vue'
+// import DetailsNovedades from './components/DetailsNovedades.vue'
 import LowFooter from './components/LowFooter.vue'
 
 import AdminView from './components/AdminView.vue'
@@ -268,7 +270,8 @@ export default {
     PerfilUser,
     DetailsProject,
     LowFooter,
-    AdminView
+    AdminView,
+    // DetailsNovedades
   },
 
   //---------------Methods---------------------
