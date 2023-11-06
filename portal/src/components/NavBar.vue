@@ -24,16 +24,19 @@
                             <a @click="goHome" class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
                         </li>
                     </ul>
+                     
                     <div v-if="!isLoggedIn" class="img-user">
-                        <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
+                        <button @click="goAuth" class="nav-buttons semibold-ligth-green-med">INICIAR SESION</button>
                     </div>
                     <div v-if="isLoggedIn" class="img-user">
                         <button @click="goLogout" class="nav-buttons"><img src="@/assets/svg/logout.svg"
                                 alt="logout"></button>
                     </div>
+                   <!--
                     <div class="notifications">
                         <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="notifications"></button>
                     </div>
+                    -->
                 </div>
             </div>
         </nav>
@@ -78,6 +81,7 @@ export default {
                 }
             });
         }
+        
     },
     mounted() {
         this.userState()
@@ -86,4 +90,40 @@ export default {
 }
 
 
+
 </script>
+<style>
+
+/*
+.text-only button img {
+    display: none; 
+}
+
+.text-only button {
+    font-size: 16px; 
+    content: "Texto aquí"
+}
+*/
+
+/*
+@media (max-width: 991px) {
+  .mobile-view .text-only button img {
+    display: none; 
+    content: "Texto aquí";
+  }
+
+  .mobile-view .text-only button::before {
+    font-size: 16px;
+  }
+}*/
+
+.mobile-view .text-only button img {
+    display: none;
+}
+
+.mobile-view .text-only button::before {
+    content: "Texto aquí";
+    font-size: 16px;
+}
+ 
+</style>
