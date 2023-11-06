@@ -1,4 +1,7 @@
 <template>
+
+<div>
+
   <header class="header">
     <!----------------- COMPONENT NAV BAR ------------------------->
     <NavBar @go-home="viewHome" @go-auth="viewAuth" @go-project-register="viewProjectRegister" @go-logout="doLogOut"
@@ -129,10 +132,60 @@
 
             <div class="row mx-1">
 
-              <div v-for="(project, index) in projects" :key="index" class="col-md-6 mb-4">
-                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-                  :projectName="project.name" :projectDescription="project.description"
-                  :projectCategory="project.category" :authorName="project.author"></ProjectCard>
+              <NewsCard></NewsCard>
+              <NewsCard></NewsCard>
+              <NewsCard></NewsCard>
+
+              <div class="col-md-6 mb-4">
+                <div class="card-content ">
+                  <div class="card-container">
+                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
+                    <div class="position-absolute w-100 overlay">
+                      <div class="d-flex mx-2 positionY justify-content-between">
+                        <p class="bold-white-lg">ITM OFICIAL</p>
+                        <p class="bold-white-lg">20/26/2023</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-3">
+                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <div class="card-content ">
+                  <div class="card-container">
+                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
+                    <div class="position-absolute w-100 overlay">
+                      <div class="d-flex mx-2 positionY justify-content-between">
+                        <p class="bold-white-lg">ITM OFICIAL</p>
+                        <p class="bold-white-lg">20/26/2023</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-3">
+                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
+                  </div>
+                </div>
+              </div>
+
+              <div class="col-md-6 mb-4">
+                <div class="card-content ">
+                  <div class="card-container">
+                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
+                    <div class="position-absolute w-100 overlay">
+                      <div class="d-flex mx-2 positionY justify-content-between">
+                        <p class="bold-white-lg">ITM OFICIAL</p>
+                        <p class="bold-white-lg">20/26/2023</p>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="pt-3">
+                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
+                    </h2>
+                  </div>
+                </div>
               </div>
 
             </div>
@@ -142,20 +195,6 @@
         </div>
 
 
-        <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" 
-          @go-author-profile="viewAuthorProfile"
-
-          :image="singleProject.image" 
-          :projectName="singleProject.name"
-          :projectDescription="singleProject.description" 
-          :projectCategory="singleProject.category" 
-          :authorId="singleProject.authorId" ></DetailsProject>
-
-
-
-        <!----------------- PANEL ADMIN ------------------------->
-        <AdminView v-if="adminPanel"></AdminView>
 
 
       </div>
@@ -169,33 +208,34 @@
 
 
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
-  <div class="">
-
+  <!-- <div class="">
     <div v-if="projectRegister" class="m-5">
       <ProjectRegister class="col-6" :categories="categories">
       </ProjectRegister>
     </div>
 
-    <!-- <div v-if="allProjects" class="row">
+    <div v-if="allProjects" class="row">
       <div v-for="(project, index) in projects" :key="index" class="col my-2">
         <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
           :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
         </ProjectCard>
       </div>
-    </div> -->
+    </div>
 
 
-    <!-- <div v-if="projectDetails">
+    <div v-if="projectDetails">
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
         :projectDescription="singleProject.description" :projectCategory="singleProject.category">
       </ProjectDetails>
-    </div> -->
+    </div>
 
     <div v-show="authUser" class="">
       <AuthUser @go-profile="goCurrentUserProfile"></AuthUser>
     </div>
-  </div>
+  </div> -->
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
+  </div>
+  
 </template>
 
 
@@ -211,6 +251,7 @@ import './js/register'
 
 
 //----------IMPORT COMPONENTS--------------
+import AddForm from './components/AddForm.vue';
 import AuthUser from './components/AuthUser.vue'
 import NavBar from './components/NavBar.vue';
 import ProjectRegister from './components/ProjectRegister.vue';
@@ -270,8 +311,7 @@ export default {
     PerfilUser,
     DetailsProject,
     LowFooter,
-    AdminView,
-    // DetailsNovedades
+    AddForm
   },
 
   //---------------Methods---------------------
