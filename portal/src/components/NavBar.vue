@@ -3,8 +3,8 @@
         <nav style="padding: 0;" class="navbar navbar-expand-lg">
             <div class="navbar-container container">
                 <a class="navbar-brand logo" href="#"><img class="img-logo" src="@/assets/svg/ITM.svg" alt="itm"></a>
-                <form class="d-flex search-bar">
-                    <input type="search" class="search-input" placeholder="Buscar">
+                <form class="d-flex search-bar" @submit.prevent="doSearch">
+                    <input v-model="inputSearchBar" type="search" class="search-input" placeholder="Buscar">
                     <button class="search-button" type="submit"><img src="@/assets/svg/search2.svg" alt="search"></button>
                 </form>
                 <button style="font-size: 0;" class="navbar-toggler btn-hamburguer" id="hamburguer" type="button"
@@ -52,7 +52,8 @@ export default {
     name: 'NavBar',
     data() {
         return {
-            isLoggedIn: false
+            isLoggedIn: false,
+            inputSearchBar: ''
         }
     },
     methods: {
@@ -83,6 +84,14 @@ export default {
         },
         goCurrentUserProfile(){
             this.$emit('go-current-user-profile')
+        },
+        doSearch() {
+            if (this.inputSearchBar == '') {
+                console.log('búsqueda vacía')
+            } else {
+                console.log('Consulta ' + this.inputSearchBar)
+                // this.$emit('do-search', {keyword: this.inputSearchBar})
+            }
         }
     },
     mounted() {
