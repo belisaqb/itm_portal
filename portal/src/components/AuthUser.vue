@@ -1,4 +1,5 @@
 <template>
+ <div>
   <!-- REGISTER SECTION -->
   <div id="registration-popup" class="registration-popup">
     <div class="registration-modal">
@@ -24,7 +25,8 @@
 
         <label for="verifyPassword">VERIFICAR CONTRASEÑA</label>
         <input type="password" id="verifyPassword" class="input-field" placeholder="verificar contraseña" required>
-        <div id="password-error" class="error-message" style="color: red; display: none;">Error al registrar usuario</div>
+        <div id="password-error" class="error-message" style="color: red; display: none;">
+          Error al registrar usuario</div>
 
         <div class="button-container">
           <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button"
@@ -66,54 +68,6 @@
     </div>
   </div>
   <!-- LOGIN SECTION -->
-
-
-  <!-- LOGIN FORM ----------------------------------------------------------------------------------------------------------->
-  <div>
-    <!-- <template v-if="isLogin">
-      <h3>Inicio de Sesión</h3>
-      <form @submit.prevent="doLogin">
-        <div class="mb-3">
-          <label for="email" class="form-label">Correo</label>
-          <input v-model="inputEmail" id="email" class="form-bg form-control" type="text" name="email" placeholder="Email">
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input v-model="inputPassword" id="password" class="form-bg form-control" type="password" name="password"
-            placeholder="Password">
-        </div>
-        <a href="#" @click="isLogin = false">¿No tienes cuenta? Registrarse</a>
-        <input :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2" value="Iniciar Sesión">
-
-      </form>
-
-      <button @click="doLogOut" v-show="isLoggedIn" class="btn btn-primary">Cerrar Sesión</button>
-    </template> -->
-    <!-- LOGIN FORM ----------------------------------------------------------------------------------------------------------->
-
-
-    <!-- REGISTER FORM
-    <template v-else>
-      <h3>Registro de Usuario</h3>
-      <form @submit.prevent="doRegister" class="add">
-        <div class="mb-3">
-          <label for="name" class="form-label">Nombre</label>
-          <input type="text" class="form-control" id="name">
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Correo</label>
-          <input v-model="inputEmail" type="email" name="email" class="form-control">
-        </div>
-        <div class="mb-3">
-          <label for="password" class="form-label">Contraseña</label>
-          <input v-model="inputPassword" type="password" name="password" class="form-control">
-        </div>
-        <a href="#" @click="isLogin = true">¿Ya tienes cuenta? Inicia Sesión</a>
-        <button :disabled="!inputEmail || !inputPassword" type="submit" class="btn btn-primary m-2">Registrarse</button>
-      </form>
-    </template>
-     REGISTER FORM -->
-
   </div>
 </template>
 
@@ -209,6 +163,7 @@ export default {
           return;
         });
     },
+    
     /* DOREGISTER METHOD*/
 
     switchToLoginModal() {

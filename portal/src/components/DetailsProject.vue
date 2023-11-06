@@ -5,7 +5,7 @@
 
             <div class="image-details-container">
                 <div class="image-container">
-                    <img :src="image" alt="img">
+                    <img class="img-fluid" :src="image" alt="img">
                 </div>
                 <div class="details-container">
                     <p class="txtDescriptionProyects">PARTICIPANTES:</p>
@@ -20,7 +20,7 @@
             </div>
             <hr class="divider">
             <div class="d-flex-dp comunMarginx">
-                <p class="txt-name-student">Por <span>Anthonny Joseph</span></p>
+                <p class="txt-name-student">Por <span @click="goAuthorProfile" >{{ authorFirstName }} {{ authorLastName }} </span></p>
                 <hr class="dividerH comunMarginx">
                 <p class="txt-name-student">01/06/2023</p>
             </div>
@@ -40,7 +40,7 @@
             </div>
             <div>
                 <h2 class="text-center pt-4 black-dark-blue-xlg">MUESTRA DEL PROYECTO</h2>
-                <img class="centered-image" src="@/assets/imgs/Proyectos/img_weather_app.png" alt="img">
+                <img class="centered-image" :src="image" alt="img">
             </div>
             <hr class="divider">
             <div class="comunMarginx pt-2">
@@ -81,6 +81,9 @@
 
 
 <script>
+import { db } from '@/firebase'
+import { doc, getDoc } from 'firebase/firestore'
+
 export default {
     name: 'DetailsProject',
     props: {
@@ -88,8 +91,51 @@ export default {
         image: { type: String, default: 'https://firebasestorage.googleapis.com/v0/b/portal-itm.appspot.com/o/images%2Fplaceholder-image.png?alt=media&token=614d5ce1-6099-4572-ace6-10d240c44e68' },
         projectName: String,
         projectDescription: String,
-        projectCategory: String
-    }
+        projectCategory: String,
+        authorId: String
+    },
+    data() {
+        return {
+            authorFirstName: '',
+            authorLastName: ''
+        }
+    },
+    methods: {
+        async getAuthorInfo() {
+            //----------- Method to get Author Information -----------
+            const authorNameAwait = await this.fetchDataById('users', this.authorId)
+            this.authorFirstName = authorNameAwait.firstname
+            this.authorLastName = authorNameAwait.lastname
+            
+        },
+        async getDocumentById(collection, documentId) {
+            //------------Method to get a document by the id--------------
+            const docRef = doc(db, collection, documentId)
+            const docSnap = await getDoc(docRef)
+            if (docSnap.exists()) {
+                // console.log('Datos del documento:', docSnap.data())
+                return docSnap.data();
+            } else {
+                console.log('El documento no existe.')
+                return null;
+            }
+        },
+        async fetchDataById(collection, documentId) {
+            //------------Method to get a document by the id--------------
+            const documentData = await this.getDocumentById(collection, documentId);
+            if (documentData) {
+                return documentData
+            } else {
+                console.log('Documento no encontrado.');
+            }
+        },
+        goAuthorProfile() {
+            this.$emit('go-author-profile', {authorId: this.authorId})
+        }
+    },
+    mounted() {
+        this.getAuthorInfo()
+    },
 }
 </script>
 

@@ -48,3 +48,11 @@
     @include mixins.set-background-color(vars.$clr-dark-blue);
     
 }
+
+.limit-lines {
+    max-height: 2.4em;
+    line-height: 1.5em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}

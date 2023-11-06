@@ -1,7 +1,7 @@
 <template>
     <div>
 
-        <form @submit.prevent="addProject">
+        <form class="m-5 p-5" @submit.prevent="addProject">
             <div class="mb-3">
                 <label for="projectName" class="form-label">Nombre del Proyecto</label>
                 <input v-model="inputProjectName" type="text" class="form-control" id="projectName"
@@ -34,7 +34,7 @@
 // import { ref } from 'firebase/storage';
 import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import { db, storage } from '@/firebase'
+import { db, storage, auth } from '@/firebase'
 
 const projectsRef = collection(db, 'projects') //call collection on firestore
 
@@ -62,7 +62,8 @@ export default {
                 description: this.inputProjectDescription,
                 id_category: this.selectedCategory,
                 image: this.imageUrl,
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                userId: auth.currentUser.uid
             })
                 .then(() => {
                     this.reset()
