@@ -1,11 +1,9 @@
 <template>
-
-<div>
-
   <header class="header">
     <!----------------- COMPONENT NAV BAR ------------------------->
     <NavBar @go-home="viewHome" @go-auth="viewAuth" @go-project-register="viewProjectRegister" @go-logout="doLogOut"
-      @go-all-projects="viewAllProjects" @go-current-user-profile="goCurrentUserProfile"></NavBar>
+      @go-all-projects="viewAllProjects" @go-current-user-profile="goCurrentUserProfile" @do-Search="doSearchProjects">
+    </NavBar>
   </header>
 
   <main>
@@ -16,24 +14,25 @@
     <section class="content" id="content">
       <div class="content-section ms-5">
 
-
+        <AddForm v-if="projectRegister" :categories="categories"></AddForm>
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
-        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId" :firstName="currentUser.firstname"
-          :lastName="currentUser.lastname" :email="currentUser.inputEmail" :carnet="currentUser.carnet"
-          :description="currentUser.description" @update:firstName="updateFirstName" @update:lastName="updateLastName" @add-project="createProject">
+        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId"
+          :firstName="currentUser.firstname" :lastName="currentUser.lastname" :email="currentUser.inputEmail"
+          :carnet="currentUser.carnet" :description="currentUser.description" @update:firstName="updateFirstName"
+          @update:lastName="updateLastName" @add-project="createProject">
         </PerfilUser>
 
 
-        <PerfilUser v-if="authorUserProfile" :authorLoggedIn="authorLoggedIn" :uid="authorUser.userId" :firstName="authorUser.firstname"
-            :lastName="authorUser.lastname" :email="authorUser.inputEmail" :carnet="authorUser.carnet">           
-        </PerfilUser> 
+        <PerfilUser v-if="authorUserProfile" :authorLoggedIn="authorLoggedIn" :uid="authorUser.userId"
+          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail"
+          :carnet="authorUser.carnet">
+        </PerfilUser>
 
 
         <!----------------- NOVEDADES ------------------------->
         <div v-if="news">
           <h1 class="text-center pt-4 black-dark-blue-xlg">NOVEDADES</h1>
-
 
           <div class="d-flex justify-content-center mt-3 dropdown mx-2">
             <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button"
@@ -132,60 +131,10 @@
 
             <div class="row mx-1">
 
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                  </div>
-                </div>
+              <div v-for="(project, index) in projects" :key="index" class="col-md-6 mb-4">
+                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+                  :projectName="project.name" :projectDescription="project.description"
+                  :projectCategory="project.category" :authorName="project.author"></ProjectCard>
               </div>
 
             </div>
@@ -195,6 +144,15 @@
         </div>
 
 
+        <!----------------- DETALLE DE PROYECTO ------------------------->
+        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image"
+          :projectName="singleProject.name" :projectDescription="singleProject.description"
+          :projectCategory="singleProject.category" :authorId="singleProject.authorId"></DetailsProject>
+
+
+
+        <!----------------- PANEL ADMIN ------------------------->
+        <AdminView v-if="adminPanel"></AdminView>
 
 
       </div>
@@ -208,34 +166,33 @@
 
 
   <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
-  <!-- <div class="">
+  <div class="">
+
     <div v-if="projectRegister" class="m-5">
       <ProjectRegister class="col-6" :categories="categories">
       </ProjectRegister>
     </div>
 
-    <div v-if="allProjects" class="row">
+    <!-- <div v-if="allProjects" class="row">
       <div v-for="(project, index) in projects" :key="index" class="col my-2">
         <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
           :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category">
         </ProjectCard>
       </div>
-    </div>
+    </div> -->
 
 
-    <div v-if="projectDetails">
+    <!-- <div v-if="projectDetails">
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
         :projectDescription="singleProject.description" :projectCategory="singleProject.category">
       </ProjectDetails>
-    </div>
+    </div> -->
 
     <div v-show="authUser" class="">
       <AuthUser @go-profile="goCurrentUserProfile"></AuthUser>
     </div>
-  </div> -->
-  <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
   </div>
-  
+  <!--//////////////////////// CODIGO DE PRUEBAS ////////////////////// -->
 </template>
 
 
@@ -335,7 +292,7 @@ export default {
 
       this.singleProject.name = getProject.name
       this.singleProject.description = getProject.description
-      this.singleProject.category = filteredCategory 
+      this.singleProject.category = filteredCategory
       this.singleProject.image = getProject.image
       this.singleProject.authorId = getProject.userId
 
@@ -389,7 +346,42 @@ export default {
       // console.log(data.userId)
       this.viewProjectRegister()
     },
+    async doSearchProjects(data) {
+      console.log(data.keyword)
+      const keyword = data.keyword;
+      const projectsRef = collection(db, 'projects');
 
+      // Crear una consulta para buscar productos que contienen la palabra clave en el campo "nombre"
+      const consulta = query(projectsRef, where('name',  '==' , keyword));
+
+      this.projects = []
+
+      // Ejecutar la consulta para obtener los resultados
+      getDocs(consulta)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+             const filterCategories = this.filterCategory(doc.data().id_category)
+            const filterUsers = this.filterUser(doc.data().userId)
+            console.log(doc.data())
+            this.projects.push({
+              id: doc.id,
+              name: doc.data().name,
+              description: doc.data().description,
+              category: filterCategories[0].category,
+              image: doc.data().image,
+              userId: doc.data().userId,
+              author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName
+            });
+
+          });
+        })
+        .catch((error) => {
+          console.error('Error al realizar la consulta:', error);
+        });
+
+      this.changeView(4)
+
+    },
     doLogOut() {
       //------------Method to logOut--------------
       // console.log('logout')
@@ -437,15 +429,15 @@ export default {
             this.projectDetails = false,
             this.projectRegister = false,
             this.authUser = false
-            this.allProjects = false,
+          this.allProjects = false,
             this.currentUserProfile = false,
             this.adminPanel = false,
             this.authorUserProfile = false
           break
 
         ///////////////////Auth//////////////////
-        case 1:        
-          this.authUser = true          
+        case 1:
+          this.authUser = true
           break
         ///////////////////ProjectDetails///////////////////
         case 2:
@@ -505,19 +497,19 @@ export default {
             this.allProjects = false,
             this.currentUserProfile = false,
             this.adminPanel = true,
-            this.authorUserProfile = false            
+            this.authorUserProfile = false
           break
-          ///////////////////Project Author User Profile////////////////////
+        ///////////////////Project Author User Profile////////////////////
         case 7:
           this.home = false
           this.news = false,
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false,
-          this.allProjects = false,
-          this.currentUserProfile = false,
-          this.adminPanel = false,
-          this.authorUserProfile = true
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = true
           break
       }
     },
@@ -663,7 +655,7 @@ export default {
 
 <script setup>
 //-------------------------- imports de Firebase ---------------------------------
-import { collection, getDocs, doc, getDoc } from 'firebase/firestore'
+import { collection, getDocs, doc, getDoc, where, query } from 'firebase/firestore'
 import { onAuthStateChanged, signOut } from "firebase/auth"
 import { db, auth } from '@/firebase'
 

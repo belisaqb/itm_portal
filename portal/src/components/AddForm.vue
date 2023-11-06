@@ -1,74 +1,185 @@
 <template>
-
-<div class="addF-container">
+    <div class="addF-container">
         <h1 class="bold-dark-blue-xlg" style="text-align: center">PUBLICAR PROYECTO</h1>
 
+        <form @submit.prevent="addProject">
+            <div class="add-col">
 
-        <div class="add-col">
+                <div class="addF-col2 form-group">
+                    <label class="light-dark-blue-xm" for="name">NOMBRE DE PROYECTO:</label>
+                    <input v-model="inputProjectName" type="text" id="name" placeholder="Nombre del proyecto">
+                </div>
+                <div class="addF-col2 form-group">
+                    <label class="light-dark-blue-xm" for="categoria">CATEGORÍA:</label>
+                    <select v-model="selectedCategory" id="categoria" class="select-input">
+                        <option v-for="(item, index) in categories" :key="index" :value="item.id">{{ item.category }}
+                        </option>
+                    </select>
+                </div>
+                <div class="addF-col2 form-group">
+                    <label class="light-dark-blue-xm" for="participantes">PARTICIPANTES:</label>
+                    <div id="participantes" class="multi-input-group">
+                        <!-- Se carga con JS                     -->
+                    </div>
+                    <div id="add-participante" class="add-button">+ Agregar Participante</div>
+                </div>
+                <div class="addF-col2 form-group">
+                    <label class="light-dark-blue-xm" for="softwares">SOFTWARES:</label>
+                    <div id="softwares" class="multi-input-group">
+                        <!-- Se carga con JS                     -->
+                    </div>
+                    <div id="add-software" class="add-button">+ Agregar Software</div>
+                </div>
 
-        
-        <div class="addF-col2 form-group">
-            <label class="light-dark-blue-xm" for="categoria">CATEGORÍA:</label>
-            <select id="categoria" class="select-input">
-                <option value="categoria1">Categoría 1</option>
-                <option value="categoria2">Categoría 2</option>
-                <option value="categoria3">Categoría 3</option>
-            </select>
-        </div>
-        <div class="addF-col2 form-group">
-            <label class="light-dark-blue-xm" for="tipoProyecto">TIPO DE PROYECTO:</label>
-            <select id="tipoProyecto" class="select-input">
-                <option value="tipo1">Tipo 1</option>
-                <option value="tipo2">Tipo 2</option>
-                <option value="tipo3">Tipo 3</option>
-            </select>
-        </div>
-        <div class="addF-col2 form-group">
-            <label class="light-dark-blue-xm" for="participantes">PARTICIPANTES:</label>
-            <div class="multi-input-group">
-                <input type="text" id="participantes" placeholder="Nombre del participante">
-                <input type="text" placeholder="Nombre del participante">
-                <div class="add-button">+ Agregar Participante</div>
             </div>
-        </div>
-        <div class="addF-col2 form-group">
-            <label class="light-dark-blue-xm" for="softwares">SOFTWARES:</label>
-            <div class="multi-input-group">
-                <input type="text" id="softwares" placeholder="Nombre del software">
-                <input type="text" placeholder="Nombre del software">
-                <div class="add-button">+ Agregar Software</div>
+
+            <div class="addF-center">
+
+                <div class="form-group">
+                    <label class="description-group light-dark-blue-xm">DESCRIPCIÓN:</label>
+                    <textarea v-model="inputProjectDescription" id="descripcion" rows="4"
+                        placeholder="Descripción del proyecto"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="light-dark-blue-xm">CARGAR IMÁGENES:</label>
+                    <label for="upload" class="upload-button">
+                        Arrastra y suelta las imágenes o haz clic aquí para subirlas.
+                        <input @change="onFileChange" type="file" id="upload" class="file-input" multiple>
+                    </label>
+                </div>
             </div>
-        </div>
 
-        </div>
-
-        <div class="addF-center">
-
-        
-        <div class="form-group">
-            <label class="description-group light-dark-blue-xm">DESCRIPCIÓN:</label>
-            <textarea id="descripcion" rows="4" placeholder="Descripción del proyecto"></textarea>
-        </div>
-        <div class="form-group">
-            <label class="light-dark-blue-xm">CARGAR IMÁGENES:</label>
-            <label for="upload" class="upload-button">
-                Arrastra y suelta las imágenes o haz clic aquí para subirlas.
-                <input type="file" id="upload" class="file-input" multiple>
-            </label>
-        </div>
-        </div>
-
-        <div class="form-group">
-        <button id="post-button" type="button" class="login-button" style="width: 10rem; background-color: rgba(0, 45, 92, 1); color: white">PUBLICAR</button>
-        </div>
+            <div class="form-group">
+                <button id="post-button" type="submit" class="login-button btn"
+                    style="width: 10rem; background-color: rgba(0, 45, 92, 1); color: white">PUBLICAR</button>
+            </div>
+        </form>
     </div>
-
 </template>
 
 
 <script>
+//---------Import Firebase-------------------------
+// import { ref } from 'firebase/storage';
+import { ref as storageRef, uploadBytesResumable, getDownloadURL } from 'firebase/storage';
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { db, storage, auth } from '@/firebase'
+
+const projectsRef = collection(db, 'projects') //call collection on firestore
+
 export default {
-    name: 'AddForm'
+    name: 'AddForm',
+    data() {
+        return {
+            inputProjectName: '',
+            inputProjectDescription: '',
+            selectedCategory: '',
+            imageUrl: ''
+        }
+    },
+    props: {
+        categories: {
+            type: Array,
+        },
+    },
+    methods: {
+        addProject() {
+            console.log('crear proyecto', this.inputProjectDescription, this.inputProjectName, this.selectedCategory)
+
+            addDoc(projectsRef, {
+                name: this.inputProjectName,
+                description: this.inputProjectDescription,
+                id_category: this.selectedCategory,
+                image: this.imageUrl,
+                createdAt: serverTimestamp(),
+                userId: auth.currentUser.uid
+            })
+                .then(() => {
+                    this.reset()
+                })
+                .catch((err) => {
+                    console.log(err.message)
+                })
+
+
+        },
+        reset() {
+            this.inputProjectName = '',
+                this.inputProjectDescription = '',
+                this.selectedCategory = ''
+        },
+        async onFileChange(event) {
+            const file = event.target.files[0];
+
+            // Subir la imagen a Firebase Storage
+            await this.uploadImage(file);
+        },
+        async uploadImage(file) {
+            const storageReference = storageRef(storage, 'images/' + file.name);
+            const task = uploadBytesResumable(storageReference, file);
+
+            task.on('state_changed',
+                (snapshot) => {
+                    // Progreso de la carga
+                    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                    console.log('Upload is ' + progress + '% done');
+                },
+                (error) => {
+                    // Manejar errores
+                    console.error('Error al subir la imagen: ', error);
+                },
+                () => {
+                    // Carga completada con éxito
+                    console.log('Imagen subida con éxito');
+                    // Obtener la URL de la imagen
+                    getDownloadURL(task.snapshot.ref).then((downloadURL) => {
+                        console.log('File available at', downloadURL);
+                        // Llamar a una función para mostrar la imagen en la interfaz de usuario
+                        this.imageUrl = downloadURL
+                    });
+                }
+            );
+        },
+        addParticipante() {
+
+        }
+    },
+    mounted() {
+        const participante = document.getElementById('add-participante')
+        participante.addEventListener('click', function () {
+            event.preventDefault()
+            let contenedor = document.createElement("div");
+            let id = "participante-" + Date.now();
+            contenedor.id = id;
+            document.querySelector('#participantes').appendChild(contenedor);
+           
+            let input = document.createElement("input");
+            input.type = "text";
+            input.setAttribute('name', "participante[]");
+            input.setAttribute('placeholder', "Nombre del Participante");
+            document.querySelector('#' + id).appendChild(input);
+        })
+
+        const software = document.getElementById('add-software')
+        software.addEventListener('click', function () {
+            event.preventDefault()
+            let contenedor = document.createElement("div");
+            let id = "software-" + Date.now();
+            contenedor.id = id;
+            document.querySelector('#softwares').appendChild(contenedor);
+
+            let input = document.createElement("input");
+            input.type = "text";
+            input.setAttribute('name', "software[]");
+            input.setAttribute('placeholder', "Nombre del software");
+            document.querySelector('#' + id).appendChild(input);
+        })
+
+    },
 }
+
+
+//-----------------------------------------
+
 </script>
 

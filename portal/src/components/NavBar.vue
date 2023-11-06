@@ -89,8 +89,9 @@ export default {
             if (this.inputSearchBar == '') {
                 console.log('búsqueda vacía')
             } else {
-                console.log('Consulta ' + this.inputSearchBar)
-                // this.$emit('do-search', {keyword: this.inputSearchBar})
+                // console.log('Consulta ' + this.inputSearchBar)
+                this.$emit('do-search', {keyword: this.inputSearchBar})
+                
             }
         }
     },
