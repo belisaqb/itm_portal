@@ -13,10 +13,10 @@
               <input v-model="editedLastName" type="text" />
             </span>
           </h1>
-          <button class="edit-button" @click="activateEditMode">
+          <button class="edit-button" @click="activateEditMode" v-if="canEditProfile">
             <img class="edit-img" src="../assets/svg/edit.svg">
           </button>
-          <button @click="saveChanges" v-if="editing">Guardar</button>
+          <button @click="saveChanges" v-if="editing && canEditProfile">Guardar</button>
           <button @click="cancelEdit" v-if="editing">Cancelar</button>
         </div>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
@@ -29,9 +29,10 @@
     </div>
 
     <div class="dark-blue-container">
-      <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange"
-        placeholder="AGREGAR DESCRIPCION DEL USUARIO"></textarea>
-    </div>
+    <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta"
+      @input="onDescriptionChange" placeholder="AGREGAR DESCRIPCION DEL USUARIO" :disabled="!canEditProfile" 
+    ></textarea>
+  </div>
 
     <div class="row pt-4 mb-4 ms-1">
       <button class="perfil-button col-auto me-4 ps-4 pe-4">
@@ -100,6 +101,7 @@ export default {
     carnet: String,
     uid: String,
     authorLoggedIn: Boolean,
+    loggedInUserUid: String,
   },
   data() {
     return {
@@ -127,7 +129,13 @@ export default {
     this.getUserProjects();
   });
 },
-
+  
+  computed: {
+    canEditProfile() {
+      // Verifica si el usuario actual coincide con el usuario del perfil
+      return this.uid === this.loggedInUserUid;
+    },
+  },
 
   methods: {
     activateEditMode() {
@@ -161,6 +169,7 @@ export default {
     },
 
     async onDescriptionChange() {
+      if (this.canEditProfile) {
       // Este método se llama cuando el usuario cambia la descripción
       const userRef = doc(db, 'users', this.uid);
       try {
@@ -170,7 +179,8 @@ export default {
         } catch (error) {
           console.error('Error al actualizar la descripción:', error);
         }
-      },
+      }
+    },
 
     addProject() {
       this.$emit('add-project')

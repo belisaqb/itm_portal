@@ -1,6 +1,6 @@
 <template>
     <div @click="projectDetails">
-        <div class="card-content">
+        <div style="cursor: pointer;" class="card-content">
             <div class="card-container">
                 <img class="card-img-top" :src="image" :alt="projectName">
                 <div class="position-absolute w-100 overlay ">

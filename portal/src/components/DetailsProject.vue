@@ -20,7 +20,7 @@
             </div>
             <hr class="divider">
             <div class="d-flex-dp comunMarginx">
-                <p class="txt-name-student">Por <span @click="goAuthorProfile" >{{ authorFirstName }} {{ authorLastName }} </span></p>
+                <p class="txt-name-student">Por <span style="cursor: pointer;" @click="goAuthorProfile" >{{ authorFirstName }} {{ authorLastName }} </span></p>
                 <hr class="dividerH comunMarginx">
                 <p class="txt-name-student">01/06/2023</p>
             </div>
