@@ -1,10 +1,10 @@
 <template>
   <div class="ps-4">
-    <div class="row pt-4 mb-4">
-      <div class="col-auto">
+    <div class="row d-flex pt-4 mb-4">
+      <div class="col-1">
         <img src="../assets/svg/user-dark.svg" style="width: 70%;">
       </div>
-      <div class="col mr-4">
+      <div class="col-10">
         <div style="display: flex;">
           <h1 class="bold-dark-blue-xlg">
             <span v-if="!editing">{{ editedFirstName }} {{ editedLastName }}</span>
@@ -21,10 +21,15 @@
         </div>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
       </div>
-      <div v-if="authorLoggedIn" class="col ms-6">
-        <button @click="addProject" class="perfil-button">
-          <img src="../assets/svg/plus-button.svg" alt="" class="img-button">
+      <div v-if="authorLoggedIn" class="col-1 img-user dropdown">
+        <button data-bs-toggle="dropdown" class="nav-buttons">
+          <img src="../assets/svg/options.svg" alt="" class="img-button">
         </button>
+          <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+            <li><a @click="addProject" class="dropdown-item semibold-ligth-green-med" href="#">Agregar Proyecto</a></li>
+            <li><a @click="editProject" class="dropdown-item semibold-ligth-green-med" href="#">Modificar Proyectos</a></li>
+          </ul>
+        
       </div>
     </div>
 
@@ -112,21 +117,21 @@ export default {
   },
 
   async mounted() {
-  console.log('OnMounted ' + this.uid);
+    console.log('OnMounted ' + this.uid);
 
-  const userRef = doc(db, 'users', this.uid);
+    const userRef = doc(db, 'users', this.uid);
 
-  // Escuchar cambios en el documento del usuario
-  onSnapshot(userRef, (doc) => {
-    if (doc.exists()) {
-      this.userDescription = doc.data().description || '';
-    } else {
-      this.userDescription = '';
-    }
+    // Escuchar cambios en el documento del usuario
+    onSnapshot(userRef, (doc) => {
+      if (doc.exists()) {
+        this.userDescription = doc.data().description || '';
+      } else {
+        this.userDescription = '';
+      }
 
-    this.getUserProjects();
-  });
-},
+      this.getUserProjects();
+    });
+  },
 
 
   methods: {
@@ -164,13 +169,13 @@ export default {
       // Este método se llama cuando el usuario cambia la descripción
       const userRef = doc(db, 'users', this.uid);
       try {
-          await updateDoc(userRef, {
-            description: this.userDescription, // Actualiza el campo de descripción
-          });
-        } catch (error) {
-          console.error('Error al actualizar la descripción:', error);
-        }
-      },
+        await updateDoc(userRef, {
+          description: this.userDescription, // Actualiza el campo de descripción
+        });
+      } catch (error) {
+        console.error('Error al actualizar la descripción:', error);
+      }
+    },
 
     addProject() {
       this.$emit('add-project')

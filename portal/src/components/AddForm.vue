@@ -19,16 +19,23 @@
                 <div class="addF-col2 form-group">
                     <label class="light-dark-blue-xm" for="participantes">PARTICIPANTES:</label>
                     <div id="participantes" class="multi-input-group">
-                        <!-- Se carga con JS                     -->
+                        <div v-for="(participante, index) in participantes" :key="index">
+                            <input type="text" v-model="participante.name" :name="'participantes[' + index + '].name'"
+                                placeholder="Nombre del Participante" />
+                        </div>
                     </div>
-                    <div id="add-participante" class="add-button">+ Agregar Participante</div>
+                    <div @click="addParticipante" id="add-participante" class="add-button">+ Agregar Participante</div>
                 </div>
                 <div class="addF-col2 form-group">
                     <label class="light-dark-blue-xm" for="softwares">SOFTWARES:</label>
                     <div id="softwares" class="multi-input-group">
+                        <div v-for="(software, index) in softwares" :key="index">
+                            <input type="text" v-model="software.name" :name="'softwares[' + index + '].name'"
+                                    placeholder="Nombre del Software" />
+                        </div>
                         <!-- Se carga con JS                     -->
                     </div>
-                    <div id="add-software" class="add-button">+ Agregar Software</div>
+                    <div @click="addSoftware" id="add-software" class="add-button">+ Agregar Software</div>
                 </div>
 
             </div>
@@ -71,10 +78,13 @@ export default {
     name: 'AddForm',
     data() {
         return {
+            inputName: '',
             inputProjectName: '',
             inputProjectDescription: '',
             selectedCategory: '',
-            imageUrl: ''
+            imageUrl: '',
+            participantes: [],
+            softwares: []
         }
     },
     props: {
@@ -92,10 +102,14 @@ export default {
                 id_category: this.selectedCategory,
                 image: this.imageUrl,
                 createdAt: serverTimestamp(),
-                userId: auth.currentUser.uid
+                userId: auth.currentUser.uid,
+                participantes: this.participantes.map(participante => participante.name),
+                softwares: this.softwares.map(software => software.name),
             })
                 .then(() => {
                     this.reset()
+                    this.participantes = []
+                    this.softwares = []
                 })
                 .catch((err) => {
                     console.log(err.message)
@@ -141,39 +155,46 @@ export default {
             );
         },
         addParticipante() {
-
+            this.participantes.push({ name: this.inputName });
+            this.inputName = '';
+            console.log(this.participantes)
+        },
+        addSoftware() {
+            this.softwares.push({ name: this.inputName })
+            this.inputName = ''
+            console.log(this.softwares)
         }
     },
     mounted() {
-        const participante = document.getElementById('add-participante')
-        participante.addEventListener('click', function () {
-            event.preventDefault()
-            let contenedor = document.createElement("div");
-            let id = "participante-" + Date.now();
-            contenedor.id = id;
-            document.querySelector('#participantes').appendChild(contenedor);
-           
-            let input = document.createElement("input");
-            input.type = "text";
-            input.setAttribute('name', "participante[]");
-            input.setAttribute('placeholder', "Nombre del Participante");
-            document.querySelector('#' + id).appendChild(input);
-        })
+        // const participante = document.getElementById('add-participante')
+        // participante.addEventListener('click', function () {
+        //     event.preventDefault()
+        //     let contenedor = document.createElement("div");
+        //     let id = "participante-" + Date.now();
+        //     contenedor.id = id;
+        //     document.querySelector('#participantes').appendChild(contenedor);
 
-        const software = document.getElementById('add-software')
-        software.addEventListener('click', function () {
-            event.preventDefault()
-            let contenedor = document.createElement("div");
-            let id = "software-" + Date.now();
-            contenedor.id = id;
-            document.querySelector('#softwares').appendChild(contenedor);
+        //     let input = document.createElement("input");
+        //     input.type = "text";
+        //     input.setAttribute('v-model', "inputName");
+        //     input.setAttribute('placeholder', "Nombre del Participante");
+        //     document.querySelector('#' + id).appendChild(input);
+        // })
 
-            let input = document.createElement("input");
-            input.type = "text";
-            input.setAttribute('name', "software[]");
-            input.setAttribute('placeholder', "Nombre del software");
-            document.querySelector('#' + id).appendChild(input);
-        })
+        // const software = document.getElementById('add-software')
+        // software.addEventListener('click', function () {
+        //     event.preventDefault()
+        //     let contenedor = document.createElement("div");
+        //     let id = "software-" + Date.now();
+        //     contenedor.id = id;
+        //     document.querySelector('#softwares').appendChild(contenedor);
+
+        //     let input = document.createElement("input");
+        //     input.type = "text";
+        //     input.setAttribute('name', "softwares[]");
+        //     input.setAttribute('placeholder', "Nombre del software");
+        //     document.querySelector('#' + id).appendChild(input);
+        // })
 
     },
 }
