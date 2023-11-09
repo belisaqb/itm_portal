@@ -17,7 +17,7 @@
         <AddForm v-if="projectRegister" :categories="categories"></AddForm>
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
-        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId"
+        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId" :loggedInUserUid="loggedInUserUid"
           :firstName="currentUser.firstname" :lastName="currentUser.lastname" :email="currentUser.inputEmail"
           :carnet="currentUser.carnet" :description="currentUser.description" @update:firstName="updateFirstName"
           @update:lastName="updateLastName" @add-project="createProject">
@@ -241,6 +241,7 @@ export default {
       authorUserProfile: false,
       firstName: '',
       lastName: '',
+      loggedInUserUid: '',
 
       //-------------------Variables Init---------------
       categories: [],
@@ -302,6 +303,7 @@ export default {
 
       this.changeView(2)
     },
+    
     async getDocumentById(collection, documentId) {
       //------------Method to get a document by the id--------------
       const docRef = doc(db, collection, documentId)
@@ -557,6 +559,15 @@ export default {
     }
 
   },
+  beforeMount() {
+
+  onAuthStateChanged(auth, (user) => {
+      if (user) {
+        this.loggedInUserUid = user.uid; // Asignar el valor del usuario al loggedInUserUid
+      }
+    });
+  },
+
   mounted: function () {
 
     //--------------------App.vue mounted-------------------------
