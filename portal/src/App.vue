@@ -14,19 +14,20 @@
     <section class="content" id="content">
       <div class="content-section ms-5">
 
-        <AddForm v-if="projectRegister" :categories="categories"></AddForm>
+        
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
-        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId" :loggedInUserUid="loggedInUserUid"
-          :firstName="currentUser.firstname" :lastName="currentUser.lastname" :email="currentUser.inputEmail"
-          :carnet="currentUser.carnet" :description="currentUser.description" @update:firstName="updateFirstName"
-          @update:lastName="updateLastName" @add-project="createProject">
+        <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId"
+          :loggedInUserUid="loggedInUserUid" :firstName="currentUser.firstname" :lastName="currentUser.lastname"
+          :email="currentUser.inputEmail" :carnet="currentUser.carnet" :description="currentUser.description" :categories="categories"
+          @update:firstName="updateFirstName" @update:lastName="updateLastName" @add-project="createProject"
+          @edit-projects="viewListOwnProjects"  @goProjectDetails="goProjectDetails">
         </PerfilUser>
 
 
         <PerfilUser v-if="authorUserProfile" :authorLoggedIn="authorLoggedIn" :uid="authorUser.userId"
-          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail"
-          :carnet="authorUser.carnet">
+          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail" :categories="categories"
+          :carnet="authorUser.carnet"  @goProjectDetails="goProjectDetails">
         </PerfilUser>
 
 
@@ -147,13 +148,21 @@
         <!----------------- DETALLE DE PROYECTO ------------------------->
         <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image"
           :projectName="singleProject.name" :projectDescription="singleProject.description"
-          :projectCategory="singleProject.category" :authorId="singleProject.authorId"></DetailsProject>
+          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes" 
+          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls"></DetailsProject>
 
 
 
         <!----------------- PANEL ADMIN ------------------------->
         <AdminView v-if="adminPanel"></AdminView>
 
+
+        <!----------------- LISTA DE PROYECTOS DEL CURRENT USER ------------------------->
+        <ProjectsList v-if="projectsList" :categories="categories" :users="users" @edit-project="editSelectedProject"></ProjectsList>
+
+        <AddForm v-if="projectRegister" @go-project-list="viewListOwnProjects" :categories="categories"></AddForm>
+
+        <EditProject v-if="editProject" @go-project-list="viewListOwnProjects" :categories="categories" :projectId="editProjectId"></EditProject>
 
       </div>
     </section>
@@ -222,6 +231,8 @@ import DetailsProject from './components/DetailsProject.vue'
 import LowFooter from './components/LowFooter.vue'
 
 import AdminView from './components/AdminView.vue'
+import ProjectsList from './components/ProjectsList.vue'
+import EditProject from './components/EditProject.vue'
 
 
 export default {
@@ -242,6 +253,8 @@ export default {
       firstName: '',
       lastName: '',
       loggedInUserUid: '',
+      projectsList: false,
+      editProject: false,
 
       //-------------------Variables Init---------------
       categories: [],
@@ -253,7 +266,8 @@ export default {
       authorLoggedIn: false,
       singleProject: {},
       currentUser: {},
-      authorUser: {}
+      authorUser: {},
+      editProjectId: ''
     }
   },
 
@@ -269,7 +283,9 @@ export default {
     PerfilUser,
     DetailsProject,
     LowFooter,
-    AddForm
+    AddForm,
+    ProjectsList,
+    EditProject
   },
 
   //---------------Methods---------------------
@@ -291,11 +307,45 @@ export default {
       const getProject = await this.fetchDataById('projects', data.id)
       const filteredCategory = this.filterCategory(getProject.id_category)[0].category
 
+      
+      //Llenar los arreglos de participantes, softwares e imagenes
+      let participantes = []
+      let softwares = []
+      let imgUrls = []
+
+      if (getProject.participantes != undefined) {
+        getProject.participantes.forEach(participante => {
+          participantes.push({
+            name: participante
+          })
+        })
+      }
+
+      if (getProject.softwares != undefined) {
+        getProject.softwares.forEach(software => {
+          softwares.push({
+            name: software
+          })
+        })
+      }
+
+      if (getProject.images != undefined) {
+        getProject.images.forEach(image => {
+          imgUrls.push({
+            name: image
+          })
+        })
+      }
+      ////////////////////////////////////////////////////////////
+
       this.singleProject.name = getProject.name
       this.singleProject.description = getProject.description
       this.singleProject.category = filteredCategory
-      this.singleProject.image = getProject.image
+      this.singleProject.image = getProject.images[0]
       this.singleProject.authorId = getProject.userId
+      this.singleProject.participantes = participantes
+      this.singleProject.softwares = softwares
+      this.singleProject.imgUrls = imgUrls
 
       console.log(this.singleProject)
       this.showProjectDetails = true
@@ -303,7 +353,6 @@ export default {
 
       this.changeView(2)
     },
-    
     async getDocumentById(collection, documentId) {
       //------------Method to get a document by the id--------------
       const docRef = doc(db, collection, documentId)
@@ -333,7 +382,7 @@ export default {
       this.currentUser = getCurrentUser;
       Object.assign(this.currentUser, { userId: user.uid })
       // console.log(this.currentUser.uid)
-      this.authorLoggedIn = 'true'
+      this.authorLoggedIn = true
 
       if (user.uid == 'YRsNBEnQm3eykok24Wu2DedqeNp2') {
         this.viewAdminPanel()
@@ -348,13 +397,18 @@ export default {
       // console.log(data.userId)
       this.viewProjectRegister()
     },
+    editSelectedProject(data) {
+      console.log('ProjectId: ' + data.id)
+      this.editProjectId = data.id
+      this.changeView(10)
+    },
     async doSearchProjects(data) {
-      console.log(data.keyword)
+      // console.log(data.keyword)
       const keyword = data.keyword;
       const projectsRef = collection(db, 'projects');
 
       // Crear una consulta para buscar productos que contienen la palabra clave en el campo "nombre"
-      const consulta = query(projectsRef, where('name',  '==' , keyword));
+      const consulta = query(projectsRef, where('name', '==', keyword));
 
       this.projects = []
 
@@ -362,8 +416,9 @@ export default {
       getDocs(consulta)
         .then((querySnapshot) => {
           querySnapshot.forEach((doc) => {
-             const filterCategories = this.filterCategory(doc.data().id_category)
+            const filterCategories = this.filterCategory(doc.data().id_category)
             const filterUsers = this.filterUser(doc.data().userId)
+            
             console.log(doc.data())
             this.projects.push({
               id: doc.id,
@@ -435,6 +490,8 @@ export default {
             this.currentUserProfile = false,
             this.adminPanel = false,
             this.authorUserProfile = false
+          this.projectsList = false
+          this.editProject = false
           break
 
         ///////////////////Auth//////////////////
@@ -452,6 +509,7 @@ export default {
             this.currentUserProfile = false,
             this.adminPanel = false,
             this.authorUserProfile = false
+          this.projectsList = false
           break
         ///////////////////ProjectRegister///////////////////
         case 3:
@@ -464,6 +522,8 @@ export default {
             this.currentUserProfile = false,
             this.adminPanel = false,
             this.authorUserProfile = false
+          this.projectsList = false
+          this.editProject = false
           break
         ///////////////////AllProjects///////////////////
         case 4:
@@ -476,6 +536,8 @@ export default {
             this.currentUserProfile = false,
             this.adminPanel = false,
             this.authorUserProfile = false
+          this.projectsList = false
+          this.editProject = false
           break
         ///////////////////Current User Profile////////////////////
         case 5:
@@ -488,6 +550,8 @@ export default {
             this.currentUserProfile = true,
             this.adminPanel = false,
             this.authorUserProfile = false
+          this.projectsList = false
+          this.editProject = false
           break
         ///////////////////Admin Panel View////////////////////
         case 6:
@@ -500,6 +564,8 @@ export default {
             this.currentUserProfile = false,
             this.adminPanel = true,
             this.authorUserProfile = false
+          this.projectsList = false
+          this.editProject = false
           break
         ///////////////////Project Author User Profile////////////////////
         case 7:
@@ -512,7 +578,37 @@ export default {
             this.currentUserProfile = false,
             this.adminPanel = false,
             this.authorUserProfile = true
+          this.projectsList = false
+          this.editProject = false
           break
+        ///////////////////Project List For The Current User////////////////////
+        case 9:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false,
+            this.projectsList = true
+            this.editProject = false
+            break
+        ///////////////////Edit Project////////////////////
+          case 10:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false,
+            this.projectsList = false
+            this.editProject = true
+            break
       }
     },
     viewHome() {
@@ -534,8 +630,12 @@ export default {
     viewAdminPanel() {
       this.changeView(6)
     },
+    viewListOwnProjects() {
+      this.changeView(9)
+      // console.log('editar')
+    },
     async viewAuthorProfile(data) {
-      console.log(data.authorId)
+      // console.log(data.authorId)
 
 
       const getAuthorUser = await this.fetchDataById('users', data.authorId);
@@ -560,8 +660,7 @@ export default {
 
   },
   beforeMount() {
-
-  onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, (user) => {
       if (user) {
         this.loggedInUserUid = user.uid; // Asignar el valor del usuario al loggedInUserUid
       }
@@ -619,13 +718,15 @@ export default {
         querySnapshot.forEach((doc) => {
           const filterCategories = this.filterCategory(doc.data().id_category)
           const filterUsers = this.filterUser(doc.data().userId)
-          // console.log(doc.data().image)
+
+
+          // console.log(project.image)
           this.projects.push({
             id: doc.id,
             name: doc.data().name,
             description: doc.data().description,
             category: filterCategories[0].category,
-            image: doc.data().image,
+            image: doc.data().images[0],
             userId: doc.data().userId,
             author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName
           });

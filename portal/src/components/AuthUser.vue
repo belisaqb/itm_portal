@@ -175,9 +175,9 @@ export default {
 
     /* DOLOGIN METHOD*/
     doLogin() {
-      console.log('login')
+      // console.log('login')
 
-      console.log(this.inputEmail, this.inputPassword)
+      // console.log(this.inputEmail, this.inputPassword)
       signInWithEmailAndPassword(auth, this.inputEmail, this.inputPassword)
         .then((cred) => {
           console.log('The user logged in:', cred.user)

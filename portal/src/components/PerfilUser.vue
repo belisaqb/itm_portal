@@ -27,7 +27,7 @@
         </button>
           <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
             <li><a @click="addProject" class="dropdown-item semibold-ligth-green-med" href="#">Agregar Proyecto</a></li>
-            <li><a @click="editProject" class="dropdown-item semibold-ligth-green-med" href="#">Modificar Proyectos</a></li>
+            <li><a @click="editProjects" class="dropdown-item semibold-ligth-green-med" href="#">Modificar Proyectos</a></li>
           </ul>
         
       </div>
@@ -107,6 +107,9 @@ export default {
     uid: String,
     authorLoggedIn: Boolean,
     loggedInUserUid: String,
+    categories: {
+      type: Array,
+    },
   },
   data() {
     return {
@@ -119,7 +122,7 @@ export default {
   },
 
   async mounted() {
-    console.log('OnMounted ' + this.uid);
+    // console.log('OnMounted ' + this.uid);
 
     const userRef = doc(db, 'users', this.uid);
 
@@ -191,11 +194,14 @@ export default {
       this.$emit('add-project')
       // this.$emit('add-project', { userId: this.uid })
     },
+    editProjects() {
+      this.$emit('edit-projects')
+    },
     getUserProjects() {
       // Define la categoría por la que deseas filtrar
       const authorId = this.uid; // Cambia esto según tu categoría deseada
 
-      console.log("AuthorID" + authorId)
+      // console.log("AuthorID" + authorId)
       // Crea una referencia a la colección "productos"
       const projectsRef = collection(db, 'projects');
 
@@ -204,17 +210,32 @@ export default {
 
       getDocs(consultaFiltrada)
         .then((querySnapshot) => {
-          querySnapshot.forEach((doc) => {
-            // Accede a los datos de cada producto
-            const project = doc.data();
-            this.ownProjects.push(project)
-          });
+            querySnapshot.forEach((doc) => {
+              const filterCategories = this.filterCategory(doc.data().id_category)
+              // console.log(project.image)
+              this.ownProjects.push({
+                id: doc.id,
+                name: doc.data().name,
+                description: doc.data().description,
+                category: filterCategories[0].category,
+                image: doc.data().images[0],
+                userId: doc.data().userId,
+              });
+            });
         })
         .catch((error) => {
           console.error('Error al obtener proyectos filtrados:', error);
         });
-      console.log(this.ownProjects)
-    }
+      // console.log(this.ownProjects)
+    },
+    goProjectDetails(data) {
+      this.$emit('goProjectDetails', data)
+    },
+    filterCategory(idToMatch) {
+      //------------Method to get the correct category for the project--------------
+      const filteredCategories = this.categories.filter(category => category.id === idToMatch)
+      return filteredCategories
+    },
   }
 }
 

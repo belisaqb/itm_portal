@@ -9,38 +9,33 @@
                 </div>
                 <div class="details-container">
                     <p class="txtDescriptionProyects">PARTICIPANTES:</p>
-                    <p class="txtDetailsProyects mediumSpaceBottom">Anthonny Joseph</p>
+                    <p class="txtDetailsProyects mediumSpaceBottom">{{ participantes.map(participante => participante.name).join(', ') }}</p>
                     <p class="txtDescriptionProyects">TIPO DE PROYECTO:</p>
                     <p class="txtDetailsProyects mediumSpaceBottom">{{ projectCategory }}</p>
                     <p class="txtDescriptionProyects">SOFTWARE:</p>
-                    <p class="txtDetailsProyects mediumSpaceBottom">HTM, SASS, JavaScript</p>
+                    <p class="txtDetailsProyects mediumSpaceBottom">{{ softwares.map(software => software.name).join(', ') }}</p>
                     <p class="txtDescriptionProyects">CICLO LECTIVO:</p>
                     <p class="txtDetailsProyects mediumSpaceBottom">I CICLO 2023</p>
                 </div>
             </div>
             <hr class="divider">
             <div class="d-flex-dp comunMarginx">
-                <p class="txt-name-student">Por <span style="cursor: pointer;" @click="goAuthorProfile" >{{ authorFirstName }} {{ authorLastName }} </span></p>
+                <p class="txt-name-student">Por <span style="cursor: pointer;" @click="goAuthorProfile">{{ authorFirstName
+                }} {{ authorLastName }} </span></p>
                 <hr class="dividerH comunMarginx">
                 <p class="txt-name-student">01/06/2023</p>
             </div>
             <div class="d-flex-dp comunMarginx">
                 <p class="txt-name-student">{{ projectDescription }}</p>
             </div>
-            <div class="images-proyect">
-                <div class="image-item">
-                    <img src="@/assets/imgs/Proyectos/img_weather_app.png" alt="img">
-                </div>
-                <div class="image-item">
-                    <img src="@/assets/imgs/Proyectos/img_weather_app.png" alt="img">
-                </div>
-                <div class="image-item">
-                    <img src="@/assets/imgs/Proyectos/img_weather_app.png" alt="img">
+            <div class="m-4 row d-flex">
+                <div class="col-4" v-for="(preview, index) in imgUrls" :key="index">
+                    <img class="img-fluid" :src="preview.name" alt="Vista previa de la imagen">
                 </div>
             </div>
             <div>
                 <h2 class="text-center pt-4 black-dark-blue-xlg">MUESTRA DEL PROYECTO</h2>
-                <img class="centered-image" :src="image" alt="img">
+                <img class="centered-image img-fluid" :src="image" alt="img">
             </div>
             <hr class="divider">
             <div class="comunMarginx pt-2">
@@ -75,7 +70,7 @@
                     <p class="margin-top-cart-proyects txt-name-student">Juego hecho en Java</p>
                 </div>
             </div>
-        </div>       
+        </div>
     </div>
 </template>
 
@@ -92,7 +87,10 @@ export default {
         projectName: String,
         projectDescription: String,
         projectCategory: String,
-        authorId: String
+        authorId: String,
+        participantes: { type: Array },
+        softwares: { type: Array },
+        imgUrls: { type: Array }
     },
     data() {
         return {
@@ -106,7 +104,7 @@ export default {
             const authorNameAwait = await this.fetchDataById('users', this.authorId)
             this.authorFirstName = authorNameAwait.firstname
             this.authorLastName = authorNameAwait.lastname
-            
+
         },
         async getDocumentById(collection, documentId) {
             //------------Method to get a document by the id--------------
@@ -130,7 +128,7 @@ export default {
             }
         },
         goAuthorProfile() {
-            this.$emit('go-author-profile', {authorId: this.authorId})
+            this.$emit('go-author-profile', { authorId: this.authorId })
         }
     },
     mounted() {
