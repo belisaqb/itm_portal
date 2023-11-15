@@ -29,7 +29,7 @@
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.name }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.author }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.category }}</p>
-                                        <p class='col-lg-2 col-sm-6-2 m-0'></p>
+                                        <p class='col-lg-2 col-sm-6-2 m-0'>{{ formatDate(project.createdAt) }}</p>
                                         <a @click="editProject(project.id)" class='col-lg-1 col-sm-3 m-0' href='#'>Editar</a>
                                         <a @click="deleteProject(project.id)" class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
                                     </div>
@@ -55,6 +55,7 @@
 
 
 <script>
+import { format } from 'date-fns';
 import { db, auth } from '@/firebase'
 import { collection, query, where, getDocs,  doc, deleteDoc  } from 'firebase/firestore';
 
@@ -102,6 +103,12 @@ export default {
             const filteredUsers = this.users.filter(user => user.id === idToMatch)
             return filteredUsers
         },
+        formatDate(createdAt) {
+            // Convierte la fecha de Firebase a un objeto de fecha
+            const dateObject = new Date(createdAt.toDate());
+            // Formatea la fecha según el formato 'dd/MM/yy'
+            return format(dateObject, 'dd/MM/yy');
+        },
         getUserProjects() {
             // Define la categoría por la que deseas filtrar
             const authorId = auth.currentUser.uid; // Cambia esto según tu categoría deseada
@@ -125,7 +132,8 @@ export default {
                             category: filterCategories[0].category,
                             image: doc.data().image,
                             userId: doc.data().userId,
-                            author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName
+                            author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName,
+                            createdAt: doc.data().createdAt
                         });
                     });
                 })

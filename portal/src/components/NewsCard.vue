@@ -6,7 +6,7 @@
                 <div class="position-absolute w-100 overlay ">
                     <div class="d-flex mx-2  positionY justify-content-between">
                         <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
+                        <p class="bold-white-lg">20/06/2023</p>
                     </div>
                 </div>
             </div>

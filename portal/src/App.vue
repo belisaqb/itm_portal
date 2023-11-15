@@ -149,7 +149,7 @@
         <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image"
           :projectName="singleProject.name" :projectDescription="singleProject.description"
           :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes" 
-          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls"></DetailsProject>
+          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
 
 
 
@@ -346,8 +346,9 @@ export default {
       this.singleProject.participantes = participantes
       this.singleProject.softwares = softwares
       this.singleProject.imgUrls = imgUrls
+      this.singleProject.createdAt = getProject.createdAt
 
-      console.log(this.singleProject)
+      // console.log(this.singleProject)
       this.showProjectDetails = true
       this.filteredProjects = this.projectsList;
 

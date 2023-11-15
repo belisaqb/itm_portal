@@ -9,11 +9,13 @@
                 </div>
                 <div class="details-container">
                     <p class="txtDescriptionProyects">PARTICIPANTES:</p>
-                    <p class="txtDetailsProyects mediumSpaceBottom">{{ participantes.map(participante => participante.name).join(', ') }}</p>
+                    <p class="txtDetailsProyects mediumSpaceBottom">{{ participantes.map(participante =>
+                        participante.name).join(', ') }}</p>
                     <p class="txtDescriptionProyects">TIPO DE PROYECTO:</p>
                     <p class="txtDetailsProyects mediumSpaceBottom">{{ projectCategory }}</p>
                     <p class="txtDescriptionProyects">SOFTWARE:</p>
-                    <p class="txtDetailsProyects mediumSpaceBottom">{{ softwares.map(software => software.name).join(', ') }}</p>
+                    <p class="txtDetailsProyects mediumSpaceBottom">{{ softwares.map(software => software.name).join(', ')
+                    }}</p>
                     <p class="txtDescriptionProyects">CICLO LECTIVO:</p>
                     <p class="txtDetailsProyects mediumSpaceBottom">I CICLO 2023</p>
                 </div>
@@ -23,7 +25,7 @@
                 <p class="txt-name-student">Por <span style="cursor: pointer;" @click="goAuthorProfile">{{ authorFirstName
                 }} {{ authorLastName }} </span></p>
                 <hr class="dividerH comunMarginx">
-                <p class="txt-name-student">01/06/2023</p>
+                <p class="txt-name-student">{{ formatDate(createdAt) }}</p>
             </div>
             <div class="d-flex-dp comunMarginx">
                 <p class="txt-name-student">{{ projectDescription }}</p>
@@ -76,6 +78,7 @@
 
 
 <script>
+import { format } from 'date-fns'
 import { db } from '@/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 
@@ -90,7 +93,8 @@ export default {
         authorId: String,
         participantes: { type: Array },
         softwares: { type: Array },
-        imgUrls: { type: Array }
+        imgUrls: { type: Array },
+        createdAt: { type: Object }
     },
     data() {
         return {
@@ -129,7 +133,15 @@ export default {
         },
         goAuthorProfile() {
             this.$emit('go-author-profile', { authorId: this.authorId })
-        }
+        },
+
+        formatDate(createdAt) {
+            // Convierte la fecha de Firebase a un objeto de fecha
+            const dateObject = new Date(createdAt.toDate());
+            // Formatea la fecha según el formato 'dd/MM/yy'
+            return format(dateObject, 'dd/MM/yy');
+        },
+
     },
     mounted() {
         this.getAuthorInfo()
