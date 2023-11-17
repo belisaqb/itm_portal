@@ -5,7 +5,7 @@
 
             <div class="image-details-container">
                 <div class="image-container">
-                    <img class="img-fluid" :src="image" alt="img">
+                    <img class="img-fluid object-fit-cover" :src="image" alt="img">
                 </div>
                 <div class="details-container">
                     <p class="txtDescriptionProyects">PARTICIPANTES:</p>
@@ -30,7 +30,7 @@
             <div class="d-flex-dp comunMarginx">
                 <p class="txt-name-student">{{ projectDescription }}</p>
             </div>
-            <div class="m-4 row d-flex">
+            <!-- <div class="m-4 row d-flex">
                 <div class="col-4" v-for="(preview, index) in imgUrls" :key="index">
                     <img class="img-fluid" :src="preview.name" alt="Vista previa de la imagen">
                 </div>
@@ -38,7 +38,11 @@
             <div>
                 <h2 class="text-center pt-4 black-dark-blue-xlg">MUESTRA DEL PROYECTO</h2>
                 <img class="centered-image img-fluid" :src="image" alt="img">
-            </div>
+            </div> -->
+
+            <h2 class="m-4 text-center pt-4 black-dark-blue-xlg">MUESTRA DEL PROYECTO</h2>
+            <CarouselSlider :slides="imgUrls"></CarouselSlider>
+
             <hr class="divider">
             <div class="comunMarginx pt-2">
                 <p class=" black-dark-blue-xlg">Relacionados</p>
@@ -78,12 +82,17 @@
 
 
 <script>
+import CarouselSlider from './CarouselSlider.vue'
 import { format } from 'date-fns'
 import { db } from '@/firebase'
 import { doc, getDoc } from 'firebase/firestore'
 
+
 export default {
     name: 'DetailsProject',
+    components: {
+        CarouselSlider
+    },
     props: {
         id: String,
         image: { type: String, default: 'https://firebasestorage.googleapis.com/v0/b/portal-itm.appspot.com/o/images%2Fplaceholder-image.png?alt=media&token=614d5ce1-6099-4572-ace6-10d240c44e68' },
@@ -287,4 +296,5 @@ export default {
     font-weight: 400;
     color: rgba(0, 45, 92, 1);
 }
+
 </style>
