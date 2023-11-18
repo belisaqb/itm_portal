@@ -48,7 +48,31 @@
                 <p class=" black-dark-blue-xlg">Relacionados</p>
             </div>
             <div class="images-proyect margin-b">
-                <div class="image-item">
+
+                <div class="container mt-4">
+                    <div class="row mx-1">
+                        <!-- Proyectos del mismo autor -->
+                        <div v-if="relatedProjectsByAuthor.length > 0">
+                            <div v-for="(project, index) in relatedProjectsByAuthor" :key="index" class="col-lg-6 col-sm-9 mb-4">
+                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
+                                ></ProjectCard>
+                            </div>
+                        </div>
+                
+                        <!-- Proyectos de la misma categoría -->
+                        <div v-if="relatedProjectsByCategory.length > 0">
+                            <div v-for="(project, index) in relatedProjectsByCategory" :key="index" class="col-lg-6 col-sm-9 mb-4">
+                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
+                                ></ProjectCard>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- <div class="image-item">
                     <div class="overlay">
                         <p class="overlay-text">TonyJEF</p>
                         <img style="width: 35px; height: 25px;" class="overlay-img"
@@ -74,7 +98,7 @@
                         <img src="@/assets/imgs/Proyectos/img_magic.png" alt="img">
                     </div>
                     <p class="margin-top-cart-proyects txt-name-student">Juego hecho en Java</p>
-                </div>
+                </div> -->
             </div>
         </div>
     </div>
@@ -85,13 +109,16 @@
 import CarouselSlider from './CarouselSlider.vue'
 import { format } from 'date-fns'
 import { db } from '@/firebase'
-import { doc, getDoc } from 'firebase/firestore'
+import { collection, doc, getDoc } from 'firebase/firestore'
+import ProjectCard from './ProjectCard.vue';
+import { query, where, getDocs } from 'firebase/firestore';
 
 
 export default {
     name: 'DetailsProject',
     components: {
-        CarouselSlider
+        CarouselSlider,
+        ProjectCard,
     },
     props: {
         id: String,
@@ -99,16 +126,22 @@ export default {
         projectName: String,
         projectDescription: String,
         projectCategory: String,
+        projectId: String,
         authorId: String,
         participantes: { type: Array },
         softwares: { type: Array },
         imgUrls: { type: Array },
-        createdAt: { type: Object }
+        createdAt: { type: Object },
+        categories: {
+            type: Array,
+        },
     },
     data() {
         return {
             authorFirstName: '',
-            authorLastName: ''
+            authorLastName: '',
+            relatedProjectsByAuthor: [],
+            relatedProjectsByCategory: [],
         }
     },
     methods: {
@@ -151,10 +184,79 @@ export default {
             return format(dateObject, 'dd/MM/yy');
         },
 
+        //--------FILTRADO POR AUTOR FALTA ENCONTRAR EL currentProjectId---------//
+        async getRelatedProjectsByAuthor() {
+            const authorId = this.authorId;
+            const currentProjectId = this.id;
+            
+            const projectsRef = collection(db, 'projects');
+            const querySnapshot = await getDocs(query(projectsRef, where('userId', '==', authorId)));
+
+            this.relatedProjectsByAuthor = [];
+
+            querySnapshot.forEach((doc) => {
+                console.log('doc.id: ' , doc.id)
+                console.log('currentProjectId: ', currentProjectId)
+            // Verifica si el proyecto actual coincide con el proyecto en iteración
+                if (doc.id != currentProjectId) {
+                    
+                    const filterCategories = this.filterCategory(doc.data().id_category);
+
+                    this.relatedProjectsByAuthor.push({
+                        id: doc.id,
+                        name: doc.data().name,
+                        description: doc.data().description,
+                        category: filterCategories[0].category,
+                        image: doc.data().images[0],
+                        userId: doc.data().userId,
+                    });
+                }
+            });
+        },
+
+        //--------FILTRADO POR CATEGORIA AUN NO FUNCIONA---------//
+        async getRelatedProjectsByCategory() {
+
+            const authorId = this.authorId;
+            const currentProjectCategoryId = this.projectCategory; // Asegúrate de tener acceso a la categoría del proyecto actual
+            console.log('currentProjectCategoryId', currentProjectCategoryId)
+
+            const projectsRef = collection(db, 'projects');
+            const querySnapshot = await getDocs(query(projectsRef, where('userId', '==', authorId)));
+
+            this.relatedProjectsByCategory = [];
+
+            querySnapshot.forEach((doc) => {
+                const projectCategoryId = doc.data().id_category;
+
+                if (doc.id !== this.id && projectCategoryId === currentProjectCategoryId) {
+                    const filterCategories = this.filterCategory(projectCategoryId);
+
+                    this.relatedProjectsByCategory.push({
+                        id: doc.id,
+                        name: doc.data().name,
+                        description: doc.data().description,
+                        category: filterCategories[0].category,
+                        image: doc.data().images[0],
+                        userId: doc.data().userId,
+                    });
+                }
+            });          
+        },
+
+        filterCategory(idToMatch) {
+            //------------Method to get the correct category for the project--------------
+            const filteredCategories = this.categories.filter(category => category.id === idToMatch)
+            return filteredCategories
+        },
     },
+
     mounted() {
         this.getAuthorInfo()
+        this.getRelatedProjectsByAuthor();
+        this.getRelatedProjectsByCategory();
     },
+
 }
 </script>
 

@@ -146,8 +146,8 @@
 
 
         <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image"
-          :projectName="singleProject.name" :projectDescription="singleProject.description"
+        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image" :projectId="singleProject.projectId"
+          :projectName="singleProject.name" :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id"
           :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes" 
           :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
 
