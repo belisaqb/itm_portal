@@ -337,7 +337,7 @@ export default {
         })
       }
       ////////////////////////////////////////////////////////////
-
+      this.singleProject.id = data.id
       this.singleProject.name = getProject.name
       this.singleProject.description = getProject.description
       this.singleProject.category = filteredCategory

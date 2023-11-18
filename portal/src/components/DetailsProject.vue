@@ -126,7 +126,6 @@ export default {
         projectName: String,
         projectDescription: String,
         projectCategory: String,
-        projectId: String,
         authorId: String,
         participantes: { type: Array },
         softwares: { type: Array },
@@ -188,6 +187,7 @@ export default {
         async getRelatedProjectsByAuthor() {
             const authorId = this.authorId;
             const currentProjectId = this.id;
+            console.log('id proyeccto ', this.id, currentProjectId)
             
             const projectsRef = collection(db, 'projects');
             const querySnapshot = await getDocs(query(projectsRef, where('userId', '==', authorId)));
@@ -195,8 +195,6 @@ export default {
             this.relatedProjectsByAuthor = [];
 
             querySnapshot.forEach((doc) => {
-                console.log('doc.id: ' , doc.id)
-                console.log('currentProjectId: ', currentProjectId)
             // Verifica si el proyecto actual coincide con el proyecto en iteración
                 if (doc.id != currentProjectId) {
                     
