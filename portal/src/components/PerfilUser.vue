@@ -240,3 +240,23 @@ export default {
 }
 
 </script>
+
+<style scoped>
+
+.edit-button {
+  background: none; 
+  border: 0;
+}
+
+.edit-img{
+  width: 1em; 
+  margin-left: 1em;
+  padding-bottom: 1em;
+}
+
+.description-ta{
+  background-color: rgb(0, 45, 92);
+  border: none;
+  width: 100%;
+}
+</style>
