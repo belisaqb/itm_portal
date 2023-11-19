@@ -12,7 +12,7 @@
 
     <!----------------- MAIN SECTION ------------------------->
     <section class="content" id="content">
-      <div class="content-section ms-5">
+      <div class="content-section ms-2 ms-lg-5">
 
         
 
@@ -132,7 +132,7 @@
 
             <div class="row mx-1">
 
-              <div v-for="(project, index) in projects" :key="index" class="col-lg-6 col-sm-9 mb-4">
+              <div v-for="(project, index) in projects" :key="index" class="col-md-6 mb-4">
                 <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
                   :projectName="project.name" :projectDescription="project.description"
                   :projectCategory="project.category" :authorName="project.author"></ProjectCard>

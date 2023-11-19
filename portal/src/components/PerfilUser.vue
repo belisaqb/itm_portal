@@ -25,39 +25,41 @@
         <button data-bs-toggle="dropdown" class="nav-buttons">
           <img src="../assets/svg/options.svg" alt="" class="img-button">
         </button>
-          <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
-            <li><a @click="addProject" class="dropdown-item semibold-ligth-green-med" href="#">Agregar Proyecto</a></li>
-            <li><a @click="editProjects" class="dropdown-item semibold-ligth-green-med" href="#">Modificar Proyectos</a></li>
-          </ul>
-        
+        <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+          <li><a @click="addProject" class="dropdown-item semibold-ligth-green-med" href="#">Agregar Proyecto</a></li>
+          <li><a @click="editProjects" class="dropdown-item semibold-ligth-green-med" href="#">Modificar Proyectos</a>
+          </li>
+        </ul>
+
       </div>
     </div>
 
     <div class="dark-blue-container">
-    <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta"
-      @input="onDescriptionChange" placeholder="AGREGAR DESCRIPCION DEL USUARIO" :disabled="!canEditProfile" 
-    ></textarea>
-  </div>
+      <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange"
+        placeholder="AGREGAR DESCRIPCION DEL USUARIO" :disabled="!canEditProfile"></textarea>
+    </div>
+
+
 
     <div class="row pt-4 mb-4 ms-1">
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/code.svg" alt="code">
+      <button @click="selectCategory('Programación')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/code.svg" alt="code">
       </button>
 
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/drawings.svg" alt="drawings">
+      <button @click="selectCategory('Diseño/Dibujo')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/drawings.svg" alt="drawings">
       </button>
 
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/cyber-segurity.svg" alt="cyber-segurity">
+      <button @click="selectCategory('Ciberseguridad')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/cyber-segurity.svg" alt="cyber-segurity">
       </button>
 
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/animations.svg" alt="animations">
+      <button @click="selectCategory('Audiovisuales')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/animations.svg" alt="animations">
       </button>
 
       <div class="col-auto d-flex justify-content-center dropdown mx-2">
-        <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button" data-bs-toggle="dropdown"
+        <button class="dropdown-toggle dropdown-button semibold-ligth-green-med rounded" type="button" data-bs-toggle="dropdown"
           aria-expanded="false">
           ORDENAR POR
         </button>
@@ -71,7 +73,7 @@
 
     <div class="container mt-4">
       <div class="row mx-1">
-
+        <h1 class="text-center py-4 black-dark-blue-xlg">PROYECTOS</h1>
         <div v-for="(project, index) in ownProjects" :key="index" class="col-md-6 mb-4">
           <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
             :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
@@ -118,6 +120,7 @@ export default {
       editedLastName: this.lastName,
       userDescription: '',
       ownProjects: [],
+      allOwnProjects: []
     };
   },
 
@@ -134,10 +137,10 @@ export default {
         this.userDescription = '';
       }
 
-    this.getUserProjects();
-  });
-},
-  
+      this.getUserProjects();
+    });
+  },
+
   computed: {
     canEditProfile() {
       // Verifica si el usuario actual coincide con el usuario del perfil
@@ -178,9 +181,9 @@ export default {
 
     async onDescriptionChange() {
       if (this.canEditProfile) {
-      // Este método se llama cuando el usuario cambia la descripción
-      const userRef = doc(db, 'users', this.uid);
-      try {
+        // Este método se llama cuando el usuario cambia la descripción
+        const userRef = doc(db, 'users', this.uid);
+        try {
           await updateDoc(userRef, {
             description: this.userDescription, // Actualiza el campo de descripción
           });
@@ -210,23 +213,24 @@ export default {
 
       getDocs(consultaFiltrada)
         .then((querySnapshot) => {
-            querySnapshot.forEach((doc) => {
-              const filterCategories = this.filterCategory(doc.data().id_category)
-              // console.log(project.image)
-              this.ownProjects.push({
-                id: doc.id,
-                name: doc.data().name,
-                description: doc.data().description,
-                category: filterCategories[0].category,
-                image: doc.data().images[0],
-                userId: doc.data().userId,
-              });
+          querySnapshot.forEach((doc) => {
+            const filterCategories = this.filterCategory(doc.data().id_category)
+            // console.log(project.image)
+            this.ownProjects.push({
+              id: doc.id,
+              name: doc.data().name,
+              description: doc.data().description,
+              category: filterCategories[0].category,
+              image: doc.data().images[0],
+              userId: doc.data().userId,
             });
+          });
         })
         .catch((error) => {
           console.error('Error al obtener proyectos filtrados:', error);
         });
       // console.log(this.ownProjects)
+      this.allOwnProjects = this.ownProjects
     },
     goProjectDetails(data) {
       this.$emit('goProjectDetails', data)
@@ -236,27 +240,30 @@ export default {
       const filteredCategories = this.categories.filter(category => category.id === idToMatch)
       return filteredCategories
     },
+    selectCategory(categoryId) {
+      // console.log('categorySelected:', categoryId);
+      this.ownProjects = this.allOwnProjects.filter(project => project.category === categoryId);      
+    }
   }
 }
 
 </script>
 
 <style scoped>
-
 .edit-button {
-  background: none; 
+  background: none;
   border: 0;
 }
 
-.edit-img{
-  width: 1em; 
+.edit-img {
+  width: 1em;
   margin-left: 1em;
   padding-bottom: 1em;
 }
 
-.description-ta{
+.description-ta {
   background-color: rgb(0, 45, 92);
   border: none;
-  width: 100%;
+  width: 100%;  
 }
 </style>
