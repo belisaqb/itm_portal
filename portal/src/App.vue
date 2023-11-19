@@ -146,9 +146,9 @@
 
 
         <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image" :projectId="singleProject.projectId"
-          :projectName="singleProject.name" :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id"
-          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes" 
+        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" @goProjectDetails="goProjectDetails" :image="singleProject.image" :projectId="singleProject.projectId"
+          :projectName="singleProject.name" :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id" :idCategory="singleProject.id_category"
+          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes"
           :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
 
 
@@ -338,6 +338,7 @@ export default {
       }
       ////////////////////////////////////////////////////////////
       this.singleProject.id = data.id
+      this.singleProject.id_category = getProject.id_category
       this.singleProject.name = getProject.name
       this.singleProject.description = getProject.description
       this.singleProject.category = filteredCategory
