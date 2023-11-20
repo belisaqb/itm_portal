@@ -22,32 +22,23 @@
                 <!--------------- NOVEDADES ---------------->
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="news" role="tabpanel">
-                        <div class="d-flex justify-content-end">
-                            <a class=" btn-dark nav-link me-2 fw-bold my-3" href="">Crear novedad</a>
-                        </div>
+                        <a @click.prevent="onClickAddNew" class="d-flex justify-content-end">
+                            <p class=" btn-dark nav-link me-2 fw-bold my-3" href="">Crear novedad</p>
+                        </a>
                         <ul class="list-group">
                             <li class="list-group-item" aria-current="true">
                                 <div class="row d-flex justify-content-between px-2 pt-2">
                                     <h6 class="col-lg-2 col-sm-6 fw-bold">Título</h6>
+                                    <h6 class="col-lg-7 col-sm-6 fw-bold">Publicado por</h6>
                                     <h6 class="col-lg-2 col-sm-6 fw-bold">Fecha</h6>
-                                    <h6 class="col-lg-6 col-sm-6 fw-bold">Descripción</h6>
                                     <h6 class="col-lg-1 col-sm-3 fw-bold">Editar</h6>
                                     <h6 class="col-lg-1 col-sm-3 fw-bold">Eliminar</h6>
                                 </div>
                             </li>
 
-                            <div>
-                                <li class='list-group-item'>
-                                    <div class='row d-flex justify-content-between px-2 pt-1'>
-                                        <p class='col-lg-2 col-sm-6-2 m-0'>Nombre de la novedad</p>
-                                        <p class='col-lg-2 col-sm-6-2 m-0'>25/10/23</p>
-                                        <p class='col-lg-6 col-sm-6-2 m-0'>La coordinación de carrera de...</p>
-                                        <a class='col-lg-1 col-sm-3 m-0' href='#'>Editar</a>
-                                        <a class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
-                                    </div>
-                                </li>
-
-                            </div>
+                <!--Cargar lista de novedades-->
+                <NewsList :newsList="newsList" @edit-news="editNews" @delete-news="deleteNews" />
+                <NewsEdit :newsToEdit="newsToEdit" @news-updated="handleNewsUpdated"/>
 
                         </ul>
                     </div>
@@ -112,8 +103,6 @@
                         </ul>
                     </div>
                 </div>
-
-
             </div>
 
         </section>
@@ -122,7 +111,86 @@
 
 
 <script>
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore';
+import { db } from '@/firebase';
+import NewsList from "@/components/NewsList.vue";
+// Este comentario se supone que sirve para solucionar un problema que hay con conectar el componente EditNews
+// eslint-disable-next-line no-unused-vars
+import NewsEdit from "@/components/NewsEdit.vue";
+
+
 export default {
-    name: 'AdminView'
+    name: 'AdminView',
+   
+    components:{
+        NewsList,
+    },
+
+    data() {
+        return {
+            newsToEdit: null,
+            allNews: [],
+            newsList: [],
+            inputProjectName: '',
+            inputProjectDescription: '',
+            selectedCategory: '',
+            imageUrl: ''
+        }
+    },
+    methods:{
+        onClickAddNew(){
+            this.$emit('add-new')
+        },
+        loadNews() {
+  const newsRef = collection(db, 'news');
+  getDocs(newsRef)
+    .then((querySnapshot) => {
+      const newsList = [];
+      querySnapshot.forEach((doc, index) => {
+        newsList.push({
+          id: doc.id,
+          rowNumber: index + 1, // Número de fila autoincremental
+          inputNewsTitle: doc.data().name,
+          profile: doc.data().profile.email,
+          date: doc.data().date, // Asegúrate de usar el nombre correcto de la propiedad
+          // Puedes agregar otras propiedades según sea necesario
+          
+        });
+        console.log(`Noticia ${index + 1}:`, newsList);
+      });
+      // Actualiza la propiedad newsList con la lista de noticias
+      this.newsList = newsList;
+    })
+    .catch((error) => {
+      console.error('Error al obtener documentos: ', error);
+    });
+},
+     // Método para manejar la edición de una noticia
+     editNews(news) {
+        this.newsToEdit = news;
+      console.log('Editando noticia:', news);
+    },
+
+    // Método para manejar la eliminación de una noticia
+    deleteNews(newsId) {
+      const newsDocRef = doc(db, 'news', newsId);
+      deleteDoc(newsDocRef)
+        .then(() => {
+          console.log('Noticia eliminada con éxito:', newsId);
+          this.loadNews();
+        })
+        .catch((error) => {
+          console.error('Error al eliminar la noticia:', error);
+        });
+    },
+
+    handleNewsUpdated() {
+      this.loadNews();
+      this.newsToEdit = null;
+    },
+    },
+    created(){
+        this.loadNews();
+    }
 }
 </script>

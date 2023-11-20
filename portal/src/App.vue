@@ -38,150 +38,14 @@
 
           <div class="container mt-4">
 
-            <div class="row mx-1">
-
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                  </div>
-                </div>
+              <div class="row mx-1">
+                <div v-for="(news, index) in allNews" :key="index" class="col-md-6 mb-4">
+                <NewsCard @showNewsDetails="goNewsDetails" :id="news.id" :image="news.image"
+                  :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText"
+                  :date="news.date" :profile="news.profile"></NewsCard>
               </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                  </div>
-                </div>
               </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                  </div>
-                </div>
-              </div>
-
-            </div>
           </div>
-
-
-        </div>
-
-
-        <!----------------- PROYECTOS ------------------------->
-        <div v-if="allProjects">
-          <h1 class="text-center pt-4 black-dark-blue-xlg">PROYECTOS</h1>
-
-          <div class="d-flex justify-content-center mt-3 dropdown mx-2">
-            <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
-              ORDENAR POR
-            </button>
-            <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
-              <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
-              <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
-            </ul>
-          </div>
-
-          <div class="container mt-4">
-
-            <div class="row mx-1">
-
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-
-
         </div>
 
 
@@ -192,7 +56,9 @@
 
 
         <!----------------- PANEL ADMIN ------------------------->
-        <AdminView v-if="adminPanel"></AdminView>
+        <AdminView @add-new="addNew" v-if="adminPanel"></AdminView>
+        
+        <NewsRegister @news-saved="redirectToAdminView" v-if="newsRegister"></NewsRegister>
 
 
       </div>
@@ -220,7 +86,6 @@
         </ProjectCard>
       </div>
     </div>
-
 
     <div v-if="projectDetails">
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
@@ -258,8 +123,9 @@ import NewsCard from './components/NewsCard.vue'
 import PerfilUser from './components/PerfilUser.vue'
 import DetailsProject from './components/DetailsProject.vue'
 import LowFooter from './components/LowFooter.vue'
-
+import NewsRegister from './components/NewsRegister.vue'
 import AdminView from './components/AdminView.vue'
+
 
 
 export default {
@@ -272,6 +138,7 @@ export default {
       projectRegister: false,
       projectDetails: false,
       news: true,
+      newsRegister: false,
       allProjects: false,
       currentUserProfile: false,
       adminPanel: false,
@@ -282,6 +149,7 @@ export default {
       projects: [],
       allProjectsList: [],
       projectId: '',
+      allNews:[],
       uid: '',
       singleProject: {},
       currentUser: {},
@@ -299,6 +167,7 @@ export default {
     ProjectDetails,
     SideBar,
     NewsCard,
+    NewsRegister,
     PerfilUser,
     DetailsProject,
     LowFooter,
@@ -320,6 +189,17 @@ export default {
       this.singleProject = getProject
       this.showProjectDetails = true
       this.filteredProjects = this.projectsList;
+
+      this.changeView(2)
+    },
+    async goNewsDetails(data) {
+      //------------Method to show a single new--------------
+      this.projectId = data
+
+      const getNew = await this.fetchDataById('allNews', data.id)
+      this.singleNew = getNew
+      this.showNewsDetails = true
+      this.filteredNews = this.newsList;
 
       this.changeView(2)
     },
@@ -360,7 +240,10 @@ export default {
 
       
     },
-
+    addNew(){
+      console.log("crear novedad")
+      this.changeView(8)
+    },
     doLogOut() {
       //------------Method to logOut--------------
       // console.log('logout')
@@ -375,7 +258,6 @@ export default {
         })
       this.viewHome();
     },
-
     updateSelectedCategory(categoryId) {
       //------------Method to filter by category with the sidebar --------------
       console.log('updateSelectedCategory llamado con categoryId:', categoryId);
@@ -385,6 +267,12 @@ export default {
       // console.log(this.projects)
       this.changeView(4);
     },
+    redirectToAdminView(){
+      console.log("guardar novedad")
+      this.changeView(9)
+    },
+
+  
 
 
     //------------------------------CHANGE VIEW------------------------------
@@ -466,7 +354,35 @@ export default {
           this.currentUserProfile = false,
           this.adminPanel = true
           break
-      }
+        
+            ///////////////////Create News////////////////////
+        case 8:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false
+            this.newsRegister = true
+            break
+
+            case 9:
+            this.home = false
+            this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.authorUserProfile = false
+            this.newsRegister = false;
+            this.adminPanel = true;
+            break
+
+        }
     },
     viewHome() {
       this.changeView(0)
@@ -511,8 +427,24 @@ export default {
         console.error('Error al obtener documentos: ', error);
       });
     //----------------------Get Categories-----------------
-
-
+    //-------------------Get News -------------------------
+    const newsRef = collection(db, 'news')
+    getDocs(newsRef)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.id, ' => ', doc.data());
+          this.allNews.push({
+            id: doc.id,
+            image: doc.data().image,
+            inputNewsTitle: doc.data().name,
+            profile: doc.data().profile.email
+          })
+        });
+      })
+      .catch((error) => {
+        console.error('Error al obtener documentos: ', error);
+      });
+    //-------------------Get News -------------------------
     //-----------------Get Projects------------------------
     //  Obtener datos de Firebase y actualizar projects
     const projectsRef = collection(db, 'projects')
