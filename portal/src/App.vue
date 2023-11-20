@@ -404,9 +404,10 @@ export default {
               name: doc.data().name,
               description: doc.data().description,
               category: filterCategories[0].category,
-              image: doc.data().image,
+              image: doc.data().images[0],
               userId: doc.data().userId,
-              author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName
+              author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName,
+              
             });
 
           });
@@ -479,6 +480,7 @@ export default {
       }
       console.log('Proyectos ordenados:', this.projects);
     },
+    
     formatDate(createdAt) {
       // Convierte la fecha de Firebase a un objeto de fecha
       const dateObject = new Date(createdAt.toDate());
