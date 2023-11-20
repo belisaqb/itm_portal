@@ -64,9 +64,10 @@
           ORDENAR POR
         </button>
         <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
-          <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
-          <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
-        </ul>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#" @click="selectFilter('Mas Nuevos')">MÁS
+                  NUEVOS</a></li>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#" @click="selectFilter('A-Z')">A-Z</a></li>
+          </ul>
       </div>
 
     </div>
@@ -77,7 +78,7 @@
         <div v-for="(project, index) in ownProjects" :key="index" class="col-md-6 mb-4">
           <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
             :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
-            :authorName="project.author"></ProjectCard>
+            :authorName="project.author" :date="project.date"></ProjectCard>
         </div>
 
       </div>
@@ -95,6 +96,8 @@ import { db } from '@/firebase'
 import { collection, doc, updateDoc } from 'firebase/firestore'
 import { onSnapshot } from 'firebase/firestore';
 
+import { format } from 'date-fns'
+
 
 export default {
   name: 'PerfilUser',
@@ -109,6 +112,7 @@ export default {
     uid: String,
     authorLoggedIn: Boolean,
     loggedInUserUid: String,
+    date: String,
     categories: {
       type: Array,
     },
@@ -223,6 +227,8 @@ export default {
               category: filterCategories[0].category,
               image: doc.data().images[0],
               userId: doc.data().userId,
+              date: this.formatDate(doc.data().createdAt)
+
             });
           });
         })
@@ -231,6 +237,30 @@ export default {
         });
       // console.log(this.ownProjects)
       this.allOwnProjects = this.ownProjects
+    },
+    selectFilter(filterOption) {
+      // this.$emit('filterSelected', filterOption);
+      // console.log('filterSelected'+ filterOption);
+      if (filterOption === 'Mas Nuevos') {
+        console.log('filterSelected' + filterOption);
+        // this.projects.sort((a, b) => new Date(a.date) - new Date(b.date));
+        this.allOwnProjects.sort((a, b) => {
+      const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+      const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+      return dateB.getTime() - dateA.getTime();
+    });
+
+      } else {
+        console.log('filterSelected' + filterOption);
+        this.allOwnProjects.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      console.log('Proyectos ordenados:', this.allOwnProjects);
+    },
+    formatDate(createdAt) {
+      // Convierte la fecha de Firebase a un objeto de fecha
+      const dateObject = new Date(createdAt.toDate());
+      // Formatea la fecha según el formato 'dd/MM/yy'
+      return format(dateObject, 'dd/MM/yy');
     },
     goProjectDetails(data) {
       this.$emit('goProjectDetails', data)
