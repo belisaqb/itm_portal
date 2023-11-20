@@ -12,7 +12,7 @@
 
     <!----------------- MAIN SECTION ------------------------->
     <section class="content" id="content">
-      <div class="content-section ms-5">
+      <div class="content-section ms-2 ms-lg-5">
 
 
 
@@ -149,9 +149,8 @@
         <!----------------- DETALLE DE PROYECTO ------------------------->
         <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image"
           :projectName="singleProject.name" :projectDescription="singleProject.description"
-          :projectCategory="singleProject.category" :authorId="singleProject.authorId"
-          :participantes="singleProject.participantes" :softwares="singleProject.softwares"
-          :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
+          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes" 
+          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
 
 
 
@@ -343,7 +342,8 @@ export default {
         })
       }
       ////////////////////////////////////////////////////////////
-
+      this.singleProject.id = data.id
+      this.singleProject.id_category = getProject.id_category
       this.singleProject.name = getProject.name
       this.singleProject.description = getProject.description
       this.singleProject.category = filteredCategory
