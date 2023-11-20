@@ -239,20 +239,22 @@ export default {
       this.allOwnProjects = this.ownProjects
     },
     selectFilter(filterOption) {
+      this.ownProjects = this.allOwnProjects
       // this.$emit('filterSelected', filterOption);
       // console.log('filterSelected'+ filterOption);
       if (filterOption === 'Mas Nuevos') {
         console.log('filterSelected' + filterOption);
         // this.projects.sort((a, b) => new Date(a.date) - new Date(b.date));
-        this.allOwnProjects.sort((a, b) => {
+        this.ownProjects.sort((a, b) => {
       const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
       const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
       return dateB.getTime() - dateA.getTime();
     });
 
       } else {
+        this.ownProjects = this.allOwnProjects
         console.log('filterSelected' + filterOption);
-        this.allOwnProjects.sort((a, b) => a.name.localeCompare(b.name));
+        this.ownProjects.sort((a, b) => a.name.localeCompare(b.name));
       }
       console.log('Proyectos ordenados:', this.allOwnProjects);
     },
