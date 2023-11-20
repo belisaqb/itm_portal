@@ -1,20 +1,39 @@
 <template>
-    <div @click="projectDetails" style="cursor: pointer;" class="card-content">
-        <div class="card-container">
-            <img class="card-img-top" :src="image" :alt="projectName">
-            <div class="position-absolute w-100 overlay ">
-                <div class="d-flex mx-2  positionY justify-content-between">
-                    <p class="bold-white-lg small">{{ authorName }}</p>
-                    <p class="bold-white-lg small">{{ projectCategory }}</p>
+    <div @click="projectDetails">
+        <div style="cursor: pointer;" class="card-content">
+            <div class="card-container">
+                <img class="card-img-top" :src="image" :alt="projectName">
+                <div class="position-absolute w-100 overlay ">
+                    <div class="d-flex mx-2  positionY justify-content-between">
+                        <p class="bold-white-lg">{{ authorName }}</p>
+                        <p class="bold-white-lg">{{ projectCategory }}</p>
+                    </div>
                 </div>
             </div>
             <div class="pt-3">
-                <h2 class="bold-dark-blue-lg">{{ projectName }}</h2>
+                <div class="d-flex-dp">
+
+                    <h2 class="bold-dark-blue-lg">{{ projectName }} </h2>
+                    <hr class="dividerH comunMarginx">
+                    <p class="light-dark-blue-xm">{{ date }}</p>
+                </div>
+                <!-- <p class="light-dark-blue-xm limit-lines">{{ formatDate(date) }}</p> -->
+                
                 <p class="light-dark-blue-xm limit-lines">{{ projectDescription }}</p>
             </div>
         </div>
     </div>
 
+    <!-- <div>
+        <div @click="projectDetails" class="card" style="width: 18rem;">
+            <img :src="image" class="card-img-top" :alt="projectName">
+            <div class="card-body">                
+                <h5 class="card-title">{{ projectName }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ projectCategory }}</h6>
+                <p class="card-text">{{ projectDescription }}</p>                
+            </div>
+        </div>
+    </div> -->
 </template>
 
 <script>
@@ -54,12 +73,6 @@ export default {
     },
 }
 </script>
-
-<style>
-.card-text-container{
-    height: 7rem;
-}
-</style>
 
 <style scoped>
 

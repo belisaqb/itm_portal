@@ -505,16 +505,8 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 100%;
-  -webkit-transition: max-height 0.3s ease;
-  transition: max-height 0.3s ease;
 }
 
-@media screen and (max-width: 576px) {
-  .limit-lines {
-    max-height: 3.6em;
-  }
-}
 .object-fit-cover {
   -o-object-fit: cover;
      object-fit: cover;

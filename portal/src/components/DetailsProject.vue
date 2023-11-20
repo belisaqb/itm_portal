@@ -48,32 +48,32 @@
                 <p class=" black-dark-blue-xlg">Relacionados</p>
             </div>
             <div class="images-proyect margin-b">
-                <div class="container">
-                    <div class="" >
-                        <div class="row">
-                            <div v-for="(project, index) in relatedProjectsCombined" :key="index" class="col-md-3">
-                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
-                                ></ProjectCard>
-                            </div>
-                        </div>
-                        <!-- Proyectos del mismo autor
-                        <div v-if="relatedProjectsByAuthor.length > 0" class="project-list">
-                            <div v-for="(project, index) in relatedProjectsByAuthor.slice(0, 4)" :key="index" class="col-lg-6">
-                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
-                                ></ProjectCard>
-                            </div>
-                        </div> -->
-                        <!-- Proyectos de la misma categoría
-                        <div v-if="relatedProjectsByCategory.length > 0" class="project-list">
-                            <div v-for="(project, index) in relatedProjectsByCategory.slice(0, 4)" :key="index" class="col-lg-6">
-                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
-                                ></ProjectCard>
-                            </div>
-                        </div> -->
+                <div class="image-item">
+                    <div class="overlay">
+                        <p class="overlay-text">TonyJEF</p>
+                        <img style="width: 35px; height: 25px;" class="overlay-img"
+                            src="@/assets/imgs/Proyectos/proyects.png" alt="img">
+                        <img src="@/assets/imgs/Proyectos/img_magic.png" alt="img">
                     </div>
+                    <p class="margin-top-cart-proyects txt-name-student">Juego hecho en Java</p>
+                </div>
+                <div class="image-item">
+                    <div class="overlay">
+                        <p class="overlay-text">TonyJEF</p>
+                        <img style="width: 35px; height: 25px;" class="overlay-img"
+                            src="@/assets/imgs/Proyectos/proyects.png" alt="img">
+                        <img src="@/assets/imgs/Proyectos/img_magic.png" alt="img">
+                    </div>
+                    <p class="margin-top-cart-proyects txt-name-student">Juego hecho en Java</p>
+                </div>
+                <div class="image-item">
+                    <div class="overlay">
+                        <p class="overlay-text">TonyJEF</p>
+                        <img style="width: 35px; height: 25px;" class="overlay-img"
+                            src="@/assets/imgs/Proyectos/proyects.png" alt="img">
+                        <img src="@/assets/imgs/Proyectos/img_magic.png" alt="img">
+                    </div>
+                    <p class="margin-top-cart-proyects txt-name-student">Juego hecho en Java</p>
                 </div>
             </div>
         </div>
@@ -85,16 +85,13 @@
 import CarouselSlider from './CarouselSlider.vue'
 import { format } from 'date-fns'
 import { db } from '@/firebase'
-import { collection, doc, getDoc } from 'firebase/firestore'
-import ProjectCard from './ProjectCard.vue';
-import { query, where, getDocs } from 'firebase/firestore';
+import { doc, getDoc } from 'firebase/firestore'
 
 
 export default {
     name: 'DetailsProject',
     components: {
-        CarouselSlider,
-        ProjectCard,
+        CarouselSlider
     },
     props: {
         id: String,
@@ -102,24 +99,16 @@ export default {
         projectName: String,
         projectDescription: String,
         projectCategory: String,
-        idCategory: String,
         authorId: String,
         participantes: { type: Array },
         softwares: { type: Array },
         imgUrls: { type: Array },
-        createdAt: { type: Object },
-        categories: {
-            type: Array,
-        },
+        createdAt: { type: Object }
     },
     data() {
         return {
             authorFirstName: '',
-            authorLastName: '',
-            relatedProjectsByAuthor: [],
-            relatedProjectsByCategory: [],
-            relatedProjectsCombined: [],
-            singleProject: {},
+            authorLastName: ''
         }
     },
     methods: {
@@ -155,15 +144,6 @@ export default {
             this.$emit('go-author-profile', { authorId: this.authorId })
         },
 
-        goProjectDetails(data) {
-            console.log(data)
-            this.$emit('goProjectDetails', data)
-            window.scrollTo({
-                top: 0,
-                behavior: "smooth" // Para un desplazamiento suave (opcional)
-            });
-        },
-
         formatDate(createdAt) {
             // Convierte la fecha de Firebase a un objeto de fecha
             const dateObject = new Date(createdAt.toDate());
@@ -171,104 +151,15 @@ export default {
             return format(dateObject, 'dd/MM/yy');
         },
 
-        async getRelatedProjectsByAuthor() {
-            const authorId = this.authorId;
-            const currentProjectId = this.id;
-            
-            const projectsRef = collection(db, 'projects');
-            const querySnapshot = await getDocs(query(projectsRef, where('userId', '==', authorId)));
-
-            this.relatedProjectsByAuthor = [];
-
-            querySnapshot.forEach((doc) => {
-                if (doc.id != currentProjectId) {
-                    
-                    const filterCategories = this.filterCategory(doc.data().id_category);
-
-                    this.relatedProjectsByAuthor.push({
-                        id: doc.id,
-                        name: doc.data().name,
-                        description: doc.data().description,
-                        category: filterCategories[0].category,
-                        image: doc.data().images[0],
-                        userId: doc.data().userId,
-                    });
-                }
-            });
-        },
-
-
-        async getRelatedProjectsByCategory() {
-    const currentProjectCategoryId = this.idCategory; 
-    console.log('currentProjectCategoryId', currentProjectCategoryId)
-
-    const projectsRef = collection(db, 'projects');
-    const querySnapshot = await getDocs(query(projectsRef, where('id_category', '==', currentProjectCategoryId)));
-
-    this.relatedProjectsByCategory = [];
-
-    querySnapshot.forEach((doc) => {
-        if (doc.id !== this.id && doc.data().userId !== this.authorId) {
-            const filterCategories = this.filterCategory(currentProjectCategoryId);
-
-            this.relatedProjectsByCategory.push({
-                id: doc.id,
-                name: doc.data().name,
-                description: doc.data().description,
-                category: filterCategories[0].category,
-                image: doc.data().images[0],
-                userId: doc.data().userId,
-            });
-        }
-        console.log('projectCategoryId: ', currentProjectCategoryId)
-    });          
-},
-
-async getRelatedProjectsCombined() {
-    // Obtén las listas de proyectos por autor y por categoría
-    await this.getRelatedProjectsByAuthor();
-    await this.getRelatedProjectsByCategory();
-
-    // Combina las listas
-    const combinedProjects = [...this.relatedProjectsByAuthor, ...this.relatedProjectsByCategory];
-
-    // Mezcla la lista de manera aleatoria
-    const shuffledProjects = combinedProjects.sort(() => Math.random() - 0.5);
-
-    // Selecciona los primeros 4 elementos para mostrar
-    this.relatedProjectsCombined = shuffledProjects.slice(0, 4);
-},
-
-
-        filterCategory(idToMatch) {
-            //------------Method to get the correct category for the project--------------
-            const filteredCategories = this.categories.filter(category => category.id === idToMatch)
-            return filteredCategories
-        },
-
-        
     },
-
     mounted() {
         this.getAuthorInfo()
-        this.getRelatedProjectsByAuthor();
-        this.getRelatedProjectsByCategory();
-        this.getRelatedProjectsCombined();
     },
-
 }
 </script>
 
 
 <style scoped>
-
-.project-list {
-    display: flex;
-    flex: row;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-}
-
 .txt-footer1 {
     font-size: 1.2rem;
     font-weight: 700;

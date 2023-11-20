@@ -56,7 +56,10 @@
     width: 60%;
     height: 60px;
     cursor: pointer;
-    background: rgba(0, 45, 92, 1);
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: white;
+    background: #00376A;
   }
 
   .register-button:hover {
