@@ -1,0 +1,79 @@
+/*Add form *****************/
+
+.addF-container {
+    width: 80%;
+    margin: 0;
+    margin-left: 5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    text-align: left;
+    background-color: rgba(0, 196, 151, 1);
+    color: rgba(0, 45, 92, 1);
+}
+
+.add-col {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.addF-col2 {
+    width: 50%;
+}
+
+.form-group {
+    margin-bottom: 20px;
+
+    text-align: center;
+    padding-right: 3rem;
+    padding-left: 3rem;
+}
+
+.form-group label {
+    font-weight: bold;
+}
+
+.form-group select,
+.form-group input[type="text"],
+.form-group textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.select-input {
+    height: 50px;
+}
+
+.multi-input-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.multi-input-group input[type="text"] {
+    margin-bottom: 10px;
+}
+
+.add-button {
+    margin-top: 10px;
+    cursor: pointer;
+}
+
+.description-group {
+    margin-top: 10px;
+}
+
+.upload-button {
+    border: 2px dashed #ccc;
+    padding: 20px;
+    cursor: pointer;
+}
+
+.file-input {
+    display: none;
+}
+
+.addF-center {
+    align-items: center;
+}

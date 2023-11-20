@@ -14,20 +14,20 @@
     <section class="content" id="content">
       <div class="content-section ms-2 ms-lg-5">
 
-        
+
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
         <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId"
           :loggedInUserUid="loggedInUserUid" :firstName="currentUser.firstname" :lastName="currentUser.lastname"
-          :email="currentUser.inputEmail" :carnet="currentUser.carnet" :description="currentUser.description" :categories="categories"
-          @update:firstName="updateFirstName" @update:lastName="updateLastName" @add-project="createProject"
-          @edit-projects="viewListOwnProjects"  @goProjectDetails="goProjectDetails">
+          :email="currentUser.inputEmail" :carnet="currentUser.carnet" :description="currentUser.description"
+          :categories="categories" @update:firstName="updateFirstName" @update:lastName="updateLastName"
+          @add-project="createProject" @edit-projects="viewListOwnProjects" @goProjectDetails="goProjectDetails">
         </PerfilUser>
 
 
         <PerfilUser v-if="authorUserProfile" :authorLoggedIn="authorLoggedIn" :uid="authorUser.userId"
-          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail" :categories="categories"
-          :carnet="authorUser.carnet"  @goProjectDetails="goProjectDetails">
+          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail"
+          :categories="categories" :carnet="authorUser.carnet" @goProjectDetails="goProjectDetails">
         </PerfilUser>
 
 
@@ -48,13 +48,13 @@
 
           <div class="container mt-4">
 
-              <div class="row mx-1">
-                <div v-for="(news, index) in allNews" :key="index" class="col-md-6 mb-4">
+            <div class="row mx-1">
+              <div v-for="(news, index) in allNews" :key="index" class="col-md-4 mb-4">
                 <NewsCard @showNewsDetails="goNewsDetails" :id="news.id" :image="news.image"
-                  :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText"
-                  :date="news.date" :profile="news.profile"></NewsCard>
+                  :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText" :date="news.date"
+                  :profile="news.profile"></NewsCard>
               </div>
-              </div>
+            </div>
           </div>
 
 
@@ -94,25 +94,30 @@
 
 
         <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" @goProjectDetails="goProjectDetails" :image="singleProject.image" :projectId="singleProject.projectId"
-          :projectName="singleProject.name" :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id" :idCategory="singleProject.id_category"
-          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes"
-          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
+        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" @goProjectDetails="goProjectDetails"
+          :image="singleProject.image" :projectId="singleProject.projectId" :projectName="singleProject.name"
+          :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id"
+          :idCategory="singleProject.id_category" :projectCategory="singleProject.category"
+          :authorId="singleProject.authorId" :participantes="singleProject.participantes"
+          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt">
+        </DetailsProject>
 
 
 
         <!----------------- PANEL ADMIN ------------------------->
         <AdminView @add-new="addNew" v-if="adminPanel"></AdminView>
-        
+
         <NewsRegister @news-saved="redirectToAdminView" v-if="newsRegister"></NewsRegister>
 
 
         <!----------------- LISTA DE PROYECTOS DEL CURRENT USER ------------------------->
-        <ProjectsList v-if="projectsList" :categories="categories" :users="users" @edit-project="editSelectedProject"></ProjectsList>
+        <ProjectsList v-if="projectsList" :categories="categories" :users="users" @edit-project="editSelectedProject">
+        </ProjectsList>
 
         <AddForm v-if="projectRegister" @go-project-list="viewListOwnProjects" :categories="categories"></AddForm>
 
-        <EditProject v-if="editProject" @go-project-list="viewListOwnProjects" :categories="categories" :projectId="editProjectId"></EditProject>
+        <EditProject v-if="editProject" @go-project-list="viewListOwnProjects" :categories="categories"
+          :projectId="editProjectId"></EditProject>
 
       </div>
     </section>
@@ -216,7 +221,7 @@ export default {
       projects: [],
       allProjectsList: [],
       projectId: '',
-      allNews:[],
+      allNews: [],
       uid: '',
       authorLoggedIn: false,
       singleProject: {},
@@ -264,7 +269,7 @@ export default {
       const getProject = await this.fetchDataById('projects', data.id)
       const filteredCategory = this.filterCategory(getProject.id_category)[0].category
 
-      
+
       //Llenar los arreglos de participantes, softwares e imagenes
       let participantes = []
       let softwares = []
@@ -372,10 +377,10 @@ export default {
       this.editProjectId = data.id
       this.changeView(10)
     },
-    addNew(){
+    addNew() {
       console.log("crear novedad")
       this.changeView(8)
-     },
+    },
     async doSearchProjects(data) {
       // console.log(data.keyword)
       const keyword = data.keyword;
@@ -392,7 +397,7 @@ export default {
           querySnapshot.forEach((doc) => {
             const filterCategories = this.filterCategory(doc.data().id_category)
             const filterUsers = this.filterUser(doc.data().userId)
-            
+
             console.log(doc.data())
             this.projects.push({
               id: doc.id,
@@ -437,12 +442,12 @@ export default {
       // console.log(this.projects)
       this.changeView(4);
     },
-    redirectToAdminView(){
+    redirectToAdminView() {
       console.log("guardar novedad")
-      this.changeView(9)
+      this.changeView(6)
     },
 
-  
+
 
     updateFirstName(newFirstName) {
       // Actualizar firstName en el objeto user
@@ -463,10 +468,10 @@ export default {
         console.log('filterSelected' + filterOption);
         // this.projects.sort((a, b) => new Date(a.date) - new Date(b.date));
         this.projects.sort((a, b) => {
-      const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
-      const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
-      return dateB.getTime() - dateA.getTime();
-    });
+          const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+          const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+          return dateB.getTime() - dateA.getTime();
+        });
 
       } else {
         console.log('filterSelected' + filterOption);
@@ -566,36 +571,47 @@ export default {
             this.projectRegister = false,
             this.authUser = false,
             this.allProjects = false,
-            this.currentUserProfile = false,
-            this.adminPanel = true,
+            this.currentUserProfile = false
+            this.adminPanel = true
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
           break
 
         ///////////////////Project Author User Profile////////////////////
         case 7:
           this.home = false
           this.news = false,
-          this.projectDetails = false,
-          this.projectRegister = false,
-          this.authUser = false,
-          this.allProjects = false,
-          this.currentUserProfile = false,
-          this.adminPanel = false,
-          this.authorUserProfile = true
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = true
           this.projectsList = false
           this.editProject = false
           break
 
-     ///////////////////Create News////////////////////
+        ///////////////////Create News////////////////////
         case 8:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
             this.authorUserProfile = false
-            this.newsRegister = true
-            break
+          this.projectsList = false
+          this.editProject = false
+          this.newsRegister = true
+          break
 
 
-            
+
         ///////////////////Project List For The Current User////////////////////
         case 9:
           this.home = false
@@ -608,10 +624,10 @@ export default {
             this.adminPanel = false,
             this.authorUserProfile = false,
             this.projectsList = true
-            this.editProject = false
-            break
+          this.editProject = false
+          break
         ///////////////////Edit Project////////////////////
-          case 10:
+        case 10:
           this.home = false
           this.news = false,
             this.projectDetails = false,
@@ -622,20 +638,17 @@ export default {
             this.adminPanel = false,
             this.authorUserProfile = false,
             this.projectsList = false
-            this.editProject = true
-            break
+          this.editProject = true
+          break
 
-          case 11:
-           this.home = false
-            this.news = false,
+        case 11:
+          this.home = false
+          this.news = false,
             this.authorUserProfile = false
-            this.newsRegister = false;
-            this.adminPanel = true;
-            break
+          this.newsRegister = false;
+          this.adminPanel = true;
+          break
 
-        }
-
-            
       }
 
     },

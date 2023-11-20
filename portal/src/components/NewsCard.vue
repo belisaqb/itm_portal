@@ -1,5 +1,5 @@
 <template>
-    <div class="col-md-6 mb-4">
+    <div class="">
         <div @click="projectDetails" class="card-content">
             <div class="card-container">
                 <img :src="image" class="card-img-top" alt="img">

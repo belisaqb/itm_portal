@@ -558,7 +558,7 @@ main {
   text-align: center !important;
   padding: 8px !important;
   margin: 4px !important;
-
+}
 .object-fit-cover {
   -o-object-fit: cover;
      object-fit: cover;
