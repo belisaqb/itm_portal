@@ -12,7 +12,7 @@
 
     <!----------------- MAIN SECTION ------------------------->
     <section class="content" id="content">
-      <div class="content-section ms-5">
+      <div class="content-section ms-2 ms-lg-5">
 
         
 
@@ -119,12 +119,13 @@
 
           <div class="d-flex justify-content-center mt-3 dropdown mx-2">
             <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button"
-              data-bs-toggle="dropdown" aria-expanded="false">
+              data-bs-toggle="dropdown" aria-expanded="false" @filterSelected="updateFilter">
               ORDENAR POR
             </button>
             <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
-              <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
-              <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#" @click="selectFilter('Mas Nuevos')">MÁS
+                  NUEVOS</a></li>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#" @click="selectFilter('A-Z')">A-Z</a></li>
             </ul>
           </div>
 
@@ -132,10 +133,10 @@
 
             <div class="row mx-1">
 
-              <div v-for="(project, index) in projects" :key="index" class="col-lg-6 col-sm-9 mb-4">
+              <div v-for="(project, index) in projects" :key="index" class="col-md-6 mb-4">
                 <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
                   :projectName="project.name" :projectDescription="project.description"
-                  :projectCategory="project.category" :authorName="project.author"></ProjectCard>
+                  :projectCategory="project.category" :authorName="project.author" :date="project.date"></ProjectCard>
               </div>
 
             </div>
@@ -146,9 +147,9 @@
 
 
         <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" :image="singleProject.image"
-          :projectName="singleProject.name" :projectDescription="singleProject.description"
-          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes" 
+        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" @goProjectDetails="goProjectDetails" :image="singleProject.image" :projectId="singleProject.projectId"
+          :projectName="singleProject.name" :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id" :idCategory="singleProject.id_category"
+          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes"
           :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
 
 
@@ -233,6 +234,7 @@ import LowFooter from './components/LowFooter.vue'
 import AdminView from './components/AdminView.vue'
 import ProjectsList from './components/ProjectsList.vue'
 import EditProject from './components/EditProject.vue'
+import { format } from 'date-fns'
 
 
 export default {
@@ -267,7 +269,8 @@ export default {
       singleProject: {},
       currentUser: {},
       authorUser: {},
-      editProjectId: ''
+      editProjectId: '',
+      date: ''
     }
   },
 
@@ -337,7 +340,8 @@ export default {
         })
       }
       ////////////////////////////////////////////////////////////
-
+      this.singleProject.id = data.id
+      this.singleProject.id_category = getProject.id_category
       this.singleProject.name = getProject.name
       this.singleProject.description = getProject.description
       this.singleProject.category = filteredCategory
@@ -475,6 +479,31 @@ export default {
       // Actualizar lastName en el objeto user
       this.$emit('update:lastName', newLastName);
       this.editedLastName = newLastName;
+    },
+
+    selectFilter(filterOption) {
+      // this.$emit('filterSelected', filterOption);
+      // console.log('filterSelected'+ filterOption);
+      if (filterOption === 'Mas Nuevos') {
+        console.log('filterSelected' + filterOption);
+        // this.projects.sort((a, b) => new Date(a.date) - new Date(b.date));
+        this.projects.sort((a, b) => {
+      const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+      const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+      return dateB.getTime() - dateA.getTime();
+    });
+
+      } else {
+        console.log('filterSelected' + filterOption);
+        this.projects.sort((a, b) => a.name.localeCompare(b.name));
+      }
+      console.log('Proyectos ordenados:', this.projects);
+    },
+    formatDate(createdAt) {
+      // Convierte la fecha de Firebase a un objeto de fecha
+      const dateObject = new Date(createdAt.toDate());
+      // Formatea la fecha según el formato 'dd/MM/yy'
+      return format(dateObject, 'dd/MM/yy');
     },
 
     //------------------------------CHANGE VIEW------------------------------
@@ -729,7 +758,8 @@ export default {
             category: filterCategories[0].category,
             image: doc.data().images[0],
             userId: doc.data().userId,
-            author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName
+            author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName,
+            date: this.formatDate(doc.data().createdAt)
           });
         });
 
