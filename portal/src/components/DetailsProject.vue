@@ -49,9 +49,9 @@
             </div>
             <div class="images-proyect margin-b">
                 <div class="container">
-                    <div class="col-md-6" style="width: 49%;">
-                        <div class="project-list">
-                            <div v-for="(project, index) in relatedProjectsCombined" :key="index" class="col-lg-6">
+                    <div class="" >
+                        <div class="row">
+                            <div v-for="(project, index) in relatedProjectsCombined" :key="index" class="col-md-3">
                                 <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
                                 :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
                                 ></ProjectCard>
@@ -101,7 +101,6 @@ export default {
         image: { type: String, default: 'https://firebasestorage.googleapis.com/v0/b/portal-itm.appspot.com/o/images%2Fplaceholder-image.png?alt=media&token=614d5ce1-6099-4572-ace6-10d240c44e68' },
         projectName: String,
         projectDescription: String,
-        idCategory: String,
         projectCategory: String,
         idCategory: String,
         authorId: String,
@@ -157,7 +156,12 @@ export default {
         },
 
         goProjectDetails(data) {
+            console.log(data)
             this.$emit('goProjectDetails', data)
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth" // Para un desplazamiento suave (opcional)
+            });
         },
 
         formatDate(createdAt) {
