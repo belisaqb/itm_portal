@@ -11,14 +11,7 @@
                 </div>
             </div>
             <div class="pt-3">
-                <div class="d-flex-dp">
-
-                    <h2 class="bold-dark-blue-lg">{{ projectName }} </h2>
-                    <hr class="dividerH comunMarginx">
-                    <p class="light-dark-blue-xm">{{ date }}</p>
-                </div>
-                <!-- <p class="light-dark-blue-xm limit-lines">{{ formatDate(date) }}</p> -->
-                
+                <h2 class="bold-dark-blue-lg">{{ projectName }}</h2>
                 <p class="light-dark-blue-xm limit-lines">{{ projectDescription }}</p>
             </div>
         </div>
@@ -38,8 +31,6 @@
 
 <script>
 // import { auth, db } from '@/firebase';
-// import { format } from 'date-fns'
-
 
 export default {
     name: 'ProjectCard',
@@ -54,19 +45,12 @@ export default {
         projectName: String,
         projectDescription: String,
         projectCategory: String,
-        authorName: String,
-        date: String
+        authorName: String
     },
     methods: {
         projectDetails() {
             this.$emit('showProjectDetails', { id: this.id });
-        },
-        // formatDate(date) {
-        //     // Convierte la fecha de Firebase a un objeto de fecha
-        //     const dateObject = new Date(date.toDate());
-        //     // Formatea la fecha según el formato 'dd/MM/yy'
-        //     return format(dateObject, 'dd/MM/yy');
-        // },
+        }
     },
     mounted() {
         // this.authorName = 
@@ -74,25 +58,3 @@ export default {
 }
 </script>
 
-<style scoped>
-
-.d-flex-dp {
-    display: flex;
-}
-
-
-
-.dividerH {
-    border-left: 4px solid rgba(0, 45, 92, 1);
-    height: 15px;
-    transform: translateY(-8px);
-}
-
-
-
-.comunMarginx {
-    margin-left: 20px;
-    margin-right: 20px;
-}
-
-</style>
