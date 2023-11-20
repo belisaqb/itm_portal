@@ -499,6 +499,7 @@ main {
   background-color: rgb(0, 45, 92);
 }
 
+
 .input-user {
   background-color: transparent !important;
   border-radius: 0 !important;
@@ -557,6 +558,10 @@ main {
   text-align: center !important;
   padding: 8px !important;
   margin: 4px !important;
+
+.object-fit-cover {
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .semibold-ligth-green-med {

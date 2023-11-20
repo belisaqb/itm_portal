@@ -6,8 +6,10 @@
                 <!--src="@/assets/imgs/Novedades/img1.jpg"-->
                 <div class="position-absolute w-100 overlay ">
                     <div class="d-flex mx-2  positionY justify-content-between">
+
                         <p class="bold-white-lg">{{profile}}</p>
                         <p class="bold-white-lg">{{date}}</p>
+
                     </div>
                 </div>
             </div>

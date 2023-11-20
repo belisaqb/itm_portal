@@ -1,24 +1,30 @@
+// navbar.js
+
+
+/*
 document.addEventListener('DOMContentLoaded', function () {
     var navbarCollapse = document.querySelector('.navbar-collapse');
     var imgUser = document.querySelector('.img-user');
-    var notifications = document.querySelector('.notifications');
+    
+    //var notifications = document.querySelector('.notifications');
+
     var divCollapse = document.querySelector(".div-collapse");
     var ulElement = divCollapse.querySelector("ul");
 
     navbarCollapse.addEventListener('show.bs.collapse', function () {
         // Navbar está colapsando
-        imgUser.innerHTML = '<button class="nav-buttons semibold-ligth-green-med">USUARIO</button>';
-        notifications.innerHTML = '<button class="nav-buttons semibold-ligth-green-med">NOTIFICACIONES</button>';
-
+        imgUser.classList.add('text-only'); // Agrega una clase para mostrar texto
+        //notifications.classList.add('text-only'); // Agrega una clase para mostrar texto
     });
 
     navbarCollapse.addEventListener('hide.bs.collapse', function () {
         // Navbar está expandiendo
         setTimeout(function () {
-            imgUser.innerHTML = '<button class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>';
-            notifications.innerHTML = '<button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="user"></button>';
+            imgUser.classList.remove('text-only'); // Elimina la clase para mostrar la imagen
+            //notifications.classList.remove('text-only'); // Elimina la clase para mostrar la imagen
         }, 100);
     });
+
 
     function updateAriaExpanded() {
         if (window.innerWidth > 991 && divCollapse.classList.contains("show")) {
@@ -29,7 +35,12 @@ document.addEventListener('DOMContentLoaded', function () {
             optionsContainer.style.top = '0';
 
             imgUser.innerHTML = '<button class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>';
-            notifications.innerHTML = '<button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="user"></button>';
+           
+            //notifications.innerHTML = '<button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="user"></button>';
+
+            // Agrega la clase "mobile-view" cuando la pantalla sea responsive
+            imgUser.classList.add('mobile-view');
+            //notifications.classList.add('mobile-view');
         }
     }
 
@@ -88,47 +99,4 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 });
-
-
-/*
-    // JavaScript para mostrar y posicionar el elemento siempre visible debajo de las opciones del menú
-    const btnHamburger = document.querySelector('.btn-hamburguer');
-    const menuOptions = document.querySelector('.navbar-nav');
-    const elementoVisible = document.querySelector('.floating-filter');
-    const optionsContainer = document.getElementById('optionsContainer');
-
-    btnHamburger.addEventListener('click', () => {
-        if (menuOptions.style.display === 'inherit' || menuOptions.style.display === '') {
-            menuOptions.style.display = 'block';
-            elementoVisible.style.top = 170 + 'px'; // Ajusta la posición debajo de las opciones
-            optionsContainer.style.top = 170 + 'px'; // Ajusta la posición debajo de las opciones
-        } else {
-            menuOptions.style.display = 'inherit';
-            elementoVisible.style.top = '0'; // Restaura la posición original
-            optionsContainer.style.top = '0'; // Restaura la posición original
-        }
-    });
-
-
-    // cierra el sidebar si esta abierto  
-    //fucion para que si el sidebar esta abierto, el btnhamburger lo cierre
-    btnHamburger.addEventListener('click', () => {
-        if (optionsContainer.classList.contains("show")) {
-            optionsContainer.classList.remove("show");
-            optionsContainer.classList.add("hide");
-            //optionsContainer.style.display= 'none';
-            elementoVisible.style.top = 170 + 'px'; // Restaura la posición original
-        } 
-    });
-
-    //fucion para que si el btnhamburger esta abierto, el sidebar lo cierre
-    const toggleButton = document.getElementById('toggleButton');
-    toggleButton.addEventListener('click', () => {
-        if (divCollapse.classList.contains("show")) {
-            divCollapse.classList.remove("show"); // Muestra el div si se cumple la condición
-            elementoVisible.style.top = '0'; // Restaura la posición original
-            optionsContainer.style.top = '0'; // Restaura la posición original
-        } 
-    });
-    
-    */
+*/

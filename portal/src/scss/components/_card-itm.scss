@@ -48,3 +48,7 @@
     @include mixins.set-background-color(vars.$clr-dark-blue);
     
 }
+
+.object-fit-cover {
+    object-fit: cover;
+}

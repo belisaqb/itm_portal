@@ -3,8 +3,8 @@
         <nav style="padding: 0;" class="navbar navbar-expand-lg">
             <div class="navbar-container container">
                 <a class="navbar-brand logo" href="#"><img class="img-logo" src="@/assets/svg/ITM.svg" alt="itm"></a>
-                <form class="d-flex search-bar">
-                    <input type="search" class="search-input" placeholder="Buscar">
+                <form class="d-flex search-bar" @submit.prevent="doSearch">
+                    <input v-model="inputSearchBar" type="search" class="search-input" placeholder="Buscar">
                     <button class="search-button" type="submit"><img src="@/assets/svg/search2.svg" alt="search"></button>
                 </form>
                 <button style="font-size: 0;" class="navbar-toggler btn-hamburguer" id="hamburguer" type="button"
@@ -24,16 +24,22 @@
                             <a @click="goHome" class="link-nav semibold-ligth-green-med" href="#">NOVEDADES</a>
                         </li>
                     </ul>
+                     
                     <div v-if="!isLoggedIn" class="img-user">
-                        <button @click="goAuth" class="nav-buttons"><img src="@/assets/svg/user.svg" alt="user"></button>
+                        <button @click="goAuth" class="nav-buttons semibold-ligth-green-med">INICIAR SESION</button>
                     </div>
-                    <div v-if="isLoggedIn" class="img-user">
-                        <button @click="goLogout" class="nav-buttons"><img src="@/assets/svg/logout.svg"
-                                alt="logout"></button>
+                    <div v-if="isLoggedIn" class="img-user dropdown">
+                        <button class="nav-buttons" data-bs-toggle="dropdown"><img src="@/assets/svg/user.svg" alt="user"></button>
+                        <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+                            <li><a @click="goCurrentUserProfile" class="dropdown-item semibold-ligth-green-med" href="#">VER PERFIL</a></li>
+                            <li><a @click="goLogout" class="dropdown-item semibold-ligth-green-med" href="#">CERRAR SESIÓN</a></li>
+                        </ul>
                     </div>
+                   <!--
                     <div class="notifications">
                         <button class="nav-buttons"><img src="@/assets/svg/campaing.svg" alt="notifications"></button>
                     </div>
+                    -->
                 </div>
             </div>
         </nav>
@@ -49,7 +55,8 @@ export default {
     name: 'NavBar',
     data() {
         return {
-            isLoggedIn: false
+            isLoggedIn: false,
+            inputSearchBar: ''
         }
     },
     methods: {
@@ -77,7 +84,20 @@ export default {
                     this.isLoggedIn = false
                 }
             });
+        },
+        goCurrentUserProfile(){
+            this.$emit('go-current-user-profile')
+        },
+        doSearch() {
+            if (this.inputSearchBar == '') {
+                console.log('búsqueda vacía')
+            } else {
+                // console.log('Consulta ' + this.inputSearchBar)
+                this.$emit('do-search', {keyword: this.inputSearchBar})
+                
+            }
         }
+        
     },
     mounted() {
         this.userState()
@@ -86,4 +106,40 @@ export default {
 }
 
 
+
 </script>
+<style>
+
+/*
+.text-only button img {
+    display: none; 
+}
+
+.text-only button {
+    font-size: 16px; 
+    content: "Texto aquí"
+}
+*/
+
+/*
+@media (max-width: 991px) {
+  .mobile-view .text-only button img {
+    display: none; 
+    content: "Texto aquí";
+  }
+
+  .mobile-view .text-only button::before {
+    font-size: 16px;
+  }
+}*/
+
+.mobile-view .text-only button img {
+    display: none;
+}
+
+.mobile-view .text-only button::before {
+    content: "Texto aquí";
+    font-size: 16px;
+}
+ 
+</style>

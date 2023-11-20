@@ -1,44 +1,65 @@
 <template>
-  <div class="ps-4 ">
-    <div class="row pt-4 mb-4">
-      <div class="col-auto">
+  <div class="ps-4">
+    <div class="row d-flex pt-4 mb-4">
+      <div class="col-1">
         <img src="../assets/svg/user-dark.svg" style="width: 70%;">
       </div>
-      <div class="col mr-4">
-        <h1 class="bold-dark-blue-xlg">{{ firstName }}  {{ lastName }}</h1>
+      <div class="col-10">
+        <div style="display: flex;">
+          <h1 class="bold-dark-blue-xlg">
+            <span v-if="!editing">{{ editedFirstName }} {{ editedLastName }}</span>
+            <span v-else>
+              <input v-model="editedFirstName" type="text" />
+              <input v-model="editedLastName" type="text" />
+            </span>
+          </h1>
+          <button class="edit-button" @click="activateEditMode" v-if="canEditProfile">
+            <img class="edit-img" src="../assets/svg/edit.svg">
+          </button>
+          <button @click="saveChanges" v-if="editing && canEditProfile">Guardar</button>
+          <button @click="cancelEdit" v-if="editing">Cancelar</button>
+        </div>
         <h2 class="light-dark-blue-xm">{{ email }}</h2>
       </div>
-      <div class="col ms-6">
-        <button class="perfil-button">
-          <img src="../assets/svg/plus-button.svg" alt="" class="img-button">
+      <div v-if="authorLoggedIn" class="col-1 img-user dropdown">
+        <button data-bs-toggle="dropdown" class="nav-buttons">
+          <img src="../assets/svg/options.svg" alt="" class="img-button">
         </button>
+        <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
+          <li><a @click="addProject" class="dropdown-item semibold-ligth-green-med" href="#">Agregar Proyecto</a></li>
+          <li><a @click="editProjects" class="dropdown-item semibold-ligth-green-med" href="#">Modificar Proyectos</a>
+          </li>
+        </ul>
+
       </div>
     </div>
 
     <div class="dark-blue-container">
-      <p class="light-ligth-green-xm p-3">ESTUDIANTE DE TERCER AÑO DE CARRERA, EL ÁREA QUE MAS LE GUSTA DE LA CARRERA ES
-        EL BACK'END Y EL FRONT-END</p>
+      <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange"
+        placeholder="AGREGAR DESCRIPCION DEL USUARIO" :disabled="!canEditProfile"></textarea>
     </div>
 
+
+
     <div class="row pt-4 mb-4 ms-1">
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/code.svg" alt="code">
+      <button @click="selectCategory('Programación')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/code.svg" alt="code">
       </button>
 
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/drawings.svg" alt="drawings">
+      <button @click="selectCategory('Diseño/Dibujo')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/drawings.svg" alt="drawings">
       </button>
 
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/cyber-segurity.svg" alt="cyber-segurity">
+      <button @click="selectCategory('Ciberseguridad')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/cyber-segurity.svg" alt="cyber-segurity">
       </button>
 
-      <button class="perfil-button col-auto me-4 ps-4 pe-4">
-        <img class="img-filter dark-blue-container-button" src="../assets/svg/animations.svg" alt="animations">
+      <button @click="selectCategory('Audiovisuales')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
+        <img class="img-filter" src="../assets/svg/animations.svg" alt="animations">
       </button>
 
       <div class="col-auto d-flex justify-content-center dropdown mx-2">
-        <button class="dropdown-toggle dropdown-button semibold-ligth-green-med" type="button" data-bs-toggle="dropdown"
+        <button class="dropdown-toggle dropdown-button semibold-ligth-green-med rounded" type="button" data-bs-toggle="dropdown"
           aria-expanded="false">
           ORDENAR POR
         </button>
@@ -48,87 +69,201 @@
         </ul>
       </div>
 
-    </div>  
+    </div>
 
-    <div class="row mx-1">
-
-      <NewsCard></NewsCard>
-      <NewsCard></NewsCard>
-      <NewsCard></NewsCard>
-
-      <div class="col-md-6 mb-4">
-        <div class="card-content ">
-          <div class="card-container">
-            <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-            <div class="position-absolute w-100 overlay">
-              <div class="d-flex mx-2 positionY justify-content-between">
-                <p class="bold-white-lg">ITM OFICIAL</p>
-                <p class="bold-white-lg">20/26/2023</p>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3">
-            <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-          </div>
+    <div class="container mt-4">
+      <div class="row mx-1">
+        <h1 class="text-center py-4 black-dark-blue-xlg">PROYECTOS</h1>
+        <div v-for="(project, index) in ownProjects" :key="index" class="col-md-6 mb-4">
+          <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
+            :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
+            :authorName="project.author"></ProjectCard>
         </div>
-      </div>
 
-      <div class="col-md-6 mb-4">
-        <div class="card-content ">
-          <div class="card-container">
-            <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-            <div class="position-absolute w-100 overlay">
-              <div class="d-flex mx-2 positionY justify-content-between">
-                <p class="bold-white-lg">ITM OFICIAL</p>
-                <p class="bold-white-lg">20/26/2023</p>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3">
-            <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-          </div>
-        </div>
       </div>
-
-      <div class="col-md-6 mb-4">
-        <div class="card-content ">
-          <div class="card-container">
-            <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-            <div class="position-absolute w-100 overlay">
-              <div class="d-flex mx-2 positionY justify-content-between">
-                <p class="bold-white-lg">ITM OFICIAL</p>
-                <p class="bold-white-lg">20/26/2023</p>
-              </div>
-            </div>
-          </div>
-          <div class="pt-3">
-            <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-            </h2>
-          </div>
-        </div>
-      </div>
-
     </div>
 
   </div>
 </template>
 
 <script>
-import NewsCard from './NewsCard.vue'
+import ProjectCard from './ProjectCard.vue';
+import { query, where, getDocs } from 'firebase/firestore';
+
+
+import { db } from '@/firebase'
+import { collection, doc, updateDoc } from 'firebase/firestore'
+import { onSnapshot } from 'firebase/firestore';
 
 
 export default {
   name: 'PerfilUser',
   components: {
-    NewsCard,
+    ProjectCard,
   },
   props: {
     firstName: String,
     lastName: String,
     email: String,
     carnet: String,
-    uid: String
+    uid: String,
+    authorLoggedIn: Boolean,
+    loggedInUserUid: String,
+    categories: {
+      type: Array,
+    },
+  },
+  data() {
+    return {
+      editing: false,
+      editedFirstName: this.firstName,
+      editedLastName: this.lastName,
+      userDescription: '',
+      ownProjects: [],
+      allOwnProjects: []
+    };
+  },
+
+  async mounted() {
+    // console.log('OnMounted ' + this.uid);
+
+    const userRef = doc(db, 'users', this.uid);
+
+    // Escuchar cambios en el documento del usuario
+    onSnapshot(userRef, (doc) => {
+      if (doc.exists()) {
+        this.userDescription = doc.data().description || '';
+      } else {
+        this.userDescription = '';
+      }
+
+      this.getUserProjects();
+    });
+  },
+
+  computed: {
+    canEditProfile() {
+      // Verifica si el usuario actual coincide con el usuario del perfil
+      return this.uid === this.loggedInUserUid;
+    },
+  },
+
+  methods: {
+    activateEditMode() {
+      this.editing = true;
+    },
+    cancelEdit() {
+      this.editing = false;
+      // Revierte a los valores originales si se cancela la edición
+      this.editedFirstName = this.firstName;
+      this.editedLastName = this.lastName;
+    },
+    saveChanges() {
+      // Emitir eventos para actualizar los valores en el componente padre
+      this.$emit('update:firstName', this.editedFirstName);
+      this.$emit('update:lastName', this.editedLastName);
+
+      // Crear una referencia al documento del usuario en Firebase
+      const userRef = doc(db, 'users', this.uid);
+
+      // Actualizar el documento del usuario en Firebase
+      updateDoc(userRef, {
+        firstname: this.editedFirstName,
+        lastname: this.editedLastName,
+      })
+        .then(() => {
+          this.editing = false;
+        })
+        .catch((error) => {
+          console.error('Error al guardar los cambios: ', error);
+        });
+    },
+
+    async onDescriptionChange() {
+      if (this.canEditProfile) {
+        // Este método se llama cuando el usuario cambia la descripción
+        const userRef = doc(db, 'users', this.uid);
+        try {
+          await updateDoc(userRef, {
+            description: this.userDescription, // Actualiza el campo de descripción
+          });
+        } catch (error) {
+          console.error('Error al actualizar la descripción:', error);
+        }
+      }
+    },
+
+    addProject() {
+      this.$emit('add-project')
+      // this.$emit('add-project', { userId: this.uid })
+    },
+    editProjects() {
+      this.$emit('edit-projects')
+    },
+    getUserProjects() {
+      // Define la categoría por la que deseas filtrar
+      const authorId = this.uid; // Cambia esto según tu categoría deseada
+
+      // console.log("AuthorID" + authorId)
+      // Crea una referencia a la colección "productos"
+      const projectsRef = collection(db, 'projects');
+
+      // Crea una consulta para filtrar por la categoría
+      const consultaFiltrada = query(projectsRef, where('userId', '==', authorId));
+
+      getDocs(consultaFiltrada)
+        .then((querySnapshot) => {
+          querySnapshot.forEach((doc) => {
+            const filterCategories = this.filterCategory(doc.data().id_category)
+            // console.log(project.image)
+            this.ownProjects.push({
+              id: doc.id,
+              name: doc.data().name,
+              description: doc.data().description,
+              category: filterCategories[0].category,
+              image: doc.data().images[0],
+              userId: doc.data().userId,
+            });
+          });
+        })
+        .catch((error) => {
+          console.error('Error al obtener proyectos filtrados:', error);
+        });
+      // console.log(this.ownProjects)
+      this.allOwnProjects = this.ownProjects
+    },
+    goProjectDetails(data) {
+      this.$emit('goProjectDetails', data)
+    },
+    filterCategory(idToMatch) {
+      //------------Method to get the correct category for the project--------------
+      const filteredCategories = this.categories.filter(category => category.id === idToMatch)
+      return filteredCategories
+    },
+    selectCategory(categoryId) {
+      // console.log('categorySelected:', categoryId);
+      this.ownProjects = this.allOwnProjects.filter(project => project.category === categoryId);      
+    }
   }
 }
 
 </script>
+
+<style scoped>
+.edit-button {
+  background: none;
+  border: 0;
+}
+
+.edit-img {
+  width: 1em;
+  margin-left: 1em;
+  padding-bottom: 1em;
+}
+
+.description-ta {
+  background-color: rgb(0, 45, 92);
+  border: none;
+  width: 100%;  
+}
+</style>
