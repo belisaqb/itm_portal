@@ -48,65 +48,13 @@
 
           <div class="container mt-4">
 
-            <div class="row mx-1">
-
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                  </div>
-                </div>
+              <div class="row mx-1">
+                <div v-for="(news, index) in allNews" :key="index" class="col-md-6 mb-4">
+                <NewsCard @showNewsDetails="goNewsDetails" :id="news.id" :image="news.image"
+                  :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText"
+                  :date="news.date" :profile="news.profile"></NewsCard>
               </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                  </div>
-                </div>
               </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                  </div>
-                </div>
-              </div>
-
-            </div>
           </div>
 
 
@@ -142,7 +90,6 @@
             </div>
           </div>
 
-
         </div>
 
 
@@ -155,7 +102,9 @@
 
 
         <!----------------- PANEL ADMIN ------------------------->
-        <AdminView v-if="adminPanel"></AdminView>
+        <AdminView @add-new="addNew" v-if="adminPanel"></AdminView>
+        
+        <NewsRegister @news-saved="redirectToAdminView" v-if="newsRegister"></NewsRegister>
 
 
         <!----------------- LISTA DE PROYECTOS DEL CURRENT USER ------------------------->
@@ -193,6 +142,7 @@
 
 
     <!-- <div v-if="projectDetails">
+
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
         :projectDescription="singleProject.description" :projectCategory="singleProject.category">
       </ProjectDetails>
@@ -230,11 +180,12 @@ import PerfilUser from './components/PerfilUser.vue'
 import DetailsProject from './components/DetailsProject.vue'
 // import DetailsNovedades from './components/DetailsNovedades.vue'
 import LowFooter from './components/LowFooter.vue'
-
+import NewsRegister from './components/NewsRegister.vue'
 import AdminView from './components/AdminView.vue'
 import ProjectsList from './components/ProjectsList.vue'
 import EditProject from './components/EditProject.vue'
 import { format } from 'date-fns'
+
 
 
 export default {
@@ -247,6 +198,7 @@ export default {
       projectRegister: false,
       projectDetails: false,
       news: true,
+      newsRegister: false,
       allProjects: false,
       currentUserProfile: false,
       adminPanel: false,
@@ -264,6 +216,7 @@ export default {
       projects: [],
       allProjectsList: [],
       projectId: '',
+      allNews:[],
       uid: '',
       authorLoggedIn: false,
       singleProject: {},
@@ -283,6 +236,7 @@ export default {
     ProjectCard,
     SideBar,
     NewsCard,
+    NewsRegister,
     PerfilUser,
     DetailsProject,
     LowFooter,
@@ -358,6 +312,17 @@ export default {
 
       this.changeView(2)
     },
+    async goNewsDetails(data) {
+      //------------Method to show a single new--------------
+      this.projectId = data
+
+      const getNew = await this.fetchDataById('allNews', data.id)
+      this.singleNew = getNew
+      this.showNewsDetails = true
+      this.filteredNews = this.newsList;
+
+      this.changeView(2)
+    },
     async getDocumentById(collection, documentId) {
       //------------Method to get a document by the id--------------
       const docRef = doc(db, collection, documentId)
@@ -407,6 +372,10 @@ export default {
       this.editProjectId = data.id
       this.changeView(10)
     },
+    addNew(){
+      console.log("crear novedad")
+      this.changeView(8)
+     },
     async doSearchProjects(data) {
       // console.log(data.keyword)
       const keyword = data.keyword;
@@ -443,6 +412,7 @@ export default {
 
       this.changeView(4)
 
+
     },
     doLogOut() {
       //------------Method to logOut--------------
@@ -458,7 +428,6 @@ export default {
         })
       this.viewHome();
     },
-
     updateSelectedCategory(categoryId) {
       //------------Method to filter by category with the sidebar --------------
       console.log('updateSelectedCategory llamado con categoryId:', categoryId);
@@ -468,6 +437,12 @@ export default {
       // console.log(this.projects)
       this.changeView(4);
     },
+    redirectToAdminView(){
+      console.log("guardar novedad")
+      this.changeView(9)
+    },
+
+  
 
     updateFirstName(newFirstName) {
       // Actualizar firstName en el objeto user
@@ -597,20 +572,30 @@ export default {
           this.projectsList = false
           this.editProject = false
           break
+
         ///////////////////Project Author User Profile////////////////////
         case 7:
           this.home = false
           this.news = false,
-            this.projectDetails = false,
-            this.projectRegister = false,
-            this.authUser = false,
-            this.allProjects = false,
-            this.currentUserProfile = false,
-            this.adminPanel = false,
-            this.authorUserProfile = true
+          this.projectDetails = false,
+          this.projectRegister = false,
+          this.authUser = false,
+          this.allProjects = false,
+          this.currentUserProfile = false,
+          this.adminPanel = false,
+          this.authorUserProfile = true
           this.projectsList = false
           this.editProject = false
           break
+
+     ///////////////////Create News////////////////////
+        case 8:
+            this.authorUserProfile = false
+            this.newsRegister = true
+            break
+
+
+            
         ///////////////////Project List For The Current User////////////////////
         case 9:
           this.home = false
@@ -639,7 +624,20 @@ export default {
             this.projectsList = false
             this.editProject = true
             break
+
+          case 11:
+           this.home = false
+            this.news = false,
+            this.authorUserProfile = false
+            this.newsRegister = false;
+            this.adminPanel = true;
+            break
+
+        }
+
+            
       }
+
     },
     viewHome() {
       this.changeView(0)
@@ -738,8 +736,24 @@ export default {
         console.error('Error al obtener users: ', error);
       });
     //----------------------Get Categories-----------------
-
-
+    //-------------------Get News -------------------------
+    const newsRef = collection(db, 'news')
+    getDocs(newsRef)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.id, ' => ', doc.data());
+          this.allNews.push({
+            id: doc.id,
+            image: doc.data().image,
+            inputNewsTitle: doc.data().name,
+            profile: doc.data().profile.email
+          })
+        });
+      })
+      .catch((error) => {
+        console.error('Error al obtener documentos: ', error);
+      });
+    //-------------------Get News -------------------------
     //-----------------Get Projects------------------------
     //  Obtener datos de Firebase y actualizar projects
     const projectsRef = collection(db, 'projects')

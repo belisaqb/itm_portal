@@ -499,6 +499,66 @@ main {
   background-color: rgb(0, 45, 92);
 }
 
+
+.input-user {
+  background-color: transparent !important;
+  border-radius: 0 !important;
+  border: 2px solid #00376A !important;
+  font-size: 16px !important;
+  text-align: center !important;
+  -webkit-box-sizing: border-box !important;
+          box-sizing: border-box !important;
+  padding: 8px !important;
+  margin: 4px !important;
+}
+
+.input-user::-webkit-input-placeholder {
+  color: #00376A !important;
+}
+
+.input-user::-moz-placeholder {
+  color: #00376A !important;
+}
+
+.input-user:-ms-input-placeholder {
+  color: #00376A !important;
+}
+
+.input-user::-ms-input-placeholder {
+  color: #00376A !important;
+}
+
+.input-user::placeholder {
+  color: #00376A !important;
+}
+
+.input-field {
+  width: 100% !important;
+  padding: 5px !important;
+  margin-bottom: 10px !important;
+  border: 1px solid #00376A !important;
+  border-radius: 3px !important;
+}
+
+/* Estilo para el ícono de subir imagen */
+.upload-icon {
+  display: inline-block;
+  margin-left: 10px; /* Puedes ajustar el espacio entre el texto y el ícono según tus necesidades */
+  cursor: pointer; /* Cambia el cursor al pasar sobre el ícono */
+}
+
+/* Estilo para el input oculto */
+#formFile {
+  display: none; /* Asegura que el input esté oculto */
+}
+
+.rectangle-div {
+  border-radius: 0 !important;
+  border: 3px dashed #00376A !important;
+  text-align: center !important;
+  padding: 8px !important;
+  margin: 4px !important;
+
 .object-fit-cover {
   -o-object-fit: cover;
      object-fit: cover;
@@ -540,6 +600,13 @@ main {
   color: rgb(0, 45, 92);
 }
 
+.bold-dark-blue-mx {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: rgb(0, 45, 92);
+  text-transform: uppercase;
+}
+
 .bold-dark-blue-xlg {
   font-weight: 700;
   font-size: 2rem;
@@ -547,6 +614,12 @@ main {
 }
 
 .light-dark-blue-xm {
+  font-weight: 300;
+  font-size: 1.2rem;
+  color: rgb(0, 45, 92);
+}
+
+.light-dark-blue-sm {
   font-weight: 300;
   font-size: 1.2rem;
   color: rgb(0, 45, 92);
