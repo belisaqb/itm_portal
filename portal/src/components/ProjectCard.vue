@@ -10,7 +10,7 @@
                     </div>
                 </div>
             </div>
-            <div class="pt-3">
+            <div class="pt-3 card-text overflow-hidden card-text-container">
                 <div class="d-flex-dp">
 
                     <h2 class="bold-dark-blue-lg">{{ projectName }} </h2>
@@ -80,7 +80,9 @@ export default {
     display: flex;
 }
 
-
+.card-text-container{
+    height: 8rem;
+}
 
 .dividerH {
     border-left: 4px solid rgba(0, 45, 92, 1);
