@@ -1,18 +1,18 @@
 <template>
   <div>
-    <aside class="floating-filter animated-element " id="filter">
+    <aside class="floating-filter animated-element" id="filter">
       <button id="toggleButton" class="nav-buttons btn-link"><img src="@/assets/svg/open.svg" alt="open"></button>
       <ul>
-        <li>
+        <li @click="selectCategory('Programación')">
           <img class="img-filter" src="@/assets/svg/code.svg" alt="code">
         </li>
-        <li>
+        <li @click="selectCategory('Diseño/Dibujo')">
           <img class="img-filter" src="@/assets/svg/drawings.svg" alt="drawings">
         </li>
-        <li>
+        <li @click="selectCategory('Ciberseguridad')">
           <img class="img-filter" src="@/assets/svg/cyber-segurity.svg" alt="cyber-segurity">
         </li>
-        <li>
+        <li @click="selectCategory('Audiovisuales')">
           <img class="img-filter" src="@/assets/svg/animations.svg" alt="animations">
         </li>
       </ul>
@@ -27,23 +27,23 @@
 
           </div>
           <div class="d-flex padding-options">
-            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/code.svg" alt="code"
-                @click="selectCategory('Programación')"></button>
-            <p class="mt-3 ms-3 regular-ligth-green-med">PROGRAMACIÓN</p>
+            <div style="cursor: pointer;" class="d-flex" @click="selectCategory('Programación')">
+              <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/code.svg" alt="code"></button>
+              <p class="mt-3 ms-3 regular-ligth-green-med">PROGRAMACIÓN</p>
+            </div>
           </div>
-          <div class="d-flex padding-options">
-            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/drawings.svg" alt="drawings"
-                @click="selectCategory('Diseño/Dibujo')"></button>
+          <div style="cursor: pointer;" @click="selectCategory('Diseño/Dibujo')" class="d-flex padding-options">
+            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/drawings.svg" alt="drawings"></button>
             <p class="mt-3 ms-3 regular-ligth-green-med">DISEÑO/DIBUJO</p>
           </div>
-          <div class="d-flex padding-options">
-            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/cyber-segurity.svg" alt="cyber-segurity"
-                @click="selectCategory('Ciberseguridad')"></button>
+          <div style="cursor: pointer;" @click="selectCategory('Ciberseguridad')" class="d-flex padding-options">
+            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/cyber-segurity.svg"
+                alt="cyber-segurity"></button>
             <p class="mt-3 ms-3 regular-ligth-green-med">CIBERSEGURIDAD</p>
           </div>
-          <div class="d-flex padding-options">
-            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/animations.svg" alt="animations"
-                @click="selectCategory('Audiovisuales')"></button>
+          <div style="cursor: pointer;" @click="selectCategory('Audiovisuales')" class="d-flex padding-options">
+            <button class="nav-buttons"><img class="img-filter" src="@/assets/svg/animations.svg"
+                alt="animations"></button>
             <p class="mt-3 ms-3 regular-ligth-green-med">AUDIOVISUALES</p>
           </div>
         </div>

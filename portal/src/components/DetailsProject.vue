@@ -51,7 +51,7 @@
                 <div class="container">
                     <div class="" >
                         <div class="row">
-                            <div v-for="(project, index) in relatedProjectsCombined" :key="index" class="col-md-3">
+                            <div v-for="(project, index) in relatedProjectsCombined" :key="index" class="col-lg-3 col-md-6">
                                 <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
                                 :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
                                 ></ProjectCard>

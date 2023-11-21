@@ -1,44 +1,47 @@
 <template>
     <div>
         <section class="container">
-            <div class=" mt-3">
+            <div class="mt-3 py-3">
 
                 <!--------------- TAB NAVEGADOR ---------------->
                 <ul class="nav nav-tabs" id="myTab" role="tablist">
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active text-dark" id="news-tab" data-bs-toggle="tab" data-bs-target="#news"
+                    <li class="tab-panel nav-item" role="presentation">
+                        <button class=" nav-link active text-dark" id="news-tab" data-bs-toggle="tab" data-bs-target="#news"
                             type="button" role="tab">Novedades</button>
                     </li>
-                    <li class="nav-item " role="presentation">
-                        <button class="nav-link unlink" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
+                    <li class="tab-panel nav-item " role="presentation">
+                        <button class="nav-link unlink text-dark" id="users-tab" data-bs-toggle="tab" data-bs-target="#users"
                             type="button" role="tab">Usuarios</button>
                     </li>
-                    <li class="nav-item " role="presentation">
-                        <button class="nav-link unlink" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects"
+                    <li class="tab-panel nav-item " role="presentation">
+                        <button class="nav-link unlink text-dark" id="projects-tab" data-bs-toggle="tab" data-bs-target="#projects"
                             type="button" role="tab">Proyectos</button>
-                    </li>              
+                    </li>
                 </ul>
 
                 <!--------------- NOVEDADES ---------------->
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="news" role="tabpanel">
-                        <a @click.prevent="onClickAddNew" class="d-flex justify-content-end">
-                            <p class=" btn-dark nav-link me-2 fw-bold my-3" href="">Crear novedad</p>
-                        </a>
+                        <div @click.prevent="onClickAddNew" class="d-flex justify-content-end">
+                            <button class="add-btn px-3 py-1 me-2 my-3">
+                                Crear novedad
+                            </button>
+                        </div>
+
                         <ul class="list-group">
                             <li class="list-group-item" aria-current="true">
                                 <div class="row d-flex justify-content-between px-2 pt-2">
                                     <h6 class="col-lg-2 col-sm-6 fw-bold">Título</h6>
-                                    <h6 class="col-lg-7 col-sm-6 fw-bold">Publicado por</h6>
+                                    <h6 class="col-lg-2 col-sm-6 fw-bold">Publicado por</h6>
                                     <h6 class="col-lg-2 col-sm-6 fw-bold">Fecha</h6>
                                     <h6 class="col-lg-1 col-sm-3 fw-bold">Editar</h6>
                                     <h6 class="col-lg-1 col-sm-3 fw-bold">Eliminar</h6>
                                 </div>
                             </li>
 
-                <!--Cargar lista de novedades-->
-                <NewsList :newsList="newsList" @edit-news="editNews" @delete-news="deleteNews" />
-                <NewsEdit :newsToEdit="newsToEdit" @news-updated="handleNewsUpdated"/>
+                            <!--Cargar lista de novedades-->
+                            <NewsList :newsList="newsList" @edit-news="editNews" @delete-news="deleteNews" />
+                            <NewsEdit :newsToEdit="newsToEdit" @news-updated="handleNewsUpdated" />
 
                         </ul>
                     </div>
@@ -64,7 +67,7 @@
                                         <p class='col-lg-2 col-sm-6-2 m-0'>juan@gmail.com</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>B94545</p>
                                         <a class='col-lg-1 col-sm-3 m-0' href='#'>Editar</a>
-                                            <a class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
+                                        <a class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
                                     </div>
                                 </li>
                             </div>
@@ -95,7 +98,7 @@
                                         <p class='col-lg-2 col-sm-6-2 m-0'>Audiovisuales</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>25/10/23</p>
                                         <a class='col-lg-1 col-sm-3 m-0' href='#'>Editar</a>
-                                            <a class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
+                                        <a class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
                                     </div>
                                 </li>
                             </div>
@@ -121,8 +124,8 @@ import NewsEdit from "@/components/NewsEdit.vue";
 
 export default {
     name: 'AdminView',
-   
-    components:{
+
+    components: {
         NewsList,
     },
 
@@ -137,60 +140,94 @@ export default {
             imageUrl: ''
         }
     },
-    methods:{
-        onClickAddNew(){
+    methods: {
+        onClickAddNew() {
             this.$emit('add-new')
         },
         loadNews() {
-  const newsRef = collection(db, 'news');
-  getDocs(newsRef)
-    .then((querySnapshot) => {
-      const newsList = [];
-      querySnapshot.forEach((doc, index) => {
-        newsList.push({
-          id: doc.id,
-          rowNumber: index + 1, // Número de fila autoincremental
-          inputNewsTitle: doc.data().name,
-          profile: doc.data().profile.email,
-          date: doc.data().date, // Asegúrate de usar el nombre correcto de la propiedad
-          // Puedes agregar otras propiedades según sea necesario
-          
-        });
-        console.log(`Noticia ${index + 1}:`, newsList);
-      });
-      // Actualiza la propiedad newsList con la lista de noticias
-      this.newsList = newsList;
-    })
-    .catch((error) => {
-      console.error('Error al obtener documentos: ', error);
-    });
-},
-     // Método para manejar la edición de una noticia
-     editNews(news) {
-        this.newsToEdit = news;
-      console.log('Editando noticia:', news);
-    },
+            const newsRef = collection(db, 'news');
+            getDocs(newsRef)
+                .then((querySnapshot) => {
+                    const newsList = [];
+                    querySnapshot.forEach((doc, index) => {
+                        newsList.push({
+                            id: doc.id,
+                            rowNumber: index + 1, // Número de fila autoincremental
+                            inputNewsTitle: doc.data().name,
+                            profile: doc.data().profile.email,
+                            date: doc.data().date, // Asegúrate de usar el nombre correcto de la propiedad
+                            // Puedes agregar otras propiedades según sea necesario
 
-    // Método para manejar la eliminación de una noticia
-    deleteNews(newsId) {
-      const newsDocRef = doc(db, 'news', newsId);
-      deleteDoc(newsDocRef)
-        .then(() => {
-          console.log('Noticia eliminada con éxito:', newsId);
-          this.loadNews();
-        })
-        .catch((error) => {
-          console.error('Error al eliminar la noticia:', error);
-        });
-    },
+                        });
+                        console.log(`Noticia ${index + 1}:`, newsList);
+                    });
+                    // Actualiza la propiedad newsList con la lista de noticias
+                    this.newsList = newsList;
+                })
+                .catch((error) => {
+                    console.error('Error al obtener documentos: ', error);
+                });
+        },
+        // Método para manejar la edición de una noticia
+        editNews(news) {
+            this.newsToEdit = news;
+            console.log('Editando noticia:', news);
+        },
 
-    handleNewsUpdated() {
-      this.loadNews();
-      this.newsToEdit = null;
+        // Método para manejar la eliminación de una noticia
+        deleteNews(newsId) {
+            const newsDocRef = doc(db, 'news', newsId);
+            deleteDoc(newsDocRef)
+                .then(() => {
+                    console.log('Noticia eliminada con éxito:', newsId);
+                    this.loadNews();
+                })
+                .catch((error) => {
+                    console.error('Error al eliminar la noticia:', error);
+                });
+        },
+
+        handleNewsUpdated() {
+            this.loadNews();
+            this.newsToEdit = null;
+        },
     },
-    },
-    created(){
+    created() {
         this.loadNews();
     }
 }
 </script>
+
+
+<style scoped>
+.add-btn {
+    background-color: rgba(0, 45, 92, 1);
+    color: white;
+    border: solid;
+    border-radius: 0.2rem;
+    border-width: 0.1rem;
+    border-color: rgba(0, 45, 92, 1);
+}
+
+.tab-panel{
+    text-decoration: none;
+    color: rgba(0, 45, 92, 1);
+    background-color: rgba(0, 167, 126, 1);
+    /* Set the background to transparent */
+    border: 0.1rem solid rgba(0, 196, 151, 1);
+    border-top-left-radius: 0.5rem;
+    border-top-right-radius: 0.5rem;
+}
+
+.tab-panel::focus{
+    background-color: rgba(0, 45, 92, 1);
+}
+
+.list-group-item {
+    text-decoration: none;
+    color: rgba(0, 45, 92, 1);
+    background-color: rgba(0, 167, 126, 1);
+    /* Set the background to transparent */
+    border: 0.1rem solid rgba(0, 196, 151, 1);
+}
+</style>

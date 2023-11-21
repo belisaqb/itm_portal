@@ -1,25 +1,29 @@
 <template>
   <div class="ps-4">
-    <div class="row d-flex pt-4 mb-4">
+    <div class="row d-flex pt-4 mb-4 mx-3">
       <div class="col-1">
         <img src="../assets/svg/user-dark.svg" style="width: 70%;">
       </div>
       <div class="col-10">
-        <div style="display: flex;">
+        <div class="d-flex">
           <h1 class="bold-dark-blue-xlg">
             <span v-if="!editing">{{ editedFirstName }} {{ editedLastName }}</span>
-            <span v-else>
-              <input v-model="editedFirstName" type="text" />
-              <input v-model="editedLastName" type="text" />
+            <span class="d-flex" v-else>
+              <input class="col input-user form-control" v-model="editedFirstName" type="text" />
+              <input class="col input-user form-control" v-model="editedLastName" type="text" />
             </span>
           </h1>
-          <button class="edit-button" @click="activateEditMode" v-if="canEditProfile">
+          <button class="edit-button" @click="activateEditMode" v-if="canEditProfile" v-show="!editing">
             <img class="edit-img" src="../assets/svg/edit.svg">
-          </button>
-          <button @click="saveChanges" v-if="editing && canEditProfile">Guardar</button>
-          <button @click="cancelEdit" v-if="editing">Cancelar</button>
+          </button>                   
         </div>
-        <h2 class="light-dark-blue-xm">{{ email }}</h2>
+        <div v-if="editing" class="d-flex">
+          <div class="ms-1 align-self-center">
+              <button class="edit-btn px-3 py-1 me-2" @click="saveChanges" v-if="editing && canEditProfile">Guardar</button>
+              <button class="cancel-btn px-3 py-1" @click="cancelEdit" v-if="editing">Cancelar</button>
+            </div> 
+        </div>
+        <h2 v-if="!editing" class="light-dark-blue-xm">{{ email }}</h2>
       </div>
       <div v-if="authorLoggedIn" class="col-1 img-user dropdown">
         <button data-bs-toggle="dropdown" class="nav-buttons">
@@ -34,14 +38,14 @@
       </div>
     </div>
 
-    <div class="dark-blue-container">
+    <div class="dark-blue-container mx-3">
       <textarea v-model="userDescription" class="light-ligth-green-xm p-3 description-ta" @input="onDescriptionChange"
         placeholder="AGREGAR DESCRIPCION DEL USUARIO" :disabled="!canEditProfile"></textarea>
     </div>
 
 
 
-    <div class="row pt-4 mb-4 ms-1">
+    <div class="row pt-4 mb-4 mx-3">
       <button @click="selectCategory('Programación')" class="perfil-button rounded col-auto me-4 ps-4 pe-4">
         <img class="img-filter" src="../assets/svg/code.svg" alt="code">
       </button>
@@ -297,5 +301,23 @@ export default {
   background-color: rgb(0, 45, 92);
   border: none;
   width: 100%;  
+}
+
+.edit-btn{
+  background-color: rgba(0, 45, 92, 1); 
+  color: white;
+  border: solid;
+  border-radius: 0.2rem;
+  border-width: 0.1rem;
+  border-color: rgba(0, 45, 92, 1); 
+}
+
+.cancel-btn{
+  background: none;
+  color: rgba(0, 45, 92, 1);  
+  border: solid;
+  border-radius: 0.2rem;
+  border-width: 0.1rem;
+  border-color: rgba(0, 45, 92, 1); 
 }
 </style>

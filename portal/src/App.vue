@@ -49,7 +49,7 @@
           <div class="container mt-4">
 
             <div class="row mx-1">
-              <div v-for="(news, index) in allNews" :key="index" class="col-md-4 mb-4">
+              <div v-for="(news, index) in allNews" :key="index" class="col-md-6 mb-4">
                 <NewsCard @showNewsDetails="goNewsDetails" :id="news.id" :image="news.image"
                   :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText" :date="news.date"
                   :profile="news.profile"></NewsCard>
@@ -504,6 +504,7 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
           break
 
         ///////////////////Auth//////////////////
@@ -522,6 +523,7 @@ export default {
             this.adminPanel = false,
             this.authorUserProfile = false
           this.projectsList = false
+          this.newsRegister = false
           break
         ///////////////////ProjectRegister///////////////////
         case 3:
@@ -536,6 +538,7 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
           break
         ///////////////////AllProjects///////////////////
         case 4:
@@ -550,6 +553,7 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
           break
         ///////////////////Current User Profile////////////////////
         case 5:
@@ -564,6 +568,7 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
           break
         ///////////////////Admin Panel View////////////////////
         case 6:
@@ -594,6 +599,7 @@ export default {
             this.authorUserProfile = true
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
           break
 
         ///////////////////Create News////////////////////
@@ -627,6 +633,7 @@ export default {
             this.authorUserProfile = false,
             this.projectsList = true
           this.editProject = false
+          this.newsRegister = false
           break
         ///////////////////Edit Project////////////////////
         case 10:
@@ -641,6 +648,7 @@ export default {
             this.authorUserProfile = false,
             this.projectsList = false
           this.editProject = true
+          this.newsRegister = false
           break
 
         case 11:
@@ -649,6 +657,7 @@ export default {
             this.authorUserProfile = false
           this.newsRegister = false;
           this.adminPanel = true;
+          this.newsRegister = false
           break
 
       }

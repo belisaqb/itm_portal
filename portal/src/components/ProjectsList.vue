@@ -4,15 +4,15 @@
             <div class=" mt-3 p-4">
 
                 <!--------------- TAB NAVEGADOR ---------------->
-                <h1 class="bold-dark-blue-xlg" style="text-align: center">PROYECTOS</h1>
+                <h1 class="bold-dark-blue-xlg" style="text-align: center">Lista de Proyectos</h1>
 
                 <div class="tab-content" id="myTabContent">
                     <div class="tab-pane fade show active" id="news" role="tabpanel">
-                        <div class="d-flex justify-content-start">
-                            <a class=" btn-dark nav-link me-2 fw-bold my-3" href="">Crear Proyecto</a>
+                        <div class="d-flex justify-content-end">
+                            <button class="add-btn px-3 py-1 me-2 my-3">Crear Proyecto</button>
                         </div>
-                        <ul class="list-group mt-4">
-                            <li class="list-group-item" aria-current="true">
+                        <ul class="list-group">
+                            <li class=" list-group-item-back list-group-item" aria-current="true">
                                 <div class="row d-flex justify-content-between px-2 pt-2">
                                     <h6 class="col-lg-2 col-sm-6 fw-bold">Nombre</h6>
                                     <h6 class="col-lg-2 col-sm-6 fw-bold">Autor</h6>
@@ -25,13 +25,15 @@
 
                             <div>
                                 <li v-for="(project, index) in ownProjects" :key="index" class='list-group-item'>
-                                    <div class='row d-flex justify-content-between px-2 pt-1'>
+                                    <div class='row d-flex justify-content-between px-2 pt-1 pb-2'>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.name }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.author }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.category }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ formatDate(project.createdAt) }}</p>
-                                        <a @click="editProject(project.id)" class='col-lg-1 col-sm-3 m-0' href='#'>Editar</a>
-                                        <a @click="deleteProject(project.id)" class='col-lg-1 col-sm-3 m-0' href='#'>Eliminar</a>
+                                        <a @click="editProject(project.id)" class='col-lg-1 col-sm-3 m-0'
+                                            href='#'><img class="w-25" src="../assets/svg/edit.svg" alt=""></a>
+                                        <a @click="deleteProject(project.id)" class='col-lg-1 col-sm-3 m-0'
+                                            href='#'><img class="w-25" src="../assets/svg/delete.svg" alt=""></a>
                                     </div>
                                 </li>
                             </div>
@@ -46,9 +48,9 @@
         </section>
 
         <div v-if="isAlertDialogVisible" class="alert-dialog">
-          <p>¿Estás seguro de eliminar este proyecto?</p>
-          <button class="btn btn-outline-danger me-2" @click="confirmAction">Sí</button>
-          <button class="btn btn-outline-primary" @click="cancelAction">No</button>
+            <p>¿Estás seguro de eliminar este proyecto?</p>
+            <button class="btn btn-outline-danger me-2" @click="confirmAction">Sí</button>
+            <button class="btn btn-outline-primary" @click="cancelAction">No</button>
         </div>
     </div>
 </template>
@@ -57,7 +59,7 @@
 <script>
 import { format } from 'date-fns';
 import { db, auth } from '@/firebase'
-import { collection, query, where, getDocs,  doc, deleteDoc  } from 'firebase/firestore';
+import { collection, query, where, getDocs, doc, deleteDoc } from 'firebase/firestore';
 
 export default {
     name: 'ProjectsList',
@@ -70,7 +72,7 @@ export default {
     },
     props: {
         categories: { type: Array },
-        users: {type: Array}
+        users: { type: Array }
     },
     methods: {
         editProject(projectId) {
@@ -144,7 +146,7 @@ export default {
         }
     },
     mounted() {
-        
+
         this.getUserProjects()
     },
 }
@@ -159,5 +161,21 @@ export default {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+}
+
+.add-btn {
+    background-color: rgba(0, 45, 92, 1);
+    color: white;
+    border: solid;
+    border-radius: 0.2rem;
+    border-width: 0.1rem;
+    border-color: rgba(0, 45, 92, 1);
+}
+
+.list-group-item{
+  text-decoration: none;
+  color: rgba(0, 45, 92, 1);
+  background-color: rgba(0, 167, 126, 1); /* Set the background to transparent */
+  border: 0.1rem solid rgba(0, 196, 151, 1);
 }
 </style>
