@@ -29,8 +29,7 @@
           Error al registrar usuario</div>
 
         <div class="button-container">
-          <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button"
-            class="register-button">REGISTRAR</button>
+          <button :disabled="!inputEmail || !inputPassword" @click="doRegister" type="button" class="register-button">REGISTRAR</button>
           <hr class="line-between-buttons">
           <button @click="isLogin = true" id="login-button" type="button" class="login-button">INICIAR SESION</button>
         </div>
@@ -54,33 +53,77 @@
           placeholder="correo electrónico" required>
 
         <label for="contraseña">CONTRASEÑA</label>
-        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña"
-          placeholder="contraseña" required>
+        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña" placeholder="contraseña" required>
 
         <div class="button-container">
           <button :disabled="!inputEmail || !inputPassword" @click="doLogin" type="button"
             class="register-button">INICIAR SESION</button>
           <hr class="line-between-buttons">
-          <button id="register-button" type="button" class="login-button">REGISTRAR</button>
+          <button id="register-button" type="button" class="login-button"> VOLVER A REGISTRO</button>
+          <hr class="line-between-buttons">
+          <button id="restore-button" type="button" class="login-button">RESTABLECER CONTRASEÑA</button>
         </div>
       </form>
       <!-- </div> v-if end -->
     </div>
   </div>
   <!-- LOGIN SECTION -->
+
+  <!-- Ingresar Email para restablecer -->
+  <div id="restore-popup" class="registration-popup">
+    <div class="registration-modal">
+      <span id="close-login-popup" class="close-popup-button">&times;</span>
+      <h2>Recuperar contraseña</h2>
+      <form class="form-display"> 
+
+        <label for="correo">CORREO ELECTRONICO</label>
+        <input v-model="inputEmail" id="RecuperarCorreo" class="input-field" type="email" name="correo" placeholder="correo electrónico" required>
+
+        <div class="button-container">
+          <button type="button" class="register-button">VERIFICAR CORREO</button>
+          <hr class="line-between-buttons">
+          <button id="backToLogin-button" type="button" class="login-button">VOLVER A INICIO DE SESION</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Ingresar Email para restablecer -->
+
+
+  <!-- Nueva contraseña -->
+  <div id="restoreConf-popup" class="registration-popup">
+    <div class="registration-modal">
+      <span id="close-login-popup" class="close-popup-button">&times;</span>
+      <h2>Recuperar contraseña</h2>
+      <form class="form-display"> 
+
+        <label for="contraseña">CONTRASEÑA</label>
+        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña" placeholder="contraseña" required>
+        
+        <label for="contraseña">CONFIRMAR CONTRASEÑA</label>
+        <input v-model="inputPassword" id="contraseña" class="input-field" type="password" name="contraseña" placeholder=" confirmar contraseña" required>
+
+        <div class="button-container">
+          <button type="button" class="register-button">CAMBIAR CONTRASEÑA</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <!-- Nueva contraseña -->
   </div>
 </template>
 
 
 <script>
 // import { ref } from 'vue'
-import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword, } from "firebase/auth";
 import { auth } from '@/firebase'
 import { db } from "@/firebase";
 import { doc, setDoc } from "firebase/firestore";
 
 // const email = ref('')
 // const password = ref('')
+//sendPasswordResetEmail 
 
 
 export default {
@@ -188,6 +231,12 @@ export default {
           console.log(err.message)
         })
     },
+
+    /** METODOS CAMBIAR CONTRASEÑA */
+
+    /** METODOS CAMBIAR CONTRASEÑA */
+
+
     /* DOLOGIN METHOD*/
 
     // /* logii */

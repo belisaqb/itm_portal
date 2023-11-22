@@ -80,6 +80,16 @@
     color: white;
   }
 
+  .recover-button {
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    color: #00376A;
+    background: none;
+  }
+
   .line-between-buttons {
     width: 100%;
     height: 1px;
