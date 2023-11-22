@@ -1,6 +1,6 @@
 <template>
     <div class="">
-        <div @click="projectDetails" class="card-content">
+        <div @click="newsDetails" class="card-content">
             <div class="card-container">
                 <img :src="image" class="card-img-top" alt="img">
                 <!--src="@/assets/imgs/Novedades/img1.jpg"-->

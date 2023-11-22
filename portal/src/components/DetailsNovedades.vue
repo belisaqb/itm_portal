@@ -1,111 +1,43 @@
 <template>
     <div>
-        <div>
         <div class="content-section m-5">
-            <h1 class="text-center pt-4 black-dark-blue-xlg">FERIA VOCACIONAL DE ITM EN LICEO DE PUNTARENAS.</h1>
+            <h1 class="text-center pt-4 black-dark-blue-xlg">{{ title }}</h1>
 
             <div class="image-details-container">
                 <div class="image-container">
-                    <img class="img-fluid"  src="../assets/imgs/Novedades/img2.jpg" alt="img">
+                    <img class="img-fluid card-img-top" :src="image" alt="img">
                 </div>
             </div>
-            
+
             <hr class="divider">
             <div class="d-flex-dp comunMarginx">
-                <p class="txt-name-student">Por <span @click="goAuthorProfile" >ELÍAS ZUÑIGA </span> </p>
-                <hr class="dividerH comunMarginx"> <p class="txt-name-student">21/9/2023</p>
+                <p class="txt-name-student">Por <span @click="goAuthorProfile">{{ author }} </span> </p>
+                <hr class="dividerH comunMarginx">
+                <p class="txt-name-student">{{ date }}</p>
             </div>
-            <div class="d-flex-dp comunMarginx">
-                <p class="txt-name-student ">  Informática y tecnología multimedia ha llevado a dar una serie de fierias vocacionales en diferentes zonas de la región pacífico central. La idea de las ferias es promover la carrera a estudiantes jóvenes de colegio y escuelas en carreras del área de ti y stem, entre estas la carrera de itm. <br>
-                Roberto González nos comenta que La coordinación de carrera de informática y tecnología multimedia ha llevado a dar una serie de fierias vocacionales en diferentes zonas de la región pacífico central. La idea de las ferias es promover la carrera a estudiantes jóvenes de colegio y escuelas en carreras del área de ti y stem, entre estas la carrera de itm.  </p>
+            <div class="d-flex-dp comunMarginx margin-b">
+                <p class="txt-name-student ">{{ description }}</p>
             </div>
-            
-            
-            <hr class="divider">
-            <div class="comunMarginx pt-2">
-                <p class=" black-dark-blue-xlg">Similares</p>
-            </div>
-           
-
-            <div class="row mx-1">
-
-                <NewsCard></NewsCard>
-                <NewsCard></NewsCard>
-                <NewsCard></NewsCard>
-
-                <div class="col mb-4">
-                <div class="card-content ">
-                    <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                        <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                    </div>
-                </div>
-                </div>
-
-                <div class="col mb-4">
-                <div class="card-content ">
-                    <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                        <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                    </div>
-                </div>
-                </div>
-
-                <div class="col mb-4">
-                <div class="card-content ">
-                    <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                        <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                    </div>
-                </div>
-                </div>
-
-                </div>
-
-            
-        </div>       
-    </div>
-    
+        </div>
     </div>
 </template>
 
 <script>
-import NewsCard from './NewsCard.vue';
 
 export default {
     name: "DetailsNovedades",
-    NewsCard,
-    components: {  }
+    props: {
+        id: String,
+        title: String,
+        image: String,
+        date: { type: String, default: "portalitm@gmail.com" },
+        author: String,
+        description: String
+    }
 }
 </script>
 
 <style scoped>
-
 .txt-footer1 {
     font-size: 1.2rem;
     font-weight: 700;
@@ -122,7 +54,7 @@ export default {
 }
 
 .margin-b {
-    padding-bottom: 8rem;
+    padding-bottom: 4rem;
 }
 
 .centered-image {
@@ -222,7 +154,7 @@ export default {
 
 .image-container img {
     width: 100%;
-    height: 30rem;
+    /* height: 30rem; */
 }
 
 .details-container {

@@ -7,7 +7,7 @@
                 <div class="image-container">
                     <img class="img-fluid object-fit-cover" :src="image" alt="img">
                 </div>
-                <div class="details-container">
+                <div class="details-container align-self-center">
                     <p class="txtDescriptionProyects">PARTICIPANTES:</p>
                     <p class="txtDetailsProyects mediumSpaceBottom">{{ participantes.map(participante =>
                         participante.name).join(', ') }}</p>
@@ -200,7 +200,7 @@ export default {
 
         async getRelatedProjectsByCategory() {
     const currentProjectCategoryId = this.idCategory; 
-    console.log('currentProjectCategoryId', currentProjectCategoryId)
+    // console.log('currentProjectCategoryId', currentProjectCategoryId)
 
     const projectsRef = collection(db, 'projects');
     const querySnapshot = await getDocs(query(projectsRef, where('id_category', '==', currentProjectCategoryId)));
@@ -390,7 +390,7 @@ async getRelatedProjectsCombined() {
 
 .details-container {
     width: 35%;
-    height: 21rem;
+    /* height: 21rem; */
 }
 
 .txtDescriptionProyects {

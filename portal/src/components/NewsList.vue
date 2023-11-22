@@ -30,7 +30,7 @@
       },
       deleteNews(newsId) {
       
-        this.$emit('delete-news', newsId);
+        this.$emit('delete-news', newsId, 'news');
       },
     },
   };

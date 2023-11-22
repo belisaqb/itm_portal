@@ -117,7 +117,7 @@ export default {
         document.getElementById('password-error').style.display = 'none';
       }
 
-      console.log('REGISTRO')
+      // console.log('REGISTRO')
       console.log('Datos del usuario:', firstname, lastname, carnet, inputEmail, inputPassword);
 
       // Después de registrar al usuario en Firebase Authentication, guarda sus datos en Firestore

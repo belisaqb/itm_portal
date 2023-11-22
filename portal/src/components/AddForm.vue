@@ -103,7 +103,7 @@ export default {
     },
     methods: {
         async addProject() {
-            console.log('crear proyecto', this.inputProjectDescription, this.inputProjectName, this.selectedCategory)
+            // console.log('crear proyecto', this.inputProjectDescription, this.inputProjectName, this.selectedCategory)
 
             const imageUrls = await this.uploadImages()
 
@@ -181,7 +181,7 @@ export default {
                                 console.log('Imagen subida con éxito');
                                 // Obtener la URL de la imagen
                                 getDownloadURL(task.snapshot.ref).then((downloadURL) => {
-                                    console.log('File available at', downloadURL);
+                                    // console.log('File available at', downloadURL);
                                     resolve(downloadURL); // Resolver la promesa con la URL de la imagen
                                 });
                             }
@@ -190,16 +190,16 @@ export default {
                 })
             );
 
-            console.log(imageUrls);
+            // console.log(imageUrls);
             return imageUrls;
         },
         addParticipante() {
             this.participantes.push({ name: this.inputName });
-            console.log(this.participantes)
+            // console.log(this.participantes)
         },
         addSoftware() {
             this.softwares.push({ name: this.inputName })
-            console.log(this.softwares)
+            // console.log(this.softwares)
         }
     },
     mounted() {

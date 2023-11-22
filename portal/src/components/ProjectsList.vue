@@ -30,10 +30,10 @@
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.author }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ project.category }}</p>
                                         <p class='col-lg-2 col-sm-6-2 m-0'>{{ formatDate(project.createdAt) }}</p>
-                                        <a @click="editProject(project.id)" class='col-lg-1 col-sm-3 m-0'
-                                            href='#'><img class="w-25" src="../assets/svg/edit.svg" alt=""></a>
-                                        <a @click="deleteProject(project.id)" class='col-lg-1 col-sm-3 m-0'
-                                            href='#'><img class="w-25" src="../assets/svg/delete.svg" alt=""></a>
+                                        <a @click="editProject(project.id)" class='col-lg-1 col-sm-3 m-0' href='#'><img
+                                                class="w-25" src="../assets/svg/edit.svg" alt=""></a>
+                                        <a @click="deleteProject(project.id)" class='col-lg-1 col-sm-3 m-0' href='#'><img
+                                                class="w-25" src="../assets/svg/delete.svg" alt=""></a>
                                     </div>
                                 </li>
                             </div>
@@ -49,8 +49,8 @@
 
         <div v-if="isAlertDialogVisible" class="alert-dialog">
             <p>¿Estás seguro de eliminar este proyecto?</p>
-            <button class="btn btn-outline-danger me-2" @click="confirmAction">Sí</button>
-            <button class="btn btn-outline-primary" @click="cancelAction">No</button>
+            <button class="agree-btn px-3 py-1 me-2" @click="confirmAction">Sí</button>
+            <button class="cancel-btn px-3 py-1" @click="cancelAction">No</button>
         </div>
     </div>
 </template>
@@ -153,15 +153,6 @@ export default {
 </script>
 
 <style scoped>
-.alert-dialog {
-    background-color: #fff;
-    border: 1px solid #ccc;
-    padding: 20px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-}
 
 .add-btn {
     background-color: rgba(0, 45, 92, 1);
@@ -172,10 +163,42 @@ export default {
     border-color: rgba(0, 45, 92, 1);
 }
 
-.list-group-item{
-  text-decoration: none;
-  color: rgba(0, 45, 92, 1);
-  background-color: rgba(0, 167, 126, 1); /* Set the background to transparent */
-  border: 0.1rem solid rgba(0, 196, 151, 1);
+.agree-btn {
+    background-color: rgba(0, 196, 151, 1);
+    color: rgba(0, 45, 92, 1);
+    ;
+    ;
+    border: solid;
+    border-radius: 0.2rem;
+    border-width: 0.1rem;
+    border-color: rgba(0, 196, 151, 1);
+}
+
+.cancel-btn {
+    background: none;
+    color: rgba(0, 196, 151, 1);
+    border: solid;
+    border-radius: 0.2rem;
+    border-width: 0.1rem;
+    border-color: rgba(0, 196, 151, 1);
+}
+
+.alert-dialog {
+    background-color: rgba(0, 45, 92, 1);
+    border: 1px solid rgba(0, 45, 92, 1);
+    color: rgba(0, 196, 151, 1);
+    padding: 20px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.list-group-item {
+    text-decoration: none;
+    color: rgba(0, 45, 92, 1);
+    background-color: rgba(0, 167, 126, 1);
+    /* Set the background to transparent */
+    border: 0.1rem solid rgba(0, 196, 151, 1);
 }
 </style>

@@ -60,6 +60,9 @@
 
         </div>
 
+        <!----------------- DETALLE DE NOVEDADES ------------------------->
+        <DetailsNovedades v-if="newsDetails" :id="singleNew.id" :image="singleNew.image" :title="singleNew.title" :date="singleNew.date"
+          :description="singleNew.description" :author="singleNew.author" ></DetailsNovedades>
 
         <!----------------- PROYECTOS ------------------------->
         <div v-if="allProjects">
@@ -105,7 +108,7 @@
 
 
         <!----------------- PANEL ADMIN ------------------------->
-        <AdminView @add-new="addNew" v-if="adminPanel"></AdminView>
+        <AdminView @add-new="addNew" v-if="adminPanel" :categories="categories"></AdminView>
 
         <NewsRegister @news-saved="redirectToAdminView" v-if="newsRegister"></NewsRegister>
 
@@ -189,6 +192,7 @@ import NewsRegister from './components/NewsRegister.vue'
 import AdminView from './components/AdminView.vue'
 import ProjectsList from './components/ProjectsList.vue'
 import EditProject from './components/EditProject.vue'
+import DetailsNovedades from './components/DetailsNovedades.vue'
 import { format } from 'date-fns'
 
 
@@ -202,6 +206,7 @@ export default {
       authUser: false,
       projectRegister: false,
       projectDetails: false,
+      newsDetails: false,
       news: true,
       newsRegister: false,
       allProjects: false,
@@ -215,6 +220,7 @@ export default {
       projectsList: false,
       editProject: false,
 
+
       //-------------------Variables Init---------------
       categories: [],
       users: [],
@@ -225,6 +231,7 @@ export default {
       uid: '',
       authorLoggedIn: false,
       singleProject: {},
+      singleNew: {},
       currentUser: {},
       authorUser: {},
       editProjectId: '',
@@ -247,7 +254,8 @@ export default {
     LowFooter,
     AddForm,
     ProjectsList,
-    EditProject
+    EditProject,
+    DetailsNovedades
   },
 
   //---------------Methods---------------------
@@ -319,14 +327,19 @@ export default {
     },
     async goNewsDetails(data) {
       //------------Method to show a single new--------------
-      this.projectId = data
+      // console.log(data)
 
-      const getNew = await this.fetchDataById('allNews', data.id)
-      this.singleNew = getNew
-      this.showNewsDetails = true
-      this.filteredNews = this.newsList;
+      const getNew = await this.fetchDataById('news', data.id)
 
-      this.changeView(2)
+      this.singleNew.id = data.id
+      this.singleNew.title = getNew.name
+      this.singleNew.date = this.formatDate(getNew.date)
+      this.singleNew.description = getNew.text
+      this.singleNew.image = getNew.image
+      this.singleNew.author = getNew.profile.email
+
+
+      this.changeView(11)
     },
     async getDocumentById(collection, documentId) {
       //------------Method to get a document by the id--------------
@@ -373,12 +386,12 @@ export default {
       this.viewProjectRegister()
     },
     editSelectedProject(data) {
-      console.log('ProjectId: ' + data.id)
+      // console.log('ProjectId: ' + data.id)
       this.editProjectId = data.id
       this.changeView(10)
     },
     addNew() {
-      console.log("crear novedad")
+      // console.log("crear novedad")
       this.changeView(8)
     },
     async doSearchProjects(data) {
@@ -398,7 +411,7 @@ export default {
             const filterCategories = this.filterCategory(doc.data().id_category)
             const filterUsers = this.filterUser(doc.data().userId)
 
-            console.log(doc.data())
+            // console.log(doc.data())
             this.projects.push({
               id: doc.id,
               name: doc.data().name,
@@ -407,7 +420,7 @@ export default {
               image: doc.data().images[0],
               userId: doc.data().userId,
               author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName,
-              
+
             });
 
           });
@@ -436,7 +449,7 @@ export default {
     },
     updateSelectedCategory(categoryId) {
       //------------Method to filter by category with the sidebar --------------
-      console.log('updateSelectedCategory llamado con categoryId:', categoryId);
+      // console.log('updateSelectedCategory llamado con categoryId:', categoryId);
       // Filtra los proyectos según la categoría seleccionada (categoryId) y asigna los resultados a projectsList.
       this.projects = this.allProjectsList.filter(project => project.category === categoryId);
       // console.log(this.allProjectsList)
@@ -444,7 +457,7 @@ export default {
       this.changeView(4);
     },
     redirectToAdminView() {
-      console.log("guardar novedad")
+      // console.log("guardar novedad")
       this.changeView(6)
     },
 
@@ -466,7 +479,7 @@ export default {
       // this.$emit('filterSelected', filterOption);
       // console.log('filterSelected'+ filterOption);
       if (filterOption === 'Mas Nuevos') {
-        console.log('filterSelected' + filterOption);
+        // console.log('filterSelected' + filterOption);
         // this.projects.sort((a, b) => new Date(a.date) - new Date(b.date));
         this.projects.sort((a, b) => {
           const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
@@ -475,12 +488,12 @@ export default {
         });
 
       } else {
-        console.log('filterSelected' + filterOption);
+        // console.log('filterSelected' + filterOption);
         this.projects.sort((a, b) => a.name.localeCompare(b.name));
       }
-      console.log('Proyectos ordenados:', this.projects);
+      // console.log('Proyectos ordenados:', this.projects);
     },
-    
+
     formatDate(createdAt) {
       // Convierte la fecha de Firebase a un objeto de fecha
       const dateObject = new Date(createdAt.toDate());
@@ -505,6 +518,7 @@ export default {
           this.projectsList = false
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
 
         ///////////////////Auth//////////////////
@@ -524,6 +538,7 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////ProjectRegister///////////////////
         case 3:
@@ -539,6 +554,7 @@ export default {
           this.projectsList = false
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////AllProjects///////////////////
         case 4:
@@ -554,6 +570,7 @@ export default {
           this.projectsList = false
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////Current User Profile////////////////////
         case 5:
@@ -569,6 +586,7 @@ export default {
           this.projectsList = false
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////Admin Panel View////////////////////
         case 6:
@@ -579,11 +597,12 @@ export default {
             this.authUser = false,
             this.allProjects = false,
             this.currentUserProfile = false
-            this.adminPanel = true
-            this.authorUserProfile = false
+          this.adminPanel = true
+          this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
 
         ///////////////////Project Author User Profile////////////////////
@@ -600,6 +619,7 @@ export default {
           this.projectsList = false
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
 
         ///////////////////Create News////////////////////
@@ -616,6 +636,7 @@ export default {
           this.projectsList = false
           this.editProject = false
           this.newsRegister = true
+          this.newsDetails = false
           break
 
 
@@ -634,6 +655,7 @@ export default {
             this.projectsList = true
           this.editProject = false
           this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////Edit Project////////////////////
         case 10:
@@ -649,15 +671,24 @@ export default {
             this.projectsList = false
           this.editProject = true
           this.newsRegister = false
+          this.newsDetails = false
           break
 
+        ///////////////////Edit Project////////////////////
         case 11:
           this.home = false
           this.news = false,
-            this.authorUserProfile = false
-          this.newsRegister = false;
-          this.adminPanel = true;
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false,
+            this.projectsList = false
+          this.editProject = false
           this.newsRegister = false
+          this.newsDetails = true
           break
 
       }
@@ -777,7 +808,9 @@ export default {
       .catch((error) => {
         console.error('Error al obtener documentos: ', error);
       });
-    //-------------------Get News -------------------------
+    //-------------------Get News ------------------------
+
+    
     //-----------------Get Projects------------------------
     //  Obtener datos de Firebase y actualizar projects
     const projectsRef = collection(db, 'projects')
