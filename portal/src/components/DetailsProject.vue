@@ -57,22 +57,6 @@
                                 ></ProjectCard>
                             </div>
                         </div>
-                        <!-- Proyectos del mismo autor
-                        <div v-if="relatedProjectsByAuthor.length > 0" class="project-list">
-                            <div v-for="(project, index) in relatedProjectsByAuthor.slice(0, 4)" :key="index" class="col-lg-6">
-                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
-                                ></ProjectCard>
-                            </div>
-                        </div> -->
-                        <!-- Proyectos de la misma categoría
-                        <div v-if="relatedProjectsByCategory.length > 0" class="project-list">
-                            <div v-for="(project, index) in relatedProjectsByCategory.slice(0, 4)" :key="index" class="col-lg-6">
-                                <ProjectCard @showProjectDetails="goProjectDetails" :id="project.id" :image="project.image"
-                                :projectName="project.name" :projectDescription="project.description" :projectCategory="project.category"
-                                ></ProjectCard>
-                            </div>
-                        </div> -->
                     </div>
                 </div>
             </div>
@@ -156,11 +140,12 @@ export default {
         },
 
         goProjectDetails(data) {
-            console.log(data)
+            //console.log(data)
             this.$emit('goProjectDetails', data)
+            this.getRelatedProjectsCombined();
             window.scrollTo({
                 top: 0,
-                behavior: "smooth" // Para un desplazamiento suave (opcional)
+                behavior: "smooth" // Para un desplazamiento suave
             });
         },
 
@@ -182,7 +167,6 @@ export default {
 
             querySnapshot.forEach((doc) => {
                 if (doc.id != currentProjectId) {
-                    
                     const filterCategories = this.filterCategory(doc.data().id_category);
 
                     this.relatedProjectsByAuthor.push({
@@ -199,16 +183,16 @@ export default {
 
 
         async getRelatedProjectsByCategory() {
-    const currentProjectCategoryId = this.idCategory; 
-    // console.log('currentProjectCategoryId', currentProjectCategoryId)
+            const currentProjectCategoryId = this.idCategory; 
+            // console.log('currentProjectCategoryId', currentProjectCategoryId)
 
-    const projectsRef = collection(db, 'projects');
-    const querySnapshot = await getDocs(query(projectsRef, where('id_category', '==', currentProjectCategoryId)));
+            const projectsRef = collection(db, 'projects');
+            const querySnapshot = await getDocs(query(projectsRef, where('id_category', '==', currentProjectCategoryId)));
 
-    this.relatedProjectsByCategory = [];
+            this.relatedProjectsByCategory = [];
 
-    querySnapshot.forEach((doc) => {
-        if (doc.id !== this.id && doc.data().userId !== this.authorId) {
+            querySnapshot.forEach((doc) => {
+            if (doc.id !== this.id && doc.data().userId !== this.authorId) {
             const filterCategories = this.filterCategory(currentProjectCategoryId);
 
             this.relatedProjectsByCategory.push({
@@ -220,7 +204,7 @@ export default {
                 userId: doc.data().userId,
             });
         }
-        console.log('projectCategoryId: ', currentProjectCategoryId)
+        //console.log('projectCategoryId: ', currentProjectCategoryId)
     });          
 },
 

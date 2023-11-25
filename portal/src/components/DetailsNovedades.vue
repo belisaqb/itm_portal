@@ -18,14 +18,40 @@
             <div class="d-flex-dp comunMarginx margin-b">
                 <p class="txt-name-student ">{{ description }}</p>
             </div>
+
+            <hr class="divider">
+            <div class="comunMarginx pt-2">
+                <p class=" black-dark-blue-xlg">Destacados</p>
+            </div>
+            <div class="images-proyect margin-b">
+                <div class="container">
+                    <div class="" >
+                        <div class="row">
+                            <div v-for="(news, index) in allNews" :key="index" class="col-md-6 mb-4">
+                                <NewsCard @showNewsDetails="goNewsDetails" :id="news.id" :image="news.image"
+                                :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText" :date="news.date"
+                                :profile="news.profile"></NewsCard>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </template>
 
 <script>
 
+import NewsCard from './NewsCard.vue'
+import { db } from '@/firebase'
+import { collection } from 'firebase/firestore'
+import { getDocs } from 'firebase/firestore';
+
 export default {
     name: "DetailsNovedades",
+    components: {
+        NewsCard,
+    },
     props: {
         id: String,
         title: String,
@@ -33,7 +59,56 @@ export default {
         date: { type: String, default: "portalitm@gmail.com" },
         author: String,
         description: String
+    }, 
+    data(){
+        return{
+            allNews: [],
+        }
+    }, 
+    methods:{
+        async getAllNews (){
+            const newsRef = collection(db, 'news')
+            const currentNewsId = this.id;
+
+            //console.log('News ID: ', currentNewsId)
+
+            getDocs(newsRef)
+            .then((querySnapshot) => {
+                const limit = 4;
+
+                // Utiliza slice para obtener solo los primeros 4 elementos
+                const firstFourNews = querySnapshot.docs
+                .filter((doc) => doc.id !== currentNewsId) // Filtra la novedad actual
+                .slice(0, limit);
+
+                firstFourNews.forEach((doc) => {
+                this.allNews.push({
+                    id: doc.id,
+                    image: doc.data().image,
+                    inputNewsTitle: doc.data().name,
+                    profile: doc.data().profile.email
+                    })
+                });
+            })
+            .catch((error) => {
+                console.error('Error al obtener documentos: ', error);
+            });
+        },
+
+        goNewsDetails(data) {
+            //console.log(data)
+            this.$emit('goNewsDetails', data)
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth" // Para un desplazamiento suave
+            });
+            //this.getAllNews()
+        },
+    },
+    mounted() {
+        this.getAllNews();
     }
+
 }
 </script>
 

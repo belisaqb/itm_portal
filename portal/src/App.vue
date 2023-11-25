@@ -61,7 +61,7 @@
         </div>
 
         <!----------------- DETALLE DE NOVEDADES ------------------------->
-        <DetailsNovedades v-if="newsDetails" :id="singleNew.id" :image="singleNew.image" :title="singleNew.title" :date="singleNew.date"
+        <DetailsNovedades v-if="newsDetails" @showNewsDetails="goNewsDetails" @goNewsDetails="goNewsDetails" :id="singleNew.id" :image="singleNew.image" :title="singleNew.title" :date="singleNew.date"
           :description="singleNew.description" :author="singleNew.author" ></DetailsNovedades>
 
         <!----------------- PROYECTOS ------------------------->
