@@ -6,36 +6,37 @@
             <div class="add-col">
 
                 <div class="addF-col2 form-group">
-                    <label class="light-dark-blue-xm" for="name">NOMBRE DE PROYECTO:</label>
-                    <input v-model="inputProjectName" type="text" id="name" placeholder="Nombre del proyecto">
+                    <label class="title-input" for="name">NOMBRE DE PROYECTO:</label>
+                    <input v-model="inputProjectName" type="text" class="select-input" id="name" placeholder="Nombre del proyecto">
                 </div>
                 <div class="addF-col2 form-group">
-                    <label class="light-dark-blue-xm" for="categoria">CATEGORÍA:</label>
+                    <label class="title-input" for="categoria">CATEGORÍA:</label>
                     <select v-model="selectedCategory" id="categoria" class="select-input">
+                        <option value="" disabled selected>Selecciona una categoría</option>
                         <option v-for="(item, index) in categories" :key="index" :value="item.id">{{ item.category }}
                         </option>
                     </select>
                 </div>
                 <div class="addF-col2 form-group">
-                    <label class="light-dark-blue-xm" for="participantes">PARTICIPANTES:</label>
+                    <label class="title-input" for="participantes">PARTICIPANTES:</label>
                     <div id="participantes" class="multi-input-group">
                         <div v-for="(participante, index) in participantes" :key="index">
-                            <input type="text" v-model="participante.name" :name="'participantes[' + index + '].name'"
+                            <input class="add-input" type="text" v-model="participante.name" :name="'participantes[' + index + '].name'"
                                 placeholder="Nombre del Participante" />
                         </div>
                     </div>
-                    <div @click="addParticipante" id="add-participante" class="add-button">+ Agregar Participante</div>
+                    <div @click="addParticipante" id="add-participante" class="btn-addInput">+ Agregar Participante</div>
                 </div>
                 <div class="addF-col2 form-group">
-                    <label class="light-dark-blue-xm" for="softwares">SOFTWARES:</label>
+                    <label class="title-input" for="softwares">SOFTWARES:</label>
                     <div id="softwares" class="multi-input-group">
                         <div v-for="(software, index) in softwares" :key="index">
-                            <input type="text" v-model="software.name" :name="'softwares[' + index + '].name'"
+                            <input class="add-input" type="text" v-model="software.name" :name="'softwares[' + index + '].name'"
                                     placeholder="Nombre del Software" />
                         </div>
                         <!-- Se carga con JS                     -->
                     </div>
-                    <div @click="addSoftware" id="add-software" class="add-button">+ Agregar Software</div>
+                    <div @click="addSoftware" id="add-software" class="btn-addInput">+ Agregar Software</div>
                 </div>
 
             </div>
@@ -43,12 +44,12 @@
             <div class="addF-center">
 
                 <div class="form-group">
-                    <label class="description-group light-dark-blue-xm">DESCRIPCIÓN:</label>
-                    <textarea v-model="inputProjectDescription" id="descripcion" rows="4"
+                    <label class="title-input">DESCRIPCIÓN:</label>
+                    <textarea v-model="inputProjectDescription" class="add-textarea" id="descripcion" rows="4"
                         placeholder="Descripción del proyecto"></textarea>
                 </div>
                 <div class="form-group">
-                    <label class="light-dark-blue-xm">CARGAR IMÁGENES:</label>
+                    <label class="title-input">CARGAR IMÁGENES:</label>
                     <!-- Mostrar el avance de la imagen seleccionada -->
                         <div class="my-4 row d-flex">
                             <div class="col-4" v-for="(preview, index) in imagePreviews" :key="index">
@@ -57,6 +58,7 @@
                         </div>
 
                     <label for="upload" class="upload-button">
+                        <img src="../assets/seleccionar-imagen.png" alt="">
                         Haz click para subir imágenes.
                         <input @change="onFileChange" type="file" id="upload" class="file-input" ref="upload" multiple>
                     </label>
