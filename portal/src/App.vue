@@ -14,20 +14,20 @@
     <section class="content" id="content">
       <div class="content-section ms-2 ms-lg-5">
 
-        
+
 
         <!----------------- COMPONENT PERFIL USER ------------------------->
         <PerfilUser v-if="currentUserProfile" :authorLoggedIn="authorLoggedIn" :uid="currentUser.userId"
           :loggedInUserUid="loggedInUserUid" :firstName="currentUser.firstname" :lastName="currentUser.lastname"
-          :email="currentUser.inputEmail" :carnet="currentUser.carnet" :description="currentUser.description" :categories="categories"
-          @update:firstName="updateFirstName" @update:lastName="updateLastName" @add-project="createProject"
-          @edit-projects="viewListOwnProjects"  @goProjectDetails="goProjectDetails">
+          :email="currentUser.inputEmail" :carnet="currentUser.carnet" :description="currentUser.description"
+          :categories="categories" @update:firstName="updateFirstName" @update:lastName="updateLastName"
+          @add-project="createProject" @edit-projects="viewListOwnProjects" @goProjectDetails="goProjectDetails">
         </PerfilUser>
 
 
         <PerfilUser v-if="authorUserProfile" :authorLoggedIn="authorLoggedIn" :uid="authorUser.userId"
-          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail" :categories="categories"
-          :carnet="authorUser.carnet"  @goProjectDetails="goProjectDetails">
+          :firstName="authorUser.firstname" :lastName="authorUser.lastname" :email="authorUser.inputEmail"
+          :categories="categories" :carnet="authorUser.carnet" @goProjectDetails="goProjectDetails">
         </PerfilUser>
 
 
@@ -41,77 +41,30 @@
               ORDENAR POR
             </button>
             <ul style="border-radius: 0% ; padding: 1rem 1.32rem; " class="dropdown-menu">
-              <li><a class="dropdown-item semibold-ligth-green-med" href="#">MÁS NUEVOS</a></li>
-              <li><a class="dropdown-item semibold-ligth-green-med" href="#">A-Z</a></li>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#" @click="selectFilterNews('Mas Nuevos')">MÁS
+                  NUEVOS</a></li>
+              <li><a class="dropdown-item semibold-ligth-green-med" href="#" @click="selectFilterNews('A-Z')">A-Z</a></li>
             </ul>
           </div>
 
           <div class="container mt-4">
 
             <div class="row mx-1">
-
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-              <NewsCard></NewsCard>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img4.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">TEATRO DE SOMBRAS, LEYENDAS COSTARRICENSES</h2>
-                  </div>
-                </div>
+              <div v-for="(news, index) in allNews" :key="index" class="col-md-6 mb-4">
+                <NewsCard @showNewsDetails="goNewsDetails" :id="news.id" :image="news.image"
+                  :inputNewsTitle="news.inputNewsTitle" :inputNewsText="news.inputNewsText" :date="news.date"
+                  :profile="news.profile"></NewsCard>
               </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img3.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">CONCURSO ANUAL DE CAMISAS ITM, SEMANA U</h2>
-                  </div>
-                </div>
-              </div>
-
-              <div class="col-md-6 mb-4">
-                <div class="card-content ">
-                  <div class="card-container">
-                    <img class="card-img-top" src="@/assets/imgs/Novedades/img2.jpg" alt="img">
-                    <div class="position-absolute w-100 overlay">
-                      <div class="d-flex mx-2 positionY justify-content-between">
-                        <p class="bold-white-lg">ITM OFICIAL</p>
-                        <p class="bold-white-lg">20/26/2023</p>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="pt-3">
-                    <h2 class="bold-dark-blue-lg">SE LLEVA A CABO FIESTA ITM, CONOZCA CÓMO SE ...
-                    </h2>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
 
 
         </div>
 
+        <!----------------- DETALLE DE NOVEDADES ------------------------->
+        <DetailsNovedades v-if="newsDetails" @showNewsDetails="goNewsDetails" @goNewsDetails="goNewsDetails"
+          :id="singleNew.id" :image="singleNew.image" :title="singleNew.title" :date="singleNew.date"
+          :description="singleNew.description" :author="singleNew.author"></DetailsNovedades>
 
         <!----------------- PROYECTOS ------------------------->
         <div v-if="allProjects">
@@ -142,28 +95,34 @@
             </div>
           </div>
 
-
         </div>
 
 
         <!----------------- DETALLE DE PROYECTO ------------------------->
-        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" @goProjectDetails="goProjectDetails" :image="singleProject.image" :projectId="singleProject.projectId"
-          :projectName="singleProject.name" :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id" :idCategory="singleProject.id_category"
-          :projectCategory="singleProject.category" :authorId="singleProject.authorId" :participantes="singleProject.participantes"
-          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt"></DetailsProject>
+        <DetailsProject v-if="projectDetails" @go-author-profile="viewAuthorProfile" @goProjectDetails="goProjectDetails"
+          :image="singleProject.image" :projectId="singleProject.projectId" :projectName="singleProject.name"
+          :projectDescription="singleProject.description" :categories="categories" :id="singleProject.id"
+          :idCategory="singleProject.id_category" :projectCategory="singleProject.category"
+          :authorId="singleProject.authorId" :participantes="singleProject.participantes"
+          :softwares="singleProject.softwares" :imgUrls="singleProject.imgUrls" :createdAt="singleProject.createdAt">
+        </DetailsProject>
 
 
 
         <!----------------- PANEL ADMIN ------------------------->
-        <AdminView v-if="adminPanel"></AdminView>
+        <AdminView @add-new="addNew" v-if="adminPanel" :categories="categories"></AdminView>
+
+        <NewsRegister @news-saved="redirectToAdminView" v-if="newsRegister"></NewsRegister>
 
 
         <!----------------- LISTA DE PROYECTOS DEL CURRENT USER ------------------------->
-        <ProjectsList v-if="projectsList" :categories="categories" :users="users" @edit-project="editSelectedProject"></ProjectsList>
+        <ProjectsList v-if="projectsList" :categories="categories" :users="users" @edit-project="editSelectedProject">
+        </ProjectsList>
 
         <AddForm v-if="projectRegister" @go-project-list="viewListOwnProjects" :categories="categories"></AddForm>
 
-        <EditProject v-if="editProject" @go-project-list="viewListOwnProjects" :categories="categories" :projectId="editProjectId"></EditProject>
+        <EditProject v-if="editProject" @go-project-list="viewListOwnProjects" :categories="categories"
+          :projectId="editProjectId"></EditProject>
 
       </div>
     </section>
@@ -193,6 +152,7 @@
 
 
     <!-- <div v-if="projectDetails">
+
       <ProjectDetails :image="singleProject.image" :projectName="singleProject.name"
         :projectDescription="singleProject.description" :projectCategory="singleProject.category">
       </ProjectDetails>
@@ -230,11 +190,13 @@ import PerfilUser from './components/PerfilUser.vue'
 import DetailsProject from './components/DetailsProject.vue'
 // import DetailsNovedades from './components/DetailsNovedades.vue'
 import LowFooter from './components/LowFooter.vue'
-
+import NewsRegister from './components/NewsRegister.vue'
 import AdminView from './components/AdminView.vue'
 import ProjectsList from './components/ProjectsList.vue'
 import EditProject from './components/EditProject.vue'
+import DetailsNovedades from './components/DetailsNovedades.vue'
 import { format } from 'date-fns'
+
 
 
 export default {
@@ -246,7 +208,9 @@ export default {
       authUser: false,
       projectRegister: false,
       projectDetails: false,
+      newsDetails: false,
       news: true,
+      newsRegister: false,
       allProjects: false,
       currentUserProfile: false,
       adminPanel: false,
@@ -258,15 +222,18 @@ export default {
       projectsList: false,
       editProject: false,
 
+
       //-------------------Variables Init---------------
       categories: [],
       users: [],
       projects: [],
       allProjectsList: [],
       projectId: '',
+      allNews: [],
       uid: '',
       authorLoggedIn: false,
       singleProject: {},
+      singleNew: {},
       currentUser: {},
       authorUser: {},
       editProjectId: '',
@@ -283,12 +250,14 @@ export default {
     ProjectCard,
     SideBar,
     NewsCard,
+    NewsRegister,
     PerfilUser,
     DetailsProject,
     LowFooter,
     AddForm,
     ProjectsList,
-    EditProject
+    EditProject,
+    DetailsNovedades
   },
 
   //---------------Methods---------------------
@@ -310,7 +279,7 @@ export default {
       const getProject = await this.fetchDataById('projects', data.id)
       const filteredCategory = this.filterCategory(getProject.id_category)[0].category
 
-      
+
       //Llenar los arreglos de participantes, softwares e imagenes
       let participantes = []
       let softwares = []
@@ -358,6 +327,22 @@ export default {
 
       this.changeView(2)
     },
+    async goNewsDetails(data) {
+      //------------Method to show a single new--------------
+      // console.log(data)
+
+      const getNew = await this.fetchDataById('news', data.id)
+
+      this.singleNew.id = data.id
+      this.singleNew.title = getNew.name
+      this.singleNew.date = this.formatDate(getNew.date)
+      this.singleNew.description = getNew.text
+      this.singleNew.image = getNew.image
+      this.singleNew.author = getNew.profile.email
+
+
+      this.changeView(11)
+    },
     async getDocumentById(collection, documentId) {
       //------------Method to get a document by the id--------------
       const docRef = doc(db, collection, documentId)
@@ -403,9 +388,13 @@ export default {
       this.viewProjectRegister()
     },
     editSelectedProject(data) {
-      console.log('ProjectId: ' + data.id)
+      // console.log('ProjectId: ' + data.id)
       this.editProjectId = data.id
       this.changeView(10)
+    },
+    addNew() {
+      // console.log("crear novedad")
+      this.changeView(8)
     },
     async doSearchProjects(data) {
       // console.log(data.keyword)
@@ -423,8 +412,8 @@ export default {
           querySnapshot.forEach((doc) => {
             const filterCategories = this.filterCategory(doc.data().id_category)
             const filterUsers = this.filterUser(doc.data().userId)
-            
-            console.log(doc.data())
+
+            // console.log(doc.data())
             this.projects.push({
               id: doc.id,
               name: doc.data().name,
@@ -433,7 +422,7 @@ export default {
               image: doc.data().images[0],
               userId: doc.data().userId,
               author: filterUsers[0].authorName + " " + filterUsers[0].authorLastName,
-              
+
             });
 
           });
@@ -443,6 +432,7 @@ export default {
         });
 
       this.changeView(4)
+
 
     },
     doLogOut() {
@@ -459,16 +449,21 @@ export default {
         })
       this.viewHome();
     },
-
     updateSelectedCategory(categoryId) {
       //------------Method to filter by category with the sidebar --------------
-      console.log('updateSelectedCategory llamado con categoryId:', categoryId);
+      // console.log('updateSelectedCategory llamado con categoryId:', categoryId);
       // Filtra los proyectos según la categoría seleccionada (categoryId) y asigna los resultados a projectsList.
       this.projects = this.allProjectsList.filter(project => project.category === categoryId);
       // console.log(this.allProjectsList)
       // console.log(this.projects)
       this.changeView(4);
     },
+    redirectToAdminView() {
+      // console.log("guardar novedad")
+      this.changeView(6)
+    },
+
+
 
     updateFirstName(newFirstName) {
       // Actualizar firstName en el objeto user
@@ -486,21 +481,36 @@ export default {
       // this.$emit('filterSelected', filterOption);
       // console.log('filterSelected'+ filterOption);
       if (filterOption === 'Mas Nuevos') {
-        console.log('filterSelected' + filterOption);
+        // console.log('filterSelected' + filterOption);
         // this.projects.sort((a, b) => new Date(a.date) - new Date(b.date));
         this.projects.sort((a, b) => {
-      const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
-      const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
-      return dateB.getTime() - dateA.getTime();
-    });
+          const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+          const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+          return dateB.getTime() - dateA.getTime();
+        });
 
       } else {
-        console.log('filterSelected' + filterOption);
+        // console.log('filterSelected' + filterOption);
         this.projects.sort((a, b) => a.name.localeCompare(b.name));
       }
-      console.log('Proyectos ordenados:', this.projects);
+      // console.log('Proyectos ordenados:', this.projects);
     },
-    
+    selectFilterNews(filterOption) {
+      if (filterOption === 'Mas Nuevos') {
+        this.allNews.sort((a, b) => {
+          const dateA = new Date(a.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+          const dateB = new Date(b.date.replace(/(\d{2})\/(\d{2})\/(\d{2})/, '20$3-$2-$1'));
+          return dateB.getTime() - dateA.getTime();
+        });
+      } else {
+        this.allNews.sort((a, b) => {
+          const titleA = a.inputNewsTitle || ''; // default to empty string if undefined
+          const titleB = b.inputNewsTitle || ''; // default to empty string if undefined
+          return titleA.localeCompare(titleB);
+        });
+      }
+    },
+
     formatDate(createdAt) {
       // Convierte la fecha de Firebase a un objeto de fecha
       const dateObject = new Date(createdAt.toDate());
@@ -524,6 +534,8 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
 
         ///////////////////Auth//////////////////
@@ -542,6 +554,8 @@ export default {
             this.adminPanel = false,
             this.authorUserProfile = false
           this.projectsList = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////ProjectRegister///////////////////
         case 3:
@@ -556,6 +570,8 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////AllProjects///////////////////
         case 4:
@@ -570,6 +586,8 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////Current User Profile////////////////////
         case 5:
@@ -584,6 +602,8 @@ export default {
             this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
         ///////////////////Admin Panel View////////////////////
         case 6:
@@ -593,12 +613,15 @@ export default {
             this.projectRegister = false,
             this.authUser = false,
             this.allProjects = false,
-            this.currentUserProfile = false,
-            this.adminPanel = true,
-            this.authorUserProfile = false
+            this.currentUserProfile = false
+          this.adminPanel = true
+          this.authorUserProfile = false
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
+
         ///////////////////Project Author User Profile////////////////////
         case 7:
           this.home = false
@@ -612,7 +635,29 @@ export default {
             this.authorUserProfile = true
           this.projectsList = false
           this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
           break
+
+        ///////////////////Create News////////////////////
+        case 8:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false
+          this.projectsList = false
+          this.editProject = false
+          this.newsRegister = true
+          this.newsDetails = false
+          break
+
+
+
         ///////////////////Project List For The Current User////////////////////
         case 9:
           this.home = false
@@ -625,10 +670,12 @@ export default {
             this.adminPanel = false,
             this.authorUserProfile = false,
             this.projectsList = true
-            this.editProject = false
-            break
+          this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = false
+          break
         ///////////////////Edit Project////////////////////
-          case 10:
+        case 10:
           this.home = false
           this.news = false,
             this.projectDetails = false,
@@ -639,9 +686,30 @@ export default {
             this.adminPanel = false,
             this.authorUserProfile = false,
             this.projectsList = false
-            this.editProject = true
-            break
+          this.editProject = true
+          this.newsRegister = false
+          this.newsDetails = false
+          break
+
+        ///////////////////Edit Project////////////////////
+        case 11:
+          this.home = false
+          this.news = false,
+            this.projectDetails = false,
+            this.projectRegister = false,
+            this.authUser = false,
+            this.allProjects = false,
+            this.currentUserProfile = false,
+            this.adminPanel = false,
+            this.authorUserProfile = false,
+            this.projectsList = false
+          this.editProject = false
+          this.newsRegister = false
+          this.newsDetails = true
+          break
+
       }
+
     },
     viewHome() {
       this.changeView(0)
@@ -740,6 +808,25 @@ export default {
         console.error('Error al obtener users: ', error);
       });
     //----------------------Get Categories-----------------
+    //-------------------Get News -------------------------
+    const newsRef = collection(db, 'news')
+    getDocs(newsRef)
+      .then((querySnapshot) => {
+        querySnapshot.forEach((doc) => {
+          // console.log(doc.id, ' => ', doc.data());
+          this.allNews.push({
+            id: doc.id,
+            image: doc.data().image,
+            inputNewsTitle: doc.data().name,
+            profile: doc.data().profile.email,
+            date: this.formatDate(doc.data().date)
+          })
+        });
+      })
+      .catch((error) => {
+        console.error('Error al obtener documentos: ', error);
+      });
+    //-------------------Get News ------------------------
 
 
     //-----------------Get Projects------------------------
